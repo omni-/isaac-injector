@@ -1,0 +1,7 @@
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omni's modloader.exe.config
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omni's modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omni's modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omni's modloader.csprojResolveAssemblyReference.cache
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omni's modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omni's modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omnis modloader.exe.config

@@ -34,3 +34,6 @@
 *.pdb
 *.sdf
 *.suo
+*.config
+*.cache
+*.opensdf

@@ -38,10 +38,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="isaac-injector.cpp">
+    <ClCompile Include="sigscan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sigscan.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

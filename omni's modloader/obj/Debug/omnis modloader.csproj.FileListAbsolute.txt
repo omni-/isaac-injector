@@ -1,0 +1,5 @@
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omnis modloader.exe.config
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omnis modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\omnis modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis modloader.pdb
