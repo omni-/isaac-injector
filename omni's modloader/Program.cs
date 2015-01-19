@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace omni_s_modloader
 {
@@ -14,14 +11,22 @@ namespace omni_s_modloader
         {
             Console.Title = "omni's modloader - " + version;
             Loader l = new Loader();
+
             Console.Write("[INFO]Initializing omni's modloader {0}...", version);
+
             bool result = l.init();
             Console.Write(result ? " success" : "\r\n[ERROR]Failed. Exiting.");
-            if (!result)
-                return;
+            if (!result) return;
+
             Injector i = new Injector();
-            Console.WriteLine("\r\n\r\n[INFO]Injection result: " + i.Inject("isaac-ng"));
-            Console.ReadKey();
+            hResult hresult;
+            Process proc = i.Inject("isaac-ng", out hresult);
+
+            Console.WriteLine("\r\n\r\n[INFO]Injection result: " + hresult);
+            if (hresult == hResult.Error || proc == null)
+                return;
+            Handler h = new Handler();
+            h.Handle(proc);
         }
     }
 }

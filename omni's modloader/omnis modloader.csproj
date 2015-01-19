@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Externals.cs" />
+    <Compile Include="Handler.cs" />
     <Compile Include="Injector.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="NativeMethods.cs" />
