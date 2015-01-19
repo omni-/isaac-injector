@@ -8,20 +8,7 @@ struct Entity
 
 struct Player : Entity
 {
-	int _items;
-	int _version;
-	int _damage;
-	int _firedelay;
-	int _shotspeed;
-	int _range;
-	int _speed;
-	int _tearFlag;
-	int _tearcolor;
-	bool _flying;
-	int _weapon;
-	int _familiars;
-	int _luck;
-	char _unk76C[0x3E4 - (sizeof(int) * 13)];
+	char _unk76C[0x3E4];
 	int _maxHearts;
 	int _hearts;
 	int _eternalHearts;

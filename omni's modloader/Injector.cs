@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace omni_s_modloader
@@ -23,12 +24,14 @@ namespace omni_s_modloader
         const uint MEM_RESERVE = 0x00002000;
         const uint PAGE_READWRITE = 4;
 
-        public hResult Inject(string procName)
+        public Process Inject(string procName, out hResult result)
         {
+            Process proc;
+            IntPtr handle;
             try
             {
-                Process proc = Process.GetProcessesByName(procName)[0];
-                IntPtr handle = NativeMethods.OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, proc.Id);
+                proc = Process.GetProcessesByName(procName)[0];
+                handle = NativeMethods.OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, proc.Id);
                 IntPtr loadlibaddr = NativeMethods.GetProcAddress(NativeMethods.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
                 string dll = Path.GetFullPath("isaac-injector.dll");
                 IntPtr malloc = NativeMethods.VirtualAllocEx(handle, IntPtr.Zero, (uint)((dll.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -36,15 +39,24 @@ namespace omni_s_modloader
                 NativeMethods.WriteProcessMemory(handle, malloc, Encoding.Default.GetBytes(dll), (uint)((dll.Length + 1) * Marshal.SizeOf(typeof(char))), out bytesWritten);
                 NativeMethods.CreateRemoteThread(handle, IntPtr.Zero, 0, loadlibaddr, malloc, 0, IntPtr.Zero);
             }
-            catch (IndexOutOfRangeException) { return hResult.ProcNotFound; }
-            catch (Exception ex) { return hResult.Error; }
-            return hResult.Success;
+            catch (IndexOutOfRangeException) 
+            { 
+                result = hResult.ProcessNotFound;
+                return null;
+            }
+            catch (FileNotFoundException) 
+            {
+                result = hResult.Error;
+                return null;
+            }
+            result = hResult.Success;
+            return proc;
         }
     }
 
     public enum hResult
     {
-        ProcNotFound,
+        ProcessNotFound,
         Error,
         Success
     }

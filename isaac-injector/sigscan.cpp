@@ -25,9 +25,6 @@ void CSigScan::Init(unsigned char *sig, char *mask, size_t len)
 	is_set = 0;
 	base_addr_ = (unsigned char*)GetModuleHandle(NULL);
 
-	//outfile.open("c:/users/cooper/desktop/log.txt", std::ios_base::app);
-	//outfile << "[info]base addr: " << (void*)base_addr_ << std::endl;
-
 	sig_len = len;
 	sig_str = new unsigned char[sig_len];
 	ustrncpy(sig_str, sig, sig_len);
@@ -39,19 +36,16 @@ void CSigScan::Init(unsigned char *sig, char *mask, size_t len)
 	if (!base_addr_)
 	{
 		outfile << "[err] failed to get base address" << std::endl;
-		return; // GetDllMemInfo() Failed
+		return;
 	}
 
 	if ((sig_addr = FindSignature()) == NULL)
 	{
 		outfile << "[err] failed to get signature" << std::endl;
-		outfile << "[info]sig addr: " << sig_addr << std::endl;
-		return; // FindSignature() Failed
+		return;
 	}
-	//outfile << "[info]sig addr: " << sig_addr << std::endl;
 
 	is_set = 1;
-	//outfile << "[info]sigscan successful" << std::endl;
 	// SigScan Successful!
 }
 
@@ -81,9 +75,6 @@ void* CSigScan::FindSignature(void)
 	unsigned char *pBasePtr = base_addr_;
 	unsigned char *pEndPtr = base_addr_ + base_len;
 	size_t i;
-	//outfile << "[info]base len: " << base_len << std::endl;
-	//outfile << "[info]end ptr: " << (void*)pEndPtr << std::endl;
-
 	while (pBasePtr < pEndPtr) {
 		for (i = 0; i < sig_len; i++) {
 			if ((sig_mask[i] != '?') && (sig_str[i] != pBasePtr[i]))
@@ -96,6 +87,5 @@ void* CSigScan::FindSignature(void)
 
 		pBasePtr++;
 	}
-
 	return NULL;
 }
