@@ -27,10 +27,13 @@
     <ClInclude Include="sigscan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="isaac-injector.h">
+    <ClInclude Include="Externs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Externs.h">
+    <ClInclude Include="pipe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -42,6 +45,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

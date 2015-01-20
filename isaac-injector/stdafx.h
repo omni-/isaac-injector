@@ -15,6 +15,7 @@
 #include <cstring>
 #include <fstream>
 #include <map>
+#include <sstream>
 
 
 // TODO: reference additional headers your program requires here

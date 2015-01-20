@@ -11,7 +11,7 @@ namespace omni_s_modloader
     public struct Player
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x3E4)]
-        char[] _unk76C;
+        byte[] _unk76C;
         int _maxHearts;
         int _hearts;
         int _eternalHearts;
@@ -23,6 +23,6 @@ namespace omni_s_modloader
         int _numBombs;
         int _numCoins;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x24E8)]
-        char[] _unkB78;
+        byte[] _unkB78;
     }
 }

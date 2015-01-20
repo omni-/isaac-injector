@@ -10,15 +10,15 @@ namespace omni_s_modloader
 {
     public class Loader
     {
-        public bool init()
+        public static bool init()
         {
             if (!Directory.Exists("Plugins"))
                 Directory.CreateDirectory("Plugins");
             return true;
         }
-        public List<OMLPlugin> GetPlugins()
+        public static List<OMLPlugin> GetPlugins()
         {
-            string[] dlls = Directory.GetFiles("Plugins/*.dll");
+            string[] dlls = Directory.GetFiles("Plugins", "*.dll");
             List<Assembly> assemblies = new List<Assembly>();
             foreach (string dll in dlls)
                 assemblies.Add(Assembly.LoadFile(dll));

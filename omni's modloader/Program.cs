@@ -10,11 +10,10 @@ namespace omni_s_modloader
         static void Main(string[] args)
         {
             Console.Title = "omni's modloader - " + version;
-            Loader l = new Loader();
 
             Console.Write("[INFO]Initializing omni's modloader {0}...", version);
 
-            bool result = l.init();
+            bool result = Loader.init();
             Console.Write(result ? " success" : "\r\n[ERROR]Failed. Exiting.");
             if (!result) return;
 
@@ -23,10 +22,13 @@ namespace omni_s_modloader
             Process proc = i.Inject("isaac-ng", out hresult);
 
             Console.WriteLine("\r\n\r\n[INFO]Injection result: " + hresult);
-            if (hresult == hResult.Error || proc == null)
-                return;
-            Handler h = new Handler();
-            h.Handle(proc);
+            if (hresult != hResult.Error && proc != null)
+            {
+                Handler h = new Handler();
+                h.Handle(proc);
+            }
+            Console.WriteLine("\r\nPress any key to continue...");
+            Console.ReadKey();
         }
     }
 }
