@@ -19,23 +19,7 @@ HANDLE initPipe(DWORD &error)
 	return hPipe;
 }
 
-unsigned char* awaitServerResponse(HANDLE hPipe)
+HANDLE ConnectMutex()
 {
-	unsigned char* buffer;
-	bool fSuccess;
-	DWORD dwRead;
-	do
-	{
-		// Read from the pipe. 
-		fSuccess = ReadFile(
-			hPipe,    // pipe handle 
-			buffer,    // buffer to receive reply 
-			BUFSIZE*sizeof(TCHAR),  // size of buffer 
-			&dwRead,  // number of bytes read 
-			NULL);    // not overlapped 
-
-		if (!fSuccess && GetLastError() != ERROR_MORE_DATA)
-			break;
-	} while (!fSuccess);  // repeat loop if ERROR_MORE_DATA 
-	return buffer;
+	return OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
 }

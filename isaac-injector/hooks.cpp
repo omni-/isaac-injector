@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "hooks.h"
+#include "pipe.h"
 
 HANDLE hPipe;
+
+HANDLE mutex;
 
 AddCollectibleType* Player_AddCollectible;
 CSigScan AddCollectibleSig;
@@ -17,9 +20,10 @@ CSigScan SpawnEntitySig;
 ModHealthType* Player_ModHealth;
 CSigScan ModHealthSig;
 
-void hookinit(HANDLE _hpipe)
+void hookinit(HANDLE _hpipe, HANDLE _mutex)
 {
 	hPipe = _hpipe;
+	mutex = _mutex;
 }
 
 void __fastcall AddCollectible_Hook(Player* player, int a2, int itemid, int a4, int a5)
@@ -29,43 +33,30 @@ void __fastcall AddCollectible_Hook(Player* player, int a2, int itemid, int a4, 
 	outfile << "[info]picked up item: " << getItemName(itemid) << "(" << itemid << "), arg4: " << a4 << ", " << "arg5: " << a5 << std::endl;
 	outfile.close();
 
+	WaitForSingleObject(mutex, 500L);
 	char buffer[32];
 	memset(&buffer, 0, sizeof(buffer));
 	strcpy(buffer, "OnPlayerAddCollectible");
-	DWORD cbWritten;
+	DWORD cbWritten, cbRead;
 
 	bool success = WriteFile(hPipe, buffer, 32, &cbWritten, NULL);
-	if (success)
-		MessageBoxA(NULL, "connection successful", "result", NULL);
-	else
-		MessageBoxA(NULL, "connection failed", "result", NULL);
-	WriteFile(hPipe, &player, 12384, &cbWritten, NULL);
 
-	unsigned char ch[sizeof(int)];
-	WriteFile(hPipe, memcpy(ch, (char*)&a2, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&itemid, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&a4, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&a5, sizeof(int)), sizeof(int), &cbWritten, NULL);
+	WriteFile(hPipe, player, 12384, &cbWritten, NULL);
+	WriteFile(hPipe, &a2, sizeof(a2), &cbWritten, NULL);
+	WriteFile(hPipe, &itemid, sizeof(itemid), &cbWritten, NULL);
+	WriteFile(hPipe, &a4, sizeof(a4), &cbWritten, NULL);
+	WriteFile(hPipe, &a5, sizeof(a5), &cbWritten, NULL);
+	ReleaseMutex(mutex);
 
-	player->_numCoins += 5;
+	memset(&buffer, 0, sizeof(buffer));
+	ReadFile(hPipe, buffer, 32, &cbRead, NULL);
+	ReadFile(hPipe, player, 12384, &cbRead, NULL);
+	ReadFile(hPipe, &a2, sizeof(int), &cbRead, NULL);
+	ReadFile(hPipe, &itemid, sizeof(int), &cbRead, NULL);
+	ReadFile(hPipe, &a4, sizeof(int), &cbRead, NULL);
+	ReadFile(hPipe, &a5, sizeof(int), &cbRead, NULL);
+
 	Player_AddCollectible(player, a2, itemid, a4, a5);
-
-	memset(&buffer, 0, sizeof buffer);
-	strcpy(buffer, "OnPlayerAddCollectibleEnd");
-	WriteFile(hPipe, buffer, 32, &cbWritten, NULL);
-	WriteFile(hPipe, &player, 12384, &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&a2, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&itemid, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&a4, sizeof(int)), sizeof(int), &cbWritten, NULL);
-	memset(&ch, 0, sizeof ch);
-	WriteFile(hPipe, memcpy(ch, (char*)&a5, sizeof(int)), sizeof(int), &cbWritten, NULL);
-
 }
 void __fastcall PillCardAction_Payload(Player* player, int a)
 {

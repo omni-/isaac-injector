@@ -22,9 +22,11 @@ extern CSigScan ModHealthSig;
 
 extern HANDLE hPipe;
 
+extern HANDLE mutex;
+
 char* getItemName(int ID);
 
-void hookinit(HANDLE _hpipe);
+void hookinit(HANDLE _hpipe, HANDLE _mutex);
 
 void __fastcall AddCollectible_Hook(Player* player, int a2, int itemid, int a4, int a5);
 

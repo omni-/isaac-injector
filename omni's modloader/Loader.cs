@@ -21,7 +21,7 @@ namespace omni_s_modloader
             string[] dlls = Directory.GetFiles("Plugins", "*.dll");
             List<Assembly> assemblies = new List<Assembly>();
             foreach (string dll in dlls)
-                assemblies.Add(Assembly.LoadFile(dll));
+                assemblies.Add(Assembly.LoadFile(Path.GetFullPath(dll)));
             List<OMLPlugin> plugins = new List<OMLPlugin>();
             foreach (Assembly a in assemblies)
                 if (a != null)

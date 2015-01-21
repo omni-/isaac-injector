@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-
 struct Entity
 {
 	char _unk0[0x76C];
 };
 
+#pragma pack(1)
 struct Player : Entity
 {
 	char _unk76C[0x3E4];

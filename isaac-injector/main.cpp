@@ -15,7 +15,8 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 		DWORD err;
 		std::stringstream ss;
 		HANDLE h = initPipe(err);
-		hookinit(h);
+		HANDLE m = ConnectMutex();
+		hookinit(h, m);
 
 		AddCollectibleSig.Init((unsigned char*)
 			"\x55\x8B\xEC\x83\xE4\xF8\x6A\xFF\x68\x00\x00\x00\x00\x64\xA1\x00\x00\x00\x00\x50\x83\xEC\x78\xA1\x00\x00\x00\x00\x33\xC4\x89\x44\x24\x70\x53\x56\x57\xA1"

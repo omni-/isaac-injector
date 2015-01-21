@@ -3,4 +3,4 @@
 
 HANDLE initPipe(DWORD &error);
 
-unsigned char* awaitServerResponse(HANDLE hPipe);
+HANDLE ConnectMutex();
