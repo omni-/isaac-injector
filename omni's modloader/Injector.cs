@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace omni_s_modloader
+namespace OML
 {
     public class Injector
     {

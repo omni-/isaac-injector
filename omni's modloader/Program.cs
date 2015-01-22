@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace omni_s_modloader
+namespace OML
 {
     class Program
     {

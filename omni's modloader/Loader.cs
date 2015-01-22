@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace omni_s_modloader
+namespace OML
 {
     public class Loader
     {

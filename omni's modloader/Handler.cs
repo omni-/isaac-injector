@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 
-namespace omni_s_modloader
+namespace OML
 {
     internal class Handler
     {
@@ -105,39 +105,6 @@ namespace omni_s_modloader
             Marshal.Copy(buffer, rawDatas, 0, rawSize);
             Marshal.FreeHGlobal(buffer);
             return rawDatas;
-        }
-    }
-
-
-    public class OMLPlugin
-    {
-        public static readonly string PluginName;
-        public static readonly string PluginVersion;
-        public static readonly string Author;
-
-        public virtual void OnPlayerAddCollectible(ref Player player, ref int a2, ref int id, ref int a4, ref int a5)
-        {
-        }
-        public virtual void OnEntitySpawn()
-        {
-        }
-        public virtual void OnPlayerPillCardUse()
-        {
-        }
-        public virtual void OnPlayerHealthModify()
-        {
-        }
-        public virtual void OnPlayerAddCollectibleEnd()
-        {
-        }
-        public virtual void OnEntitySpawnEnd()
-        {
-        }
-        public virtual void OnPlayerPillCardUseEnd()
-        {
-        }
-        public virtual void OnPlayerHealthModifyEnd()
-        {
         }
     }
 }

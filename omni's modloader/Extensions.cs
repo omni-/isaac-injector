@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace omni_s_modloader
+namespace OML
 {
     public static class Extensions
     {

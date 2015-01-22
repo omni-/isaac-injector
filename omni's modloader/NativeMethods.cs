@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace omni_s_modloader
+namespace OML
 {
     public class NativeMethods
     {
