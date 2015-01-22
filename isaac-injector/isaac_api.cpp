@@ -10,7 +10,7 @@ void API_Effect_GoodPill(Player* player)
 
 void API_HPUp(Player* player, int amount)
 {
-	//amount = amount * 2;
+	amount = amount * 2;
 	_asm
 	{
 		mov eax, player
@@ -21,7 +21,7 @@ void API_HPUp(Player* player, int amount)
 
 void API_HPDown(Player* player, int amount)
 {
-	//amount = -amount * 2;
+	amount = -amount * 2;
 	_asm
 	{
 		mov eax, player

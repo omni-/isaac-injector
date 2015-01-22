@@ -23,6 +23,8 @@ struct Player : Entity
 	char _unkB78[0x24E8];
 };
 
+char* Player_serialize(Player* player, DWORD &resultSize);
+
 struct PointF
 {
 	float x;

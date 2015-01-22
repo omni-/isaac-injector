@@ -24,10 +24,11 @@ bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 	API_HPDown(player, 2);
 	API_AddSoulHearts(player, 4);
 	API_SpawnEntity(rand() % 7 + 46, 0, 0, 3, 5);
+	API_SpawnEntity(5, 100, 169, 7, 5);
 	//
 
 	// Event Handling
-	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -67,11 +68,16 @@ void* AddCollectibleEvent_Original;
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
 	// Testcode
-	//player->_numCoins = 99;
+	player->_numCoins = 99;
 	//
 
 	// Event Handling
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
+
+	FILE* f;
+	fopen_s(&f, "C:\\AddCollectibleEvent_Payload.txt", "a+");
+	fprintf(f, "PLAYER_EVENT_ADDCOLLECTIBLE sent.");
+	fclose(f);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -114,7 +120,7 @@ void __cdecl SpawnEntityEvent_Payload(PointF* zero, PointF* position, int gameMa
 	//
 
 	// Event Handling
-	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -151,11 +157,11 @@ void* HpUpEvent_Original;
 int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
 	// Event handling
-	if (amount > 0)
+	/*if (amount > 0)
 		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
 	else
-		if (amount < 0)
-			IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
+	if (amount < 0)
+		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);*/
 
 	return amount;
 }
@@ -190,7 +196,7 @@ void* AddSoulHeartsEvent_Original;
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 	// Event handling
-	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 
 	return amount;
 }

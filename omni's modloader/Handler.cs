@@ -11,6 +11,11 @@ namespace OML
 {
     internal class Handler
     {
+        [DllImport("kernel32.dll", SetLastError = true)]
+            static extern bool PeekNamedPipe(SafeHandle handle,
+            byte[] buffer, uint nBufferSize, ref uint bytesRead,
+            ref uint bytesAvail, ref uint BytesLeftThisMessage);
+
         public const int PLAYER_EVENT_TAKEPILL = 0x00;
         public const int PLAYER_EVENT_ADDCOLLECTIBLE = 0x01;
         public const int GAME_EVENT_SPAWNENTITY = 0x02;
@@ -20,7 +25,7 @@ namespace OML
 
         public void Handle(Process proc)
         {
-            var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+            var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 32768, 32768);
             var mutex = new Mutex(false, "omlmutex");
             var read = new BinaryReader(server);
             var write = new BinaryWriter(server);
@@ -29,52 +34,63 @@ namespace OML
             Console.Write("\r\n[INFO]Waiting for connection...");
             server.WaitForConnection();
             Console.WriteLine("Successful connection to injected dll.");
+            
+            byte[] buffer = new byte[1];
+            uint bytesRead = 0;
+            uint bytesAvail = 0;
+            uint bytesLeft = 0;
 
             while (!proc.HasExited)
             {
-                mutex.WaitOne(5000);
-
-                int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                const string sOnPlayerAddCollectible = "OnPlayerAddCollectible";
-
-                switch (_event)
+                if (mutex.WaitOne(50))
                 {
-                    case 1:
-                        Player player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                        int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                        int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                        int a4 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                        int a5 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                    if (PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
+                    {
+                        int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                        Console.WriteLine("Reading finished");
+                        switch (_event)
+                        {
+                            case PLAYER_EVENT_TAKEPILL:
+                                break;
+                            case PLAYER_EVENT_ADDCOLLECTIBLE:
+                                Player player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
+                                int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                                int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                                int a4 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                                int a5 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
-                        foreach (OMLPlugin p in plugins)
-                            p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4, ref a5);
-                        player._keys = 5;
+                                foreach (OMLPlugin p in plugins)
+                                    p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4, ref a5);
+                                player._keys = 5;
 
-                        server.Flush();
+                                server.Flush();
 
-                        write.Write(PLAYER_EVENT_ADDCOLLECTIBLE);
-                        write.Write(RawSerialize(player));
-                        write.Write(a2);
-                        write.Write(id);
-                        write.Write(a4);
-                        write.Write(a5);
-                        mutex.ReleaseMutex();
-                        break;
-                    case 2:
-                        break;
-                    case 0:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    default:
-                        break;
+                                write.Write(PLAYER_EVENT_ADDCOLLECTIBLE);
+                                write.Write(RawSerialize(player));
+                                write.Write(a2);
+                                write.Write(id);
+                                write.Write(a4);
+                                write.Write(a5);
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                break;
+                            case 5:
+                                break;
+                            default:
+                                break;
+                        }
+                        if (server.IsConnected)
+                            server.Flush();
+
+                        Console.WriteLine("Releasing mutex and END.");
+                    }
+
+                    mutex.ReleaseMutex();
                 }
-                if (server.IsConnected)
-                    server.Flush();
             }
         }
         static byte[] GetBytes(string str, int len)
