@@ -1,43 +1,32 @@
 #pragma once
 #include "stdafx.h"
-#include "detours.h"
-#include "sigscan.h"
 #include "Externs.h"
 
-using AddCollectibleType = void __fastcall (Player*, int, int, int, int);
-extern AddCollectibleType* Player_AddCollectible;
-extern CSigScan AddCollectibleSig;
+#define PLAYER_EVENT_TAKEPILL		0x00
+#define PLAYER_EVENT_ADDCOLLECTIBLE 0x01
+#define GAME_EVENT_SPAWNENTITY		0x02
+#define PLAYER_EVENT_HPUP		    0x03
+#define PLAYER_EVENT_HPDOWN		    0x04
+#define PLAYER_EVENT_ADDSOULHEARTS  0x05
 
-using PillCardActionType = void __fastcall (Player*, int);
-extern PillCardActionType* Player_PillCardAction;
-extern CSigScan PillCardActionSig;
+extern char* eventMasks[];
 
-using SpawnEntityType = char __cdecl (int, int, int, unsigned int);
-extern SpawnEntityType* SpawnEntity;
-extern CSigScan SpawnEntitySig;
+// Player/Game manager
+extern DWORD** PlayerManager;
 
-using ModHealthType = int __cdecl (Player*, int);
-extern ModHealthType* Player_ModHealth;
-extern CSigScan ModHealthSig;
+// Hooks
+void TakePillEvent_Hook();
+void AddCollectibleEvent_Hook();
+char SpawnEntityEvent_Hook();
+int HpUpEvent_Hook();
+void AddSoulHeartsEvent_Hook();
 
-extern HANDLE hPipe;
+// functions
+using IsaacRandomFuncType = unsigned int __cdecl(void);
+extern IsaacRandomFuncType* IsaacRandomFunc;
 
-extern HANDLE mutex;
+using GoodPillEffectFuncType = int __stdcall(Player*);
+extern GoodPillEffectFuncType* GoodPillEffectFunc;
 
-char* getItemName(int ID);
-
-void hookinit(HANDLE _hpipe, HANDLE _mutex);
-
-void __fastcall AddCollectible_Hook(Player* player, int a2, int itemid, int a4, int a5);
-
-void __fastcall PillCardAction_Payload(Player* player, int a);
-
-void PillCardAction_Hook();
-
-void __cdecl SpawnEntity_Payload(int a1, int a2, int a3, unsigned int a4);
-
-char SpawnEntity_Hook();
-
-int __cdecl ModHealth_Payload(Player* plyr, int amt);
-
-int ModHealth_Hook(); // Player* player, int amount
+bool Hooks_Init();
+DWORD Hooks_GetPlayerManager();

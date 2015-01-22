@@ -5,3 +5,4 @@ C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis modloader.pdb
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis modloader.csprojResolveAssemblyReference.cache
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\OML.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\OML.dll

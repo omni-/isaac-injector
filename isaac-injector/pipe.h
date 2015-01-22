@@ -1,6 +1,7 @@
+#pragma once
 #include "stdafx.h"
 #define BUFSIZE 512
 
-HANDLE initPipe(DWORD &error);
+HANDLE InitPipe(DWORD &error);
 
 HANDLE ConnectMutex();

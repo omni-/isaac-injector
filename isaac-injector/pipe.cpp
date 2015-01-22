@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "pipe.h"
 
-HANDLE initPipe(DWORD &error)
+HANDLE InitPipe(DWORD &error)
 {
 	HANDLE hPipe;
 	DWORD dwWritten, dwRead;

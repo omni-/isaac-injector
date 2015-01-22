@@ -7,85 +7,64 @@
 #include <Psapi.h>
 #include "sigscan.h"
 
-/* There is no ANSI ustrncpy */
-unsigned char* ustrncpy(unsigned char *dest, const unsigned char *src, int len) {
-	while (len--)
-		dest[len] = src[len];
+void* SigScan_BasePtr = NULL;
+size_t SigScan_BaseLen = 0;
 
-	return dest;
-}
-
-unsigned char* base_addr_;
-size_t CSigScan::base_len;
-std::ofstream outfile;
-
-/* Initialize the Signature Object */
-void CSigScan::Init(unsigned char *sig, char *mask, size_t len) 
+BOOL SigScan_GetImageInfo()
 {
-	is_set = 0;
-	base_addr_ = (unsigned char*)GetModuleHandle(NULL);
+	BOOL Success = false;
 
-	sig_len = len;
-	sig_str = new unsigned char[sig_len];
-	ustrncpy(sig_str, sig, sig_len);
-
-	sig_mask = new char[sig_len + 1];
-	strncpy(sig_mask, mask, sig_len);
-	sig_mask[sig_len + 1] = 0;
-
-	if (!base_addr_)
+	HMODULE hMod = GetModuleHandle(L"isaac-ng.exe");
+	if (hMod != 0)
 	{
-		outfile << "[err] failed to get base address" << std::endl;
-		return;
+		MEMORY_BASIC_INFORMATION memInfo;
+		if (VirtualQuery((void*)hMod, &memInfo, sizeof(memInfo)) != 0)
+		{
+			IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)hMod;
+			IMAGE_NT_HEADERS* pe = (IMAGE_NT_HEADERS*)((unsigned long)memInfo.AllocationBase + (unsigned long)dos->e_lfanew);
+
+			if ((dos->e_magic == IMAGE_DOS_SIGNATURE) && (pe->Signature == IMAGE_NT_SIGNATURE))
+			{
+				Success = true;
+
+				SigScan_BasePtr = (void*)memInfo.AllocationBase;
+				SigScan_BaseLen = (size_t)pe->OptionalHeader.SizeOfImage;
+			}
+			else
+				;
+			//Log("DOS- or PE-Signatur invalid!\n");
+		}
 	}
 
-	if ((sig_addr = FindSignature()) == NULL)
-	{
-		outfile << "[err] failed to get signature" << std::endl;
-		return;
-	}
-
-	is_set = 1;
-	// SigScan Successful!
+	return Success;
 }
 
-/* Destructor frees sig-string allocated memory */
-CSigScan::~CSigScan(void) {
-	delete[] sig_str;
-	delete[] sig_mask;
-}
-
-/* Scan for the signature in memory then return the starting position's address */
-void* CSigScan::FindSignature(void)
+void* SigScan_FindSignature(FuncSignature* sig)
 {
-	MODULEINFO modinfo;
+	FILE* debugFile;
 
-	GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &modinfo, sizeof(MODULEINFO));
+	char* tempPtr = (char*)SigScan_BasePtr;
 
-	base_len = modinfo.SizeOfImage;
-
-	MEMORY_BASIC_INFORMATION meminfo;
-
-	while (true)
+	int maxLen = 0;
+	while (tempPtr < ((char*)SigScan_BasePtr + SigScan_BaseLen - sig->length))
 	{
-		if (VirtualQuery((void*)base_len, &meminfo, sizeof(MEMORY_BASIC_INFORMATION)))
-			if (!(meminfo.Protect &PAGE_EXECUTE_WRITECOPY))
+		size_t detectedLen = 0;
+
+		for (int i = 0; i < sig->length; i++)
+		{
+			if (!((tempPtr[i] == sig->signature[i]) || (sig->mask[i] == '?')))
 				break;
-	}
-	unsigned char *pBasePtr = base_addr_;
-	unsigned char *pEndPtr = base_addr_ + base_len;
-	size_t i;
-	while (pBasePtr < pEndPtr) {
-		for (i = 0; i < sig_len; i++) {
-			if ((sig_mask[i] != '?') && (sig_str[i] != pBasePtr[i]))
-				break;
+			detectedLen++;
 		}
 
-		// If 'i' reached the end, we know we have a match!
-		if (i == sig_len)
-			return (void*)pBasePtr;
+		if (detectedLen > maxLen)
+			maxLen = detectedLen;
 
-		pBasePtr++;
+		if (detectedLen == sig->length)
+			return tempPtr;
+
+		tempPtr++;
 	}
+
 	return NULL;
 }
