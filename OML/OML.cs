@@ -40,7 +40,7 @@ namespace OML
     }
     public class OML
     {
-        public IntPtr GetPlayer(IntPtr handle, ref Player player)
+        public void GetPlayer(IntPtr handle, ref Player player)
         {
 
         }

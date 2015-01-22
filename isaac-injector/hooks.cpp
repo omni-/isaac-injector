@@ -67,7 +67,7 @@ void* AddCollectibleEvent_Original;
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
 	// Testcode
-	player->_numCoins = 99;
+	//player->_numCoins = 99;
 	//
 
 	// Event Handling

@@ -10,7 +10,9 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 		outfile.open("c:\\ExeModdingLog.txt", std::ios_base::app);
 		outfile << "======================================" << std::endl;
 
-		IPC_Init();
+		auto b = IPC_Init();
+		if (!b)
+			MessageBoxA(NULL, "ipc init failed", NULL, NULL);
 		Hooks_Init();
 
 		break;

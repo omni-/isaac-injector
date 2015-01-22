@@ -12,7 +12,13 @@ bool IPC_Init()
 	DWORD error;
 	hPipe = InitPipe(error);
 	hMutex = ConnectMutex();
-
+	if (error != 0)
+	{
+		char *s = (char*)malloc(10);
+		sprintf(s, "err: %d", error);
+		MessageBoxA(NULL, s, NULL, NULL);
+		free(s);
+	}
 	return (error == 0) && (hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE);
 }
 

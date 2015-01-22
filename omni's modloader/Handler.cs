@@ -11,12 +11,19 @@ namespace OML
 {
     internal class Handler
     {
+        public const int PLAYER_EVENT_TAKEPILL = 0x00;
+        public const int PLAYER_EVENT_ADDCOLLECTIBLE = 0x01;
+        public const int GAME_EVENT_SPAWNENTITY = 0x02;
+        public const int PLAYER_EVENT_HPUP = 0x03;
+        public const int PLAYER_EVENT_HPDOWN = 0x04;
+        public const int PLAYER_EVENT_ADDSOULHEARTS = 0x05;
+
         public void Handle(Process proc)
         {
-            var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances,
-                PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+            var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
             var mutex = new Mutex(false, "omlmutex");
             var read = new BinaryReader(server);
+            var write = new BinaryWriter(server);
             var formatter = new BinaryFormatter();
             var plugins = Loader.GetPlugins();
             Console.Write("\r\n[INFO]Waiting for connection...");
@@ -27,12 +34,12 @@ namespace OML
             {
                 mutex.WaitOne(5000);
 
-                string input = Encoding.ASCII.GetString(read.ReadBytes(32)).Replace("\0", "");
+                int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                 const string sOnPlayerAddCollectible = "OnPlayerAddCollectible";
 
-                switch (input)
+                switch (_event)
                 {
-                    case sOnPlayerAddCollectible:
+                    case 1:
                         Player player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                         int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                         int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
@@ -44,13 +51,8 @@ namespace OML
                         player._keys = 5;
 
                         server.Flush();
-                        var write = new BinaryWriter(server);
 
-                        byte[] unibytes = Encoding.Unicode.GetBytes(sOnPlayerAddCollectible);
-                        byte[] asciibytes = Encoding.Convert(Encoding.Unicode, Encoding.ASCII, unibytes);
-                        byte[] dest = new byte[32];
-                        Array.Copy(asciibytes, dest, asciibytes.Length);
-                        write.Write(dest);
+                        write.Write(PLAYER_EVENT_ADDCOLLECTIBLE);
                         write.Write(RawSerialize(player));
                         write.Write(a2);
                         write.Write(id);
@@ -58,19 +60,15 @@ namespace OML
                         write.Write(a5);
                         mutex.ReleaseMutex();
                         break;
-                    case "OnEntitySpawn":
+                    case 2:
                         break;
-                    case "OnPlayerPillCardUse":
+                    case 0:
                         break;
-                    case "OnPlayerHealthModify":
+                    case 3:
                         break;
-                    case "OnPlayerAddCollectibleEnd":
+                    case 4:
                         break;
-                    case "OnEntitySpawnEnd":
-                        break;
-                    case "OnPlayerPillCardUseEnd":
-                        break;
-                    case "OnPlayerHealthModifyEnd":
+                    case 5:
                         break;
                     default:
                         break;

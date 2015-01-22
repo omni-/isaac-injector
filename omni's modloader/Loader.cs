@@ -26,8 +26,10 @@ namespace OML
             foreach (Assembly a in assemblies)
                 if (a != null)
                     foreach (Type t in a.GetTypes())
-                        plugins.Add((OMLPlugin)Activator.CreateInstance(t));
+                        if (t.IsAssignableFrom(typeof(OMLPlugin)))
+                            plugins.Add((OMLPlugin)Activator.CreateInstance(t));
             return plugins;
         }
+
     }
 }
