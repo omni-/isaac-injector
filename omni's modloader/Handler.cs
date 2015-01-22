@@ -35,6 +35,7 @@ namespace OML
             server.WaitForConnection();
             Console.WriteLine("Successful connection to injected dll.");
             
+            // Peek named pipe arguments
             byte[] buffer = new byte[1];
             uint bytesRead = 0;
             uint bytesAvail = 0;
@@ -47,7 +48,6 @@ namespace OML
                     if (PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
                     {
                         int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                        Console.WriteLine("Reading finished");
                         switch (_event)
                         {
                             case PLAYER_EVENT_TAKEPILL:
@@ -57,10 +57,9 @@ namespace OML
                                 int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                 int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                 int a4 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                int a5 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
                                 foreach (OMLPlugin p in plugins)
-                                    p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4, ref a5);
+                                    p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4);
                                 player._keys = 5;
 
                                 server.Flush();
@@ -70,7 +69,6 @@ namespace OML
                                 write.Write(a2);
                                 write.Write(id);
                                 write.Write(a4);
-                                write.Write(a5);
                                 break;
                             case 2:
                                 break;
@@ -85,8 +83,6 @@ namespace OML
                         }
                         if (server.IsConnected)
                             server.Flush();
-
-                        Console.WriteLine("Releasing mutex and END.");
                     }
 
                     mutex.ReleaseMutex();

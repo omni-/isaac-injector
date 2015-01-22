@@ -13,7 +13,7 @@ namespace OML
         public string PluginVersion;
         public string PluginAuthor;
 
-        public virtual void OnPlayerAddCollectible(ref Player player, ref int a2, ref int id, ref int a4, ref int a5)
+        public virtual void OnPlayerAddCollectible(ref Player player, ref int a2, ref int id, ref int a4)
         {
         }
         public virtual void OnEntitySpawn()

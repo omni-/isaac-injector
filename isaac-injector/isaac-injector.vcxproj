@@ -94,6 +94,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Externs.cpp" />
     <ClCompile Include="hooks.cpp" />
     <ClCompile Include="ipc.cpp" />
     <ClCompile Include="isaac_api.cpp" />
