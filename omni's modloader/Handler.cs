@@ -11,11 +11,6 @@ namespace OML
 {
     internal class Handler
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-            static extern bool PeekNamedPipe(SafeHandle handle,
-            byte[] buffer, uint nBufferSize, ref uint bytesRead,
-            ref uint bytesAvail, ref uint BytesLeftThisMessage);
-
         public const int PLAYER_EVENT_TAKEPILL = 0x00;
         public const int PLAYER_EVENT_ADDCOLLECTIBLE = 0x01;
         public const int GAME_EVENT_SPAWNENTITY = 0x02;
@@ -45,7 +40,7 @@ namespace OML
             {
                 if (mutex.WaitOne(50))
                 {
-                    if (PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
+                    if (NativeMethods.PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
                     {
                         int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                         switch (_event)

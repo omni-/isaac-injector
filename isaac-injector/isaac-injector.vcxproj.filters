@@ -68,8 +68,5 @@
     <ClCompile Include="isaac_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Externs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

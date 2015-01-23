@@ -6,12 +6,11 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		std::ofstream outfile;
-		outfile.open("c:\\ExeModdingLog.txt", std::ios_base::app);
-		outfile << "======================================" << std::endl;
+		//std::ofstream outfile;
+		//outfile.open("c:\\users\\cooper\\desktop\\log.txt");
+		//outfile << "======================================" << std::endl;
 
-		auto b = IPC_Init();
-		if (!b)
+		if (!IPC_Init())
 			MessageBoxA(NULL, "ipc init failed", NULL, NULL);
 		Hooks_Init();
 

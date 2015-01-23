@@ -26,8 +26,3 @@ HANDLE InitPipe(DWORD &error)
 
 	return hPipe;
 }
-
-HANDLE ConnectMutex()
-{
-	return OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
-}

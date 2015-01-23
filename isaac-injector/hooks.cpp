@@ -28,7 +28,8 @@ bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 	//
 
 	// Event Handling
-	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -73,11 +74,10 @@ void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int
 
 	// Event Handling
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-
-	FILE* f;
-	fopen_s(&f, "C:\\AddCollectibleEvent_Payload.txt", "a+");
-	fprintf(f, "PLAYER_EVENT_ADDCOLLECTIBLE sent.");
-	fclose(f);
+	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
+	//std::ofstream outfile;
+	//outfile.open("c:\\users\\cooper\\desktop\\log.txt");
+	//outfile << "AddCollectible event sent and recieved." << std::endl;
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -108,19 +108,20 @@ void* SpawnEntityEvent_Original;
 void __cdecl SpawnEntityEvent_Payload(PointF* zero, PointF* position, int gameManager, signed int EntityID, int Variant, int unknown_ptr, int subtype, unsigned int seed)
 {
 	// test code
-	FILE* f;
+	//FILE* f;
 
-	fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
-	fprintf(f, "a1.1: %f, a1.2: %f, a2.1: %f, a2.2: %f, manager: %p, EID: %d, Var: %d, unknown: %d, subtype: %d, seed: %p\n",
-		zero->x, zero->y,
-		position->x, position->y,
-		gameManager,
-		EntityID, Variant, unknown_ptr, subtype, seed);
-	fclose(f);
+	//fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
+	//fprintf(f, "a1.1: %f, a1.2: %f, a2.1: %f, a2.2: %f, manager: %p, EID: %d, Var: %d, unknown: %d, subtype: %d, seed: %p\n",
+	//	zero->x, zero->y,
+	//	position->x, position->y,
+	//	gameManager,
+	//	EntityID, Variant, unknown_ptr, subtype, seed);
+	//fclose(f);
 	//
 
 	// Event Handling
-	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -157,11 +158,16 @@ void* HpUpEvent_Original;
 int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
 	// Event handling
-	/*if (amount > 0)
+	if (amount > 0)
+	{
 		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-	else
-	if (amount < 0)
-		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);*/
+		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, amount);
+	}
+	else if (amount < 0)
+	{
+		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
+		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, amount);
+	}
 
 	return amount;
 }
@@ -196,7 +202,8 @@ void* AddSoulHeartsEvent_Original;
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 	// Event handling
-	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 
 	return amount;
 }
@@ -240,7 +247,6 @@ void Hooks_InitEventMasks()
 	eventMasks[PLAYER_EVENT_HPUP] = "pi";
 	eventMasks[PLAYER_EVENT_HPDOWN] = "pi";
 	eventMasks[PLAYER_EVENT_ADDSOULHEARTS] = "pi";
-
 	eventMasks[GAME_EVENT_SPAWNENTITY] = "pppiipii";
 }
 
