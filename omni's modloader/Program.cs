@@ -11,23 +11,23 @@ namespace OML
         {
             Console.Title = "omni's modloader - " + version;
 
-            Console.Write("[INFO]Initializing omni's modloader {0}...", version);
+            Console.Write("[INFO] initializing omni's modloader {0}...", version);
 
             bool result = Loader.init();
-            Console.Write(result ? " success" : "\r\n[ERROR]Failed. Exiting.");
+            Console.Write(result ? " success" : "\r\n[ERROR] failed. exiting.");
             if (!result) return;
 
             Injector i = new Injector();
             hResult hresult;
             Process proc = i.Inject("isaac-ng", out hresult);
 
-            Console.WriteLine("\r\n\r\n[INFO]Injection result: " + hresult);
+            Console.WriteLine("\r\n\r\n[INFO] injection result: " + hresult);
             if (hresult != hResult.Error && proc != null)
             {
                 Handler h = new Handler();
                 h.Handle(proc);
             }
-            Console.WriteLine("\r\nPress any key to continue...");
+            Console.WriteLine("\r\nprocess exited/error encountered. press any key to exit...");
             Console.ReadKey();
         }
     }

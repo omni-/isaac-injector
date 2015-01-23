@@ -18,7 +18,7 @@ namespace OML
         }
         public static List<OMLPlugin> GetPlugins()
         {
-            string[] dlls = Directory.GetFiles("Plugins", "*.dll");
+            string[] dlls = Directory.GetFiles("Plugins", "*.dll").Where(x => x != "Plugins\\OML.dll").ToArray<string>();
             List<Assembly> assemblies = new List<Assembly>();
             foreach (string dll in dlls)
                 assemblies.Add(Assembly.LoadFile(Path.GetFullPath(dll)));
@@ -26,7 +26,7 @@ namespace OML
             foreach (Assembly a in assemblies)
                 if (a != null)
                     foreach (Type t in a.GetTypes())
-                        if (t.IsAssignableFrom(typeof(OMLPlugin)))
+                        if (t.IsSubclassOf(typeof(OMLPlugin)))
                             plugins.Add((OMLPlugin)Activator.CreateInstance(t));
             return plugins;
         }

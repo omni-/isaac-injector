@@ -25,10 +25,14 @@ namespace OML
             var read = new BinaryReader(server);
             var write = new BinaryWriter(server);
             var formatter = new BinaryFormatter();
+            Console.WriteLine("\r\n[INFO] loading plugins...");
             var plugins = Loader.GetPlugins();
-            Console.Write("\r\n[INFO]Waiting for connection...");
+            foreach (OMLPlugin p in plugins)
+                Console.Write("\r\nloading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
+            Console.WriteLine("\r\n\r\n[INFO] plugin load completed.");
+            Console.Write("\r\n[INFO] waiting for connection...");
             server.WaitForConnection();
-            Console.WriteLine("Successful connection to injected dll.");
+            Console.WriteLine("successful connection to injected dll.");
             
             // Peek named pipe arguments
             byte[] buffer = new byte[1];
@@ -55,7 +59,7 @@ namespace OML
 
                                 foreach (OMLPlugin p in plugins)
                                     p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4);
-                                player._keys = 5;
+                                //player._keys = 5;
 
                                 server.Flush();
 

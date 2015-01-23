@@ -28,8 +28,8 @@ bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 	//
 
 	// Event Handling
-	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	//IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -120,8 +120,8 @@ void __cdecl SpawnEntityEvent_Payload(PointF* zero, PointF* position, int gameMa
 	//
 
 	// Event Handling
-	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
-	IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	//IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -160,13 +160,13 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 	// Event handling
 	if (amount > 0)
 	{
-		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, amount);
+		//IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
+		//IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, amount);
 	}
 	else if (amount < 0)
 	{
-		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, amount);
+		//IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
+		//IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, amount);
 	}
 
 	return amount;
@@ -202,8 +202,8 @@ void* AddSoulHeartsEvent_Original;
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 	// Event handling
-	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 
 	return amount;
 }
