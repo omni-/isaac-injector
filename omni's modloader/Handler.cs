@@ -144,6 +144,11 @@ namespace OML
                 Console.WriteLine("[ERROR] pipe error occured.");
                 return;
             }
+            catch (AbandonedMutexException)
+            {
+                Console.WriteLine("[ERROR] mutex abandoned. process crashed?");
+                return;
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("[ERROR] fatal error.");
