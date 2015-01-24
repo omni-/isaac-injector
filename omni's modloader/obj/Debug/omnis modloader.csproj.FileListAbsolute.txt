@@ -1,6 +1,5 @@
 F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\omnis modloader.exe
 F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\omnis modloader.pdb
-F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\OML.dll
 F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\OML.pdb
 F:\C++\Projekte\isaac-injector\omni's modloader\obj\Debug\omnis modloader.exe
 F:\C++\Projekte\isaac-injector\omni's modloader\obj\Debug\omnis modloader.pdb

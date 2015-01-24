@@ -3,7 +3,17 @@
 
 struct Entity
 {
-	char _unk0[0x76C];
+char _unk0000[0xC];
+	int _id;
+	unsigned int _variant;
+	int _subtype;
+char _unk0018[0x5C];
+	int _tearType;
+	// 116
+char _unk000C[0x39C];
+	float x;
+	float y;
+char _unk0[0x350];
 };
 
 #pragma pack(1)

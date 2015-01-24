@@ -20,6 +20,7 @@ void AddCollectibleEvent_Hook();
 char SpawnEntityEvent_Hook();
 int HpUpEvent_Hook();
 void AddSoulHeartsEvent_Hook();
+void ShootTearsEvent_Hook();
 
 // functions
 using IsaacRandomFuncType = unsigned int __cdecl(void);
