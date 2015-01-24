@@ -29,5 +29,8 @@ extern IsaacRandomFuncType* IsaacRandomFunc;
 using GoodPillEffectFuncType = int __stdcall(Player*);
 extern GoodPillEffectFuncType* GoodPillEffectFunc;
 
+using InitTearFuncType = TearStruct* __cdecl (int, TearStruct*);
+extern InitTearFuncType* InitTearFunc;
+
 bool Hooks_Init();
 DWORD Hooks_GetPlayerManager();

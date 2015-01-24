@@ -21,28 +21,33 @@ bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 	// Testcode
 	API_Effect_GoodPill(player);
-	Entity* pooter = API_SpawnEntity(14, 0, 0, 3, 5);
+	Entity* pooter = API_SpawnEntity(217, 0, 0, 3, 2, NULL);
 	/*API_HPDown(player, 2);
 	API_AddSoulHearts(player, 4);
 	API_SpawnEntity(rand() % 7 + 46, 0, 0, 3, 5);
 	API_SpawnEntity(5, 100, 169, 7, 5);*/
 
-	API_SpawnEntity(pooter->_id, 0, 0, 7, 5);
-
-	pooter->_tearType = 5;
-
-	PointF pos;
-	pos.x = 120;
-	pos.y = 200;
 	PointF velocity;
-	velocity.x = 0.1;
-	velocity.y = 0;
-	API_ShootTears(&pos, &velocity, 4, pooter);
-	//
+	velocity.x = 5.0f;
+	velocity.y = 0.0f;
+
+	TearStruct tear;
+	API_InitTear(30, &tear);
+	tear._shotspeed = 2;
+	tear._type = TEARTYPE_ENEMY_FLAME;
+	tear._damage = 1;
+	//tear._tearcolor_red = 0;
+	//tear._tearcolor_blue = 0;
+	//tear._tearcolor_alpha = 0.7;
+	API_ShootTears(&pooter->position, &velocity, 0, &tear, pooter);
+
+	API_SpawnEntity(1000, rand() % 50 + 1, 0, (pooter->position.x-80.0f) / 40.0f, (pooter->position.y-160.0f) / 40.0f, player);
+//	API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
+	//API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
 
 	// Event Handling
-	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	//IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -120,6 +125,10 @@ void* SpawnEntityEvent_Original;
 
 void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, int gameManager, signed int EntityID, int Variant, int unknown_ptr, int subtype, unsigned int seed)
 {
+	FILE* f;
+	fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
+		fprintf(f, "EntityID: %d", EntityID);
+	fclose(f);
 	// test code
 	//FILE* f;
 
@@ -170,6 +179,11 @@ void* HpUpEvent_Original;
 
 int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
+	FILE* f;
+	fopen_s(&f, "C:\\HpUpEvent_Payload.txt", "a+");
+		fprintf(f, "HPup: %d", amount);
+	fclose(f);
+
 	// Event handling
 	if (amount > 0)
 	{
@@ -214,6 +228,10 @@ void* AddSoulHeartsEvent_Original;
 
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
+	FILE* f;
+	fopen_s(&f, "C:\\AddSoulHeartsEvent_Payload.txt", "a+");
+		fprintf(f, "Soul hearts: %d", amount);
+	fclose(f);
 	// Event handling
 	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
@@ -243,11 +261,40 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 
 void* ShootTearsEvent_Original;
 
-void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int typ, float a5)
+void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int typ, TearStruct* a5)
 {
 	FILE* f;
-	fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
+	fopen_s(&f, "C:\\ShootTearsEvent_Payload.txt", "a+");
 		fprintf(f, "dir = %f / %f, pos = %f / %f, mob: %d/%d/%d, typ: %d, a5: %f\n", direction->x, direction->y, startpos->x, startpos->y, mob->_id, mob->_variant, mob->_subtype, typ, a5);
+		fprintf(f, "0: %p, 4: %f, sh: %f, sso: %f, ss: %f, 20: %f, 24: %f, 28: %f, 32: %f, 36: %f, 40: %f, 44: %f, 48: %f\n", a5->_stuff0, a5->_stuff4, a5->_shotheight, a5->_shotspeed_strange, a5->_shotspeed, 
+			a5->_damage, a5->_stuff24, a5->_stuff28, a5->_stuff32, a5->_stuff36, a5->_tearcolor_red, a5->_tearcolor_green, a5->_tearcolor_blue);
+		
+	//	fprintf(f, "unknown2[0]=%p, ", a5->unknown2[0]);
+		//for (int i=0; i < 0x11; i++)
+		//	fprintf(f, "unknown2[%d]=%f, ", i, a5->unknown2[i]);
+		//fprintf(f, ", Stuff: %d\n", a5->_stuffX01);
+	//	a5->_shotheight = -4;
+	//	a5->_shotspeed = 2;
+	//	a5->_shotspeed = a5->_shotspeed / 4.0f;
+		//a5->_stuff16 = a5->_stuff16 / 4.0f;
+		//a5->_stuff20 = rand() % 3 + 0.1;
+	//	direction->x *= 4;
+	//	direction->y *= 4;
+
+		//startpos->x *= 2;
+		//startpos->y *= 2;
+
+		//a5->_type = 1;
+
+		//a5->_stuff36 = 0.1f;
+		// 0 = normal enemy (red)
+		// 1 = bones
+		// 2 = purple flames
+		// 3 = puke
+		// 4 = white (isaac)
+		// 5 = invisible // undefined
+
+		//a5->_stuff24 = 10;
 	fclose(f);
 }
 
@@ -274,16 +321,12 @@ __declspec(naked) void ShootTearsEvent_Hook()
 }
 
 /******************************************
-************* GoodPillEffect **************
+*************** Functions *****************
 *******************************************/
 
 GoodPillEffectFuncType* GoodPillEffectFunc;
-
-/******************************************
-************** Isaac random ***************
-*******************************************/
-
 IsaacRandomFuncType* IsaacRandomFunc;
+InitTearFuncType* InitTearFunc;
 
 /******************************************
 ************** Initialization *************
@@ -302,7 +345,7 @@ void Hooks_InitEventMasks()
 void Hooks_HookEvents()
 {
 	FILE* f;
-	fopen_s(&f, "C:\Hooks_HookEvents.txt", "a+");
+	fopen_s(&f, "C:\\Hooks_HookEvents.txt", "a+");
 	
 	// TakePillEvent
 	void* TakePillEvent_SigPtr = SigScan_FindSignature(&Signature_TakePillEvent);
@@ -337,6 +380,7 @@ void Hooks_GetFunctions()
 {
 	IsaacRandomFunc = (IsaacRandomFuncType*)SigScan_FindSignature(&Signature_IsaacRandomFunc);
 	GoodPillEffectFunc = (GoodPillEffectFuncType*)SigScan_FindSignature(&Signature_GoodPillEffectFunc);
+	InitTearFunc = (InitTearFuncType*)SigScan_FindSignature(&Signature_InitTearFunc);
 }
 
 void Hooks_GetPlayerManagerPtr()

@@ -1,6 +1,13 @@
 #pragma once
 #include "stdafx.h"
 
+#pragma pack(1)
+struct PointF
+{
+	float x;
+	float y;
+};
+
 struct Entity
 {
 char _unk0000[0xC];
@@ -9,10 +16,11 @@ char _unk0000[0xC];
 	int _subtype;
 char _unk0018[0x5C];
 	int _tearType;
-	// 116
-char _unk000C[0x39C];
-	float x;
-	float y;
+char _unk0020[0x23C];
+	float _scaleX;
+	float _scaleY;
+char _unk000C[0x158];
+	PointF position;
 char _unk0[0x350];
 };
 
@@ -33,11 +41,30 @@ struct Player : Entity
 	char _unkB78[0x24E8];
 };
 
-#pragma pack(1)
-struct PointF
+//4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 84, 96, 100, 104, 108, 112, 116(Type)
+struct TearStruct
 {
-	float x;
-	float y;
+	//float unknown[0x1D];
+
+	float _stuff0;
+	float _stuff4;
+	float _shotheight;
+	float _shotspeed_strange;
+	float _shotspeed;
+	float _damage;
+	float _stuff24;
+	float _stuff28;
+	float _stuff32;
+	float _stuff36;
+	float _tearcolor_red;
+	float _tearcolor_green;
+	float _tearcolor_blue;
+	float _tearcolor_alpha;
+	float unknown[0x0F];
+	int _type;
+//	float _stuffX00;
+	//int _stuffX01;
+	float unknown2[0x11];
 };
 
 /*
