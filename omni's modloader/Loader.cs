@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OML
 {
-    public class Loader
+    internal class Loader
     {
         public static bool init()
         {

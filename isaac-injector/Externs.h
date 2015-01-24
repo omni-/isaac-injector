@@ -33,6 +33,7 @@ struct Player : Entity
 	char _unkB78[0x24E8];
 };
 
+#pragma pack(1)
 struct PointF
 {
 	float x;
