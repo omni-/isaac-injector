@@ -51,7 +51,7 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 	pos->x = (x * 40) + 80;
 	pos->y = (y * 40) + 160;
 	// manager
-	DWORD playerMan = Hooks_GetPlayerManager();
+	PlayerManager* playerMan = Hooks_GetPlayerManager();
 
 	unsigned int seed = IsaacRandomFunc();
 
@@ -74,6 +74,18 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 		return NULL;
 }
 
+int API_TeleportPlayer(int a1, int a2, void* a3, int a4)
+{
+	_asm
+	{
+		mov eax, a1
+		mov edx, a2
+		mov esi, a3
+		push a4
+		call PlayerTeleportFunc
+	}
+}
+
 TearStruct* API_InitTear(int value, TearStruct* tear)
 {
 	_asm
@@ -81,6 +93,18 @@ TearStruct* API_InitTear(int value, TearStruct* tear)
 		mov ecx, value
 		mov esi, tear
 		call InitTearFunc
+	}
+}
+
+void API_AddCollectible(Player* player, int itemID)
+{
+	_asm
+	{
+		mov ecx, player
+		push 0
+		push 0
+		push itemID
+		call AddCollectibleEvent_Hook
 	}
 }
 

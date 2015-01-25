@@ -18,3 +18,7 @@ void API_ShootTears(PointF* pos, PointF* velocity, int pattern, TearStruct* tear
 Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y, Entity* parent);
 
 void API_Effect_GoodPill(Player* player);
+
+void API_AddCollectible(Player* player, int itemID);
+
+int API_TeleportPlayer(int a1, int a2, void* a3, int a4);
