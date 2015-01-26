@@ -9,7 +9,7 @@
 #include "isaac_api.h"
 
 char* eventMasks[6];
-DWORD** PlayerManager;
+DWORD** PlayerManagerPtr;
 
 /******************************************
 ************** TakePillEvent **************
@@ -20,12 +20,53 @@ void* TakePillEvent_Original;
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 	// Testcode
-	//API_Effect_GoodPill(player);
+	API_Effect_GoodPill(player);
+	Entity* pooter = API_SpawnEntity(217, 0, 0, 3, 2, NULL);
+
 	//API_HPDown(player, 2);
 	//API_AddSoulHearts(player, 4);
-	//API_SpawnEntity(rand() % 7 + 46, 0, 0, 3, 5);
-	//API_SpawnEntity(5, 100, 169, 7, 5);
-	//
+	//API_SpawnEntity(5, 100, 169, 7, 5, NULL);
+
+	PointF velocity;
+	velocity.x = 5.0f;
+	velocity.y = 0.0f;
+
+	TearStruct tear;
+	API_InitTear(30, &tear);
+	tear._shotspeed = 2;
+	tear._type = TEARTYPE_ENEMY_FLAME;
+	tear._damage = 1;
+	//tear._tearcolor_red = 0;
+	//tear._tearcolor_blue = 0;
+	//tear._tearcolor_alpha = 0.7;
+	API_ShootTears(&pooter->position, &velocity, 0, &tear, pooter);
+
+	player->_scaleX *= 0.8f;
+	player->_scaleY *= 0.8f;
+
+	API_AddCollectible(player, 333);
+
+	PlayerManager* playerMan = Hooks_GetPlayerManager();
+	player->_numBombs = playerMan->RoomCount;
+
+	FILE* f;
+	fopen_s(&f, "C:\\TakePillEvent_Payload.txt", "a+");
+		fprintf(f, "Count: %d\n", playerMan->RoomCount);
+		for (int i=0; i < playerMan->RoomCount; i++)
+		{
+			fprintf(f, "Roomtype[%d]= %d, RoomID[%d]=%d\n", i, playerMan->rooms[i].info->type, i, playerMan->rooms[i].info->unknown1);
+			
+		}
+	fclose(f);
+
+//	*playerMan->_SeeForever = 1;
+	//PlayerManagerRefreshFunc(playerMan);
+
+	//API_TeleportPlayer(3, rand() % 100, (void*)(playerMan+33088), -1);
+
+	//API_SpawnEntity(1000, rand() % 50 + 1, 0, (pooter->position.x-80.0f) / 40.0f, (pooter->position.y-160.0f) / 40.0f, player);
+//	API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
+	//API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
 
 	// Event Handling
 	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
@@ -75,9 +116,6 @@ void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int
 	// Event Handling
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
 	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
-	//std::ofstream outfile;
-	//outfile.open("c:\\users\\cooper\\desktop\\log.txt");
-	//outfile << "AddCollectible event sent and recieved." << std::endl;
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -105,23 +143,16 @@ __declspec(naked) void AddCollectibleEvent_Hook()
 
 void* SpawnEntityEvent_Original;
 
-void __cdecl SpawnEntityEvent_Payload(PointF* zero, PointF* position, int gameManager, signed int EntityID, int Variant, int unknown_ptr, int subtype, unsigned int seed)
+void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, int gameManager, signed int EntityID, int Variant, Entity* parent, int subtype, unsigned int seed)
 {
-	// test code
-	//FILE* f;
-
-	//fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
-	//fprintf(f, "a1.1: %f, a1.2: %f, a2.1: %f, a2.2: %f, manager: %p, EID: %d, Var: %d, unknown: %d, subtype: %d, seed: %p\n",
-	//	zero->x, zero->y,
-	//	position->x, position->y,
-	//	gameManager,
-	//	EntityID, Variant, unknown_ptr, subtype, seed);
-	//fclose(f);
-	//
+	FILE* f;
+	fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
+		fprintf(f, "EntityID: %d", EntityID);
+	fclose(f);
 
 	// Event Handling
-	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
-	IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
+	//IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -129,23 +160,23 @@ __declspec(naked) char SpawnEntityEvent_Hook()
 	_asm
 	{
 		push ebp
-			mov ebp, esp
+		mov ebp, esp
 			push eax
 			push ebx
-			push dword ptr[ebp + 0x1C]
-			push dword ptr[ebp + 0x18]
-			push dword ptr[ebp + 0x14]
-			push dword ptr[ebp + 0x10]
-			push dword ptr[ebp + 0x0C]
-			push dword ptr[ebp + 0x08]
-			push ebx
-			push eax
-			call SpawnEntityEvent_Payload
-			add esp, 32
+				push dword ptr[ebp + 0x1C]
+				push dword ptr[ebp + 0x18]
+				push dword ptr[ebp + 0x14]
+				push dword ptr[ebp + 0x10]
+				push dword ptr[ebp + 0x0C]
+				push dword ptr[ebp + 0x08]
+				push ebx
+				push eax
+					call SpawnEntityEvent_Payload
+				add esp, 32
 			pop ebx
 			pop eax
-			pop ebp
-			jmp SpawnEntityEvent_Original
+		pop ebp
+		jmp SpawnEntityEvent_Original
 	}
 }
 
@@ -157,6 +188,11 @@ void* HpUpEvent_Original;
 
 int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
+	FILE* f;
+	fopen_s(&f, "C:\\HpUpEvent_Payload.txt", "a+");
+		fprintf(f, "HPup: %d", amount);
+	fclose(f);
+
 	// Event handling
 	if (amount > 0)
 	{
@@ -201,6 +237,11 @@ void* AddSoulHeartsEvent_Original;
 
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
+	FILE* f;
+	fopen_s(&f, "C:\\AddSoulHeartsEvent_Payload.txt", "a+");
+		fprintf(f, "Soul hearts: %d", amount);
+	fclose(f);
+
 	// Event handling
 	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
@@ -225,16 +266,80 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 }
 
 /******************************************
-************* GoodPillEffect **************
+************* ShootTearsEvent *************
+*******************************************/
+
+void* ShootTearsEvent_Original;
+
+void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int typ, TearStruct* a5)
+{
+	FILE* f;
+	fopen_s(&f, "C:\\ShootTearsEvent_Payload.txt", "a+");
+		fprintf(f, "dir = %f / %f, pos = %f / %f, mob: %d/%d/%d, typ: %d, a5: %f\n", direction->x, direction->y, startpos->x, startpos->y, mob->_id, mob->_variant, mob->_subtype, typ, a5);
+	fclose(f);
+}
+
+__declspec(naked) void ShootTearsEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		mov ebp, esp
+			push ecx
+			push edx
+				push dword ptr[ebp + 0x10]
+				push dword ptr[ebp + 0x0C]
+				push dword ptr[ebp + 0x08]
+				push edx
+				push ecx
+					call ShootTearsEvent_Payload
+				add esp, 20
+			pop edx
+			pop ecx
+		pop ebp
+		jmp ShootTearsEvent_Original
+	}
+}
+
+/******************************************
+************* ChangeRoomEvent *************
+*******************************************/
+
+void* ChangeRoomEvent_Original;
+
+
+void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
+{
+	FILE* f;
+	fopen_s(&f, "C:\\ChangeRoomEvent_Payload.txt", "a+");
+		fprintf(f, "manager.CurrRoomIndex = %d, NewRoomIndex = %d\n", roomMan->currRoomIndex, newRoomIdx);
+	fclose(f);
+}
+
+__declspec(naked) void ChangeRoomEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		mov ebp, esp
+			push dword ptr[ebp + 0x0C]
+			push dword ptr[ebp + 0x08]
+				call ChangeRoomEvent_Payload
+			add esp, 8
+		pop ebp
+		jmp ChangeRoomEvent_Original
+	}
+}
+
+/******************************************
+*************** Functions *****************
 *******************************************/
 
 GoodPillEffectFuncType* GoodPillEffectFunc;
-
-/******************************************
-************** Isaac random ***************
-*******************************************/
-
 IsaacRandomFuncType* IsaacRandomFunc;
+InitTearFuncType* InitTearFunc;
+PlayerManagerRefreshFuncType* PlayerManagerRefreshFunc;
+PlayerTeleportFuncType* PlayerTeleportFunc;
 
 /******************************************
 ************** Initialization *************
@@ -264,31 +369,43 @@ void Hooks_HookEvents()
 	void* SpawnEntityEvent_SigPtr = SigScan_FindSignature(&Signature_SpawnEntityEvent);
 	SpawnEntityEvent_Original = DetourFunction(PBYTE(SpawnEntityEvent_SigPtr), PBYTE(SpawnEntityEvent_Hook));
 
-	// HpUp
+	// HpUpEvent
 	void* HpUpEvent_SigPtr = SigScan_FindSignature(&Signature_HpUpEvent);
 	HpUpEvent_Original = DetourFunction(PBYTE(HpUpEvent_SigPtr), PBYTE(HpUpEvent_Hook));
 
-	// AddSoulHearts
+	// AddSoulHeartsEvent
 	void* AddSoulHeartsEvent_SigPtr = SigScan_FindSignature(&Signature_AddSoulHeartsEvent);
 	AddSoulHeartsEvent_Original = DetourFunction(PBYTE(AddSoulHeartsEvent_SigPtr), PBYTE(AddSoulHeartsEvent_Hook));
+
+	// ShootTearsEvent
+	void* ShootTearsEvent_SigPtr = SigScan_FindSignature(&Signature_ShootTearsEvent);
+	ShootTearsEvent_Original = DetourFunction(PBYTE(ShootTearsEvent_SigPtr), PBYTE(ShootTearsEvent_Hook));
+
+	// ChangeRoomEvent
+	void* ChangeRoomEvent_SigPtr = SigScan_FindSignature(&Signature_ChangeRoomEvent);
+	ChangeRoomEvent_Original = DetourFunction(PBYTE(ChangeRoomEvent_SigPtr), PBYTE(ChangeRoomEvent_Hook));
 }
 
 void Hooks_GetFunctions()
 {
 	IsaacRandomFunc = (IsaacRandomFuncType*)SigScan_FindSignature(&Signature_IsaacRandomFunc);
 	GoodPillEffectFunc = (GoodPillEffectFuncType*)SigScan_FindSignature(&Signature_GoodPillEffectFunc);
+	InitTearFunc = (InitTearFuncType*)SigScan_FindSignature(&Signature_InitTearFunc);
+	PlayerManagerRefreshFunc = (PlayerManagerRefreshFuncType*)SigScan_FindSignature(&Signature_PlayerManagerRefreshFunc);
+	PlayerTeleportFunc = (PlayerTeleportFuncType*)SigScan_FindSignature(&Signature_Teleport);
 }
 
 void Hooks_GetPlayerManagerPtr()
 {
-	PlayerManager = (DWORD**)SigScan_FindSignature(&Signature_PlayerManager);
-	PlayerManager = (DWORD**)((DWORD)PlayerManager + 2);
+	PlayerManager* qa;
+	PlayerManagerPtr = (DWORD**)SigScan_FindSignature(&Signature_PlayerManager);
+	PlayerManagerPtr = (DWORD**)((DWORD)PlayerManagerPtr + 2);
 }
 
-DWORD Hooks_GetPlayerManager()
+PlayerManager* Hooks_GetPlayerManager()
 {
-	if (PlayerManager)
-		return **PlayerManager;
+	if (PlayerManagerPtr)
+		return (PlayerManager*)**PlayerManagerPtr;
 	else
 		return NULL;
 }

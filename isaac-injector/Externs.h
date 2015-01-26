@@ -1,9 +1,32 @@
 #pragma once
 #include "stdafx.h"
 
+#pragma pack(1)
+struct PointF
+{
+	float x;
+	float y;
+};
+
 struct Entity
 {
-	char _unk0[0x76C];
+char _unk0000[0xC];
+	int _id;
+	unsigned int _variant;
+	int _subtype;
+char _unk0018[0x10];
+	void* Paralysis;
+char _unk0021[0x48];
+	int _tearType;
+char _unk0020[0x23C];
+	float _scaleX;
+	float _scaleY;
+char _unk000D[0x88];
+	float dmg;  // no
+	float dmg2; // no
+char _unk000C[0xC8];
+	PointF position;
+char _unk0[0x350];
 };
 
 #pragma pack(1)
@@ -23,11 +46,129 @@ struct Player : Entity
 	char _unkB78[0x24E8];
 };
 
-#pragma pack(1)
-struct PointF
+//4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 84, 96, 100, 104, 108, 112, 116(Type)
+struct TearStruct
 {
-	float x;
-	float y;
+	//float unknown[0x1D];
+
+	float _stuff0;
+	float _stuff4;
+	float _shotheight;
+	float _shotspeed_strange;
+	float _shotspeed;
+	float _damage;
+	float _stuff24;
+	float _stuff28;
+	float _stuff32;
+	float _stuff36;
+	float _tearcolor_red;
+	float _tearcolor_green;
+	float _tearcolor_blue;
+	float _tearcolor_alpha;
+	float unknown[0x0F];
+	int _type;
+//	float _stuffX00;
+	//int _stuffX01;
+	float unknown2[0x11];
+};
+
+struct RoomManager
+{
+	char* unknown[0x5D9C];
+	DWORD currRoomIndex;
+	DWORD previousRoomIndex;
+};
+
+struct RoomInfo
+{
+	int unknown1;
+	int type;
+	int variant;
+	char name[16];
+	int unknown2;
+	int unknown3;
+	int unknown4;
+	int difficulty;
+	// pointer
+	int unknown5;
+	int unknown6;
+	//
+	int unknown7;
+	// pointer
+	int unknown8;
+	int unknown9;
+	// 
+	int unknown10;
+	int unknown11;
+};
+
+struct Room
+{
+	RoomInfo* info;
+	// ?
+	int unknown1;
+	// rooms
+	int LeftRoomID;
+	int TopRoomID;
+	int RightRoomID;
+	int BottomRoomID;
+	int BottomLeftRoomID;
+	int TopRightRoomID;
+	int BottomRightRoomID;
+	int BottomRightRoomID2;
+	//	?
+	int unknown2;
+	// zero (mostly)
+	int unknown3;
+	int unknown4;
+	int unknown5;
+	// pointers
+	int unknown6;
+	int unknown7;
+	int unknown8;
+	int unknown9;
+	int unknown10;
+	int unknown11;
+	// zero
+	int unknown12;
+	// pointers
+	int unknown13;
+	int unknown14;
+	int unknown15;
+	// zero
+	int unknown16;
+	int unknown17;
+	// pointers
+	int unknown18;
+	// zero
+	int unknown19;
+	int unknown20;
+	// pointers
+	int unknown21;
+	int unknown22;
+	int unknown23;
+	// zero
+	int unknown24;
+	int unknown25;
+	int unknown26;
+	int unknown27;
+	int unknown28;
+	int unknown29;
+	int unknown30;
+	// -1 x 3
+	int unknown31;
+	int unknown32;
+	int unknown33;
+	// index
+	int index;
+};
+
+struct PlayerManager
+{
+	char unknown[0x18];
+	Room rooms[50]; // unknown size.. 50 for now
+	char unknown2[0x3BB8];
+	int RoomCount;
 };
 
 /*
