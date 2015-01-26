@@ -10,7 +10,7 @@ namespace OML
     public class OMLPlugin
     {
         public string PluginName;
-        public string PluginVersion;
+        public string PluginVersion; 
         public string PluginAuthor;
 
         public virtual void OnPlayerAddCollectible(ref Player player, ref int a2, ref int id, ref int a4)

@@ -30,9 +30,6 @@ BOOL SigScan_GetImageInfo()
 				SigScan_BasePtr = (void*)memInfo.AllocationBase;
 				SigScan_BaseLen = (size_t)pe->OptionalHeader.SizeOfImage;
 			}
-			else
-				;
-			//Log("DOS- or PE-Signatur invalid!\n");
 		}
 	}
 
@@ -43,16 +40,16 @@ void* SigScan_FindSignature(FuncSignature* sig)
 {
 	FILE* debugFile;
 
-	char* tempPtr = (char*)SigScan_BasePtr;
+	char* scanPtr = (char*)SigScan_BasePtr;
 
 	int maxLen = 0;
-	while (tempPtr < ((char*)SigScan_BasePtr + SigScan_BaseLen - sig->length))
+	while (scanPtr < ((char*)SigScan_BasePtr + SigScan_BaseLen - sig->length))
 	{
 		size_t detectedLen = 0;
 
 		for (int i = 0; i < sig->length; i++)
 		{
-			if (!((tempPtr[i] == sig->signature[i]) || (sig->mask[i] == '?')))
+			if (!((scanPtr[i] == sig->signature[i]) || (sig->mask[i] == '?')))
 				break;
 			detectedLen++;
 		}
@@ -61,9 +58,9 @@ void* SigScan_FindSignature(FuncSignature* sig)
 			maxLen = detectedLen;
 
 		if (detectedLen == sig->length)
-			return tempPtr;
+			return scanPtr;
 
-		tempPtr++;
+		scanPtr++;
 	}
 
 	return NULL;

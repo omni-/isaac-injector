@@ -8,6 +8,8 @@
 #define PLAYER_EVENT_HPUP		    0x03
 #define PLAYER_EVENT_HPDOWN		    0x04 
 #define PLAYER_EVENT_ADDSOULHEARTS  0x05
+#define ENEMY_EVENT_SHOOTTEARS      0x06
+#define GAME_EVENT_CHANGEROOM		0x07
 
 extern char* eventMasks[];
 
@@ -26,14 +28,12 @@ extern IsaacRandomFuncType* IsaacRandomFunc;
 using GoodPillEffectFuncType = int __stdcall(Player*);
 extern GoodPillEffectFuncType* GoodPillEffectFunc;
 
-using InitTearFuncType = TearStruct* __cdecl (int, TearStruct*);
+using InitTearFuncType = TearInfo* __cdecl (int, TearInfo*);
 extern InitTearFuncType* InitTearFunc;
 
-using PlayerManagerRefreshFuncType = int __stdcall (PlayerManager*);
-extern PlayerManagerRefreshFuncType* PlayerManagerRefreshFunc;
+using Player_TeleportFuncType = void (void);
+extern Player_TeleportFuncType* Player_TeleportFunc;
 
-using PlayerTeleportFuncType = void (void);
-extern PlayerTeleportFuncType* PlayerTeleportFunc;
-
+// initialization + playermanager
 bool Hooks_Init();
 PlayerManager* Hooks_GetPlayerManager();

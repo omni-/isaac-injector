@@ -8,8 +8,7 @@
 
 #include "isaac_api.h"
 
-char* eventMasks[6];
-DWORD** PlayerManagerPtr;
+char* eventMasks[8];
 
 /******************************************
 ************** TakePillEvent **************
@@ -19,58 +18,9 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	// Testcode
-	API_Effect_GoodPill(player);
-	Entity* pooter = API_SpawnEntity(217, 0, 0, 3, 2, NULL);
-
-	//API_HPDown(player, 2);
-	//API_AddSoulHearts(player, 4);
-	//API_SpawnEntity(5, 100, 169, 7, 5, NULL);
-
-	PointF velocity;
-	velocity.x = 5.0f;
-	velocity.y = 0.0f;
-
-	TearStruct tear;
-	API_InitTear(30, &tear);
-	tear._shotspeed = 2;
-	tear._type = TEARTYPE_ENEMY_FLAME;
-	tear._damage = 1;
-	//tear._tearcolor_red = 0;
-	//tear._tearcolor_blue = 0;
-	//tear._tearcolor_alpha = 0.7;
-	API_ShootTears(&pooter->position, &velocity, 0, &tear, pooter);
-
-	player->_scaleX *= 0.8f;
-	player->_scaleY *= 0.8f;
-
-	API_AddCollectible(player, 333);
-
-	PlayerManager* playerMan = Hooks_GetPlayerManager();
-	player->_numBombs = playerMan->RoomCount;
-
-	FILE* f;
-	fopen_s(&f, "C:\\TakePillEvent_Payload.txt", "a+");
-		fprintf(f, "Count: %d\n", playerMan->RoomCount);
-		for (int i=0; i < playerMan->RoomCount; i++)
-		{
-			fprintf(f, "Roomtype[%d]= %d, RoomID[%d]=%d\n", i, playerMan->rooms[i].info->type, i, playerMan->rooms[i].info->unknown1);
-			
-		}
-	fclose(f);
-
-//	*playerMan->_SeeForever = 1;
-	//PlayerManagerRefreshFunc(playerMan);
-
-	//API_TeleportPlayer(3, rand() % 100, (void*)(playerMan+33088), -1);
-
-	//API_SpawnEntity(1000, rand() % 50 + 1, 0, (pooter->position.x-80.0f) / 40.0f, (pooter->position.y-160.0f) / 40.0f, player);
-//	API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
-	//API_SpawnEntity(1000, 23, 0, 3, 5, pooter);
-
-	// Event Handling
-	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+//Event Handling
+	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	//IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -80,24 +30,24 @@ __declspec(naked) void TakePillEvent_Hook()
 	_asm
 	{
 		push esi		// save pill
-			push edi        // save player
+		push edi        // save player
 
-			mov ecx, edi
-			mov edx, esi
+		mov ecx, edi
+		mov edx, esi
 			call TakePillEvent_Payload
-			test eax, eax
-			jnz handled
+		test eax, eax
+		jnz handled
 
-		not_handled :
-		pop edi				// restore player
-			pop esi         // restore pill
-			jmp TakePillEvent_Original
+	not_handled :
+		pop edi			// restore player
+		pop esi         // restore pill
+		jmp TakePillEvent_Original
 
-		handled :
-		pop edi				// restore player
-			pop esi
-			mov esi, 100    // skip pill code
-			jmp TakePillEvent_Original
+	handled :
+		pop edi			// restore player
+		pop esi
+		mov esi, 100    // skip pill code (set pillID to something greater than the max pill ID to skip pill effect handler)
+		jmp TakePillEvent_Original
 	}
 }
 
@@ -109,13 +59,9 @@ void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
-	// Testcode
-	player->_numCoins = 99;
-	//
-
-	// Event Handling
-	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
+// Event Handling
+	//IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
+	//IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -123,17 +69,17 @@ __declspec(naked) void AddCollectibleEvent_Hook()
 	_asm
 	{
 		push ebp
-			mov ebp, esp
+		mov ebp, esp
 			push ecx
-			push dword ptr[ebp + 0x10]
-			push dword ptr[ebp + 0x0C]
-			push dword ptr[ebp + 0x08]
-			push ecx
-			call AddCollectibleEvent_Payload
-			add esp, 16
+				push dword ptr[ebp + 0x10]
+				push dword ptr[ebp + 0x0C]
+				push dword ptr[ebp + 0x08]
+				push ecx
+					call AddCollectibleEvent_Payload
+				add esp, 16
 			pop ecx
-			pop ebp
-			jmp AddCollectibleEvent_Original
+		pop ebp
+		jmp AddCollectibleEvent_Original
 	}
 }
 
@@ -145,12 +91,7 @@ void* SpawnEntityEvent_Original;
 
 void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, int gameManager, signed int EntityID, int Variant, Entity* parent, int subtype, unsigned int seed)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\SpawnEntityEvent_Payload.txt", "a+");
-		fprintf(f, "EntityID: %d", EntityID);
-	fclose(f);
-
-	// Event Handling
+// Event Handling
 	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
 	//IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
 }
@@ -188,12 +129,6 @@ void* HpUpEvent_Original;
 
 int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\HpUpEvent_Payload.txt", "a+");
-		fprintf(f, "HPup: %d", amount);
-	fclose(f);
-
-	// Event handling
 	if (amount > 0)
 	{
 		//IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
@@ -214,17 +149,15 @@ __declspec(naked) int HpUpEvent_Hook() // Player* player, int amount
 	{
 		jecxz _original
 
-			push eax // save player
-
+		push eax // save player
 			push ecx // push amount
 			push eax // push player
-			call HpUpEvent_Payload
+				call HpUpEvent_Payload
 			add esp, 8
+		mov ecx, eax // ecx = amount from HpUp function
+		pop eax      // eax = player
 
-			mov ecx, eax // ecx = amount from HpUp function
-			pop eax      // eax = player
-
-		_original :
+	_original :
 		jmp HpUpEvent_Original
 	}
 }
@@ -237,12 +170,7 @@ void* AddSoulHeartsEvent_Original;
 
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\AddSoulHeartsEvent_Payload.txt", "a+");
-		fprintf(f, "Soul hearts: %d", amount);
-	fclose(f);
-
-	// Event handling
+// Event handling
 	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
 
@@ -254,14 +182,12 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 	_asm
 	{
 		push eax	// save player
-
 			mov edx, ecx
 			mov ecx, eax
-			call AddSoulHeartsEvent_Payload
-
+				call AddSoulHeartsEvent_Payload
 			mov ecx, eax
-			pop eax
-			jmp AddSoulHeartsEvent_Original
+		pop eax
+		jmp AddSoulHeartsEvent_Original
 	}
 }
 
@@ -271,12 +197,11 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 
 void* ShootTearsEvent_Original;
 
-void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int typ, TearStruct* a5)
+void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\ShootTearsEvent_Payload.txt", "a+");
-		fprintf(f, "dir = %f / %f, pos = %f / %f, mob: %d/%d/%d, typ: %d, a5: %f\n", direction->x, direction->y, startpos->x, startpos->y, mob->_id, mob->_variant, mob->_subtype, typ, a5);
-	fclose(f);
+// Event handling
+	//IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
+	//IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -307,13 +232,11 @@ __declspec(naked) void ShootTearsEvent_Hook()
 
 void* ChangeRoomEvent_Original;
 
-
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\ChangeRoomEvent_Payload.txt", "a+");
-		fprintf(f, "manager.CurrRoomIndex = %d, NewRoomIndex = %d\n", roomMan->currRoomIndex, newRoomIdx);
-	fclose(f);
+// Event handling
+	//IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
+	//IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()
@@ -338,13 +261,13 @@ __declspec(naked) void ChangeRoomEvent_Hook()
 GoodPillEffectFuncType* GoodPillEffectFunc;
 IsaacRandomFuncType* IsaacRandomFunc;
 InitTearFuncType* InitTearFunc;
-PlayerManagerRefreshFuncType* PlayerManagerRefreshFunc;
-PlayerTeleportFuncType* PlayerTeleportFunc;
+Player_TeleportFuncType* Player_TeleportFunc;
 
 /******************************************
 ************** Initialization *************
 *******************************************/
 
+// p = player, but at the moment every p is just a pointer
 void Hooks_InitEventMasks()
 {
 	eventMasks[PLAYER_EVENT_TAKEPILL] = "pi";
@@ -353,6 +276,8 @@ void Hooks_InitEventMasks()
 	eventMasks[PLAYER_EVENT_HPDOWN] = "pi";
 	eventMasks[PLAYER_EVENT_ADDSOULHEARTS] = "pi";
 	eventMasks[GAME_EVENT_SPAWNENTITY] = "pppiipii";
+	eventMasks[ENEMY_EVENT_SHOOTTEARS] = "pppip";
+	eventMasks[GAME_EVENT_CHANGEROOM] = "pi";
 }
 
 void Hooks_HookEvents()
@@ -388,16 +313,21 @@ void Hooks_HookEvents()
 
 void Hooks_GetFunctions()
 {
+	// misc
 	IsaacRandomFunc = (IsaacRandomFuncType*)SigScan_FindSignature(&Signature_IsaacRandomFunc);
-	GoodPillEffectFunc = (GoodPillEffectFuncType*)SigScan_FindSignature(&Signature_GoodPillEffectFunc);
 	InitTearFunc = (InitTearFuncType*)SigScan_FindSignature(&Signature_InitTearFunc);
-	PlayerManagerRefreshFunc = (PlayerManagerRefreshFuncType*)SigScan_FindSignature(&Signature_PlayerManagerRefreshFunc);
-	PlayerTeleportFunc = (PlayerTeleportFuncType*)SigScan_FindSignature(&Signature_Teleport);
+
+	// effects
+	GoodPillEffectFunc = (GoodPillEffectFuncType*)SigScan_FindSignature(&Signature_GoodPillEffectFunc);
+
+	// player functions
+	Player_TeleportFunc = (Player_TeleportFuncType*)SigScan_FindSignature(&Signature_PlayerTeleportEvent);  // could/should be hooked, too
 }
+
+DWORD** PlayerManagerPtr;
 
 void Hooks_GetPlayerManagerPtr()
 {
-	PlayerManager* qa;
 	PlayerManagerPtr = (DWORD**)SigScan_FindSignature(&Signature_PlayerManager);
 	PlayerManagerPtr = (DWORD**)((DWORD)PlayerManagerPtr + 2);
 }
