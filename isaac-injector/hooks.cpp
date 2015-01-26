@@ -20,16 +20,16 @@ void* TakePillEvent_Original;
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 	// Testcode
-	API_Effect_GoodPill(player);
-	API_HPDown(player, 2);
-	API_AddSoulHearts(player, 4);
-	API_SpawnEntity(rand() % 7 + 46, 0, 0, 3, 5);
-	API_SpawnEntity(5, 100, 169, 7, 5);
+	//API_Effect_GoodPill(player);
+	//API_HPDown(player, 2);
+	//API_AddSoulHearts(player, 4);
+	//API_SpawnEntity(rand() % 7 + 46, 0, 0, 3, 5);
+	//API_SpawnEntity(5, 100, 169, 7, 5);
 	//
 
 	// Event Handling
-	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	//IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
 
 	return true;
 }
@@ -120,8 +120,8 @@ void __cdecl SpawnEntityEvent_Payload(PointF* zero, PointF* position, int gameMa
 	//
 
 	// Event Handling
-	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
-	//IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
+	IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, unknown_ptr, subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
