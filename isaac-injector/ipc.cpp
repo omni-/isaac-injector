@@ -7,12 +7,14 @@
 HANDLE hPipe;
 HANDLE hMutex;
 
+//////// The code contains some debug-message boxes because of the pipes not working properly at the moment ////////
+
 bool IPC_Init()
 {
 	DWORD error;
 	hPipe = InitPipe(error);
 	Sleep(100);
-	hMutex = CreateMutexA(NULL, FALSE, "omlmutex");//OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
+	hMutex = CreateMutexA(NULL, FALSE, "omlmutex"); //OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
 	if (hMutex == 0)
 		MessageBoxA(NULL, "OpenMutexA failed", NULL, NULL);
 

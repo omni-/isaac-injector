@@ -59,7 +59,7 @@ FuncSignature Signature_AddCollectibleEvent = {
 	//68
 };
 
-FuncSignature Signature_Teleport = {
+FuncSignature Signature_PlayerTeleportEvent = {
 	"\x55\x8b\xec\x8b\x4d\x08\x53\xc7\x46\x04\x00\x00\x00\x00\x89\x46\x18\x89\x4e\x10"
 	"\x89\x56\x14\xc6\x86\xdc\x03\x00\x00\x00\x83\xf8\x03\x0f\x85\x00\x00\x00\x00\x8b"
 	"\x1d\x00\x00\x00\x00\x8b\x83\x9c\x94\x00\x00\x2b\x83\x98\x94\x00\x00\xa9\x00\x00"
@@ -67,7 +67,7 @@ FuncSignature Signature_Teleport = {
 	// mask
 	"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx????xx????xxxxxxxxxxxxx????x?x????xxx????xxx",
 	// size
-	strlen(Signature_Teleport.mask)
+	strlen(Signature_PlayerTeleportEvent.mask)
 };
 
 FuncSignature Signature_ShootTearsEvent = {
@@ -136,16 +136,4 @@ FuncSignature Signature_ChangeRoomEvent = {
 	"xxxxxx????xx????xxxxxxxx????xxxxxxxx????xxxxxxxxxxx????x????xxxxxxxx?xxxxxxx????xxx?xxxxxxxx?x????x?",
 	// size
 	strlen(Signature_ChangeRoomEvent.mask)
-};
-
-FuncSignature Signature_PlayerManagerRefreshFunc = {
-	"\x55\x8b\xec\x83\xec\x30\x53\x8b\x5d\x08\x8b\x83\x98\x5d\x00\x00\x8b\x8b\x9c\x5d\x00\x00"
-	"\x56\x57\x05\x00\x00\x00\x00\x8b\xfb\x89\x45\xf0\xe8\x00\x00\x00\x00\x8b\x48\x08\x8b\x51"
-	"\x04\x83\x48\x30\x05\x8b\x35\x00\x00\x00\x00\x8b\x86\x9c\x94\x00\x00\x2b\x86\x98\x94\x00"
-	"\x00\x89\x55\xe4\xa9\x00\x00\x00\x00\x75\x00\x68\x00\x00\x00\x00\x6a\x00\xe8\x00\x00\x00"
-	"\x00\x83\xc4\x08",
-	// mask
-	"xxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxx????xxxxxxxxxxxx????xxxxxxxxxxxxxxxx????x?x????xxx????xxx",
-	// size
-	strlen(Signature_PlayerManagerRefreshFunc.mask)
 };
