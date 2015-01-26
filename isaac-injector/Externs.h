@@ -8,6 +8,7 @@ struct PointF
 	float y;
 };
 
+#pragma pack(1)
 struct Entity
 {
 char _unk0000[0xC];
@@ -47,6 +48,7 @@ struct Player : Entity
 };
 
 //4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 84, 96, 100, 104, 108, 112, 116(Type)
+#pragma pack(1)
 struct TearStruct
 {
 	//float unknown[0x1D];
