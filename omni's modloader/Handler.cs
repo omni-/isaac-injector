@@ -15,16 +15,21 @@ namespace OML
         {
             try
             {
+                //init server, mutex, and streams
                 var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 32768, 32768);
                 var mutex = new Mutex(false, "omlmutex");
                 var read = new BinaryReader(server);
                 var write = new BinaryWriter(server);
                 var formatter = new BinaryFormatter();
+
+                //load plugins
                 Console.WriteLine("\r\n[INFO] loading plugins...");
                 var plugins = Loader.GetPlugins();
                 foreach (OMLPlugin p in plugins)
                     Console.Write("\r\nloading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
                 Console.WriteLine("\r\n\r\n[INFO] plugin load completed.");
+
+                //wait for connection
                 Console.Write("\r\n[INFO] waiting for connection...");
                 server.WaitForConnection();
                 Console.WriteLine("successful connection to injected dll.");
@@ -37,7 +42,7 @@ namespace OML
 
                 while (!proc.HasExited)
                 {
-                    if (mutex.WaitOne(50))
+                    if (mutex.WaitOne())
                     {
                         if (NativeMethods.PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
                         {
@@ -45,7 +50,7 @@ namespace OML
                             int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                             switch (_event)
                             {
-                                case OML.PLAYER_EVENT_TAKEPILL:
+                                case OML.PLAYER_EVENT_TAKEPILL: //0
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int pillid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     foreach (OMLPlugin p in plugins)
@@ -54,7 +59,7 @@ namespace OML
                                     write.Write(OML.PLAYER_EVENT_TAKEPILL);
                                     write.Write(RawSerialize(player));
                                     break;
-                                case OML.PLAYER_EVENT_ADDCOLLECTIBLE:
+                                case OML.PLAYER_EVENT_ADDCOLLECTIBLE: //1
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
@@ -71,30 +76,30 @@ namespace OML
                                     write.Write(id);
                                     write.Write(a4);
                                     break;
-                                case OML.GAME_EVENT_SPAWNENTITY:
-                                    PointF zero = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
+                                case OML.GAME_EVENT_SPAWNENTITY: //2
+                                    PointF velocity = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
                                     PointF position = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
                                     int gameManager = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     int entityid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     int variant = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                    int unk = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                                    Entity parent = RawDeserialize<Entity>(read.ReadBytes(Marshal.SizeOf(typeof(Entity))), 0);
                                     int subtype = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                    uint seed = BitConverter.ToUInt32(read.ReadBytes(sizeof(int)), 0);
+                                    int seed = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
                                     foreach (OMLPlugin p in plugins)
-                                        p.OnEntitySpawn(ref zero, ref position, ref gameManager, ref entityid, ref variant, ref unk, ref subtype, ref seed);
+                                        p.OnEntitySpawn(ref velocity, ref velocity, ref gameManager, ref entityid, ref variant, ref parent, ref subtype, ref seed);
 
                                     write.Write(OML.GAME_EVENT_SPAWNENTITY);
-                                    write.Write(RawSerialize(zero));
+                                    write.Write(RawSerialize(velocity));
                                     write.Write(RawSerialize(position));
                                     write.Write(gameManager);
                                     write.Write(entityid);
                                     write.Write(variant);
-                                    write.Write(unk);
+                                    write.Write(RawSerialize(parent));
                                     write.Write(subtype);
                                     write.Write(seed);
                                     break;
-                                case OML.PLAYER_EVENT_HPUP:
+                                case OML.PLAYER_EVENT_HPUP: //3
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int hpamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
@@ -105,7 +110,7 @@ namespace OML
                                     write.Write(RawSerialize(player));
                                     write.Write(hpamount);
                                     break;
-                                case OML.PLAYER_EVENT_HPDOWN:
+                                case OML.PLAYER_EVENT_HPDOWN: //4
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int hmamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
@@ -116,7 +121,7 @@ namespace OML
                                     write.Write(RawSerialize(player));
                                     write.Write(hmamount);
                                     break;
-                                case OML.PLAYER_EVENT_ADDSOULHEARTS:
+                                case OML.PLAYER_EVENT_ADDSOULHEARTS: //5
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int shamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
@@ -126,6 +131,10 @@ namespace OML
                                     write.Write(OML.PLAYER_EVENT_ADDSOULHEARTS);
                                     write.Write(RawSerialize(player));
                                     write.Write(shamount);
+                                    break;
+                                case OML.ENEMY_EVENT_SHOOTTEARS: //6
+                                    break;
+                                case OML.GAME_EVENT_CHANGEROOM: //7
                                     break;
                                 default:
                                     Console.WriteLine("[WARN] unknown packet recieved. event not implemented?");
@@ -149,14 +158,14 @@ namespace OML
                 Console.WriteLine("[ERROR] mutex abandoned. process crashed?");
                 return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("[ERROR] fatal error.");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Source);
-                Console.WriteLine(ex.StackTrace);
-                throw;
-            }
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("[ERROR] fatal error.");
+            //    Console.WriteLine(ex.Message);
+            //    Console.WriteLine(ex.Source);
+            //    Console.WriteLine(ex.StackTrace);
+            //    throw;
+            //}
             finally
             {
             }

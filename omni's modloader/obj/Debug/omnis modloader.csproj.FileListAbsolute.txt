@@ -11,4 +11,3 @@ C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\obj\Debug\omnis
 F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\OML.dll
 F:\C++\Projekte\isaac-injector\omni's modloader\bin\Debug\OML.pdb
 F:\C++\Projekte\isaac-injector\omni's modloader\obj\Debug\omnis modloader.csprojResolveAssemblyReference.cache
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omni's modloader\bin\Debug\OML.pdb

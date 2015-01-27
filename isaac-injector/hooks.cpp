@@ -19,8 +19,8 @@ void* TakePillEvent_Original;
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 //Event Handling
-	//IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	//IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
+	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, &pillID);
 
 	return true;
 }
@@ -60,8 +60,8 @@ void* AddCollectibleEvent_Original;
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
 // Event Handling
-	//IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-	//IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
+	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
+	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -92,8 +92,8 @@ void* SpawnEntityEvent_Original;
 void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, int gameManager, signed int EntityID, int Variant, Entity* parent, int subtype, unsigned int seed)
 {
 // Event Handling
-	//IPC_SendEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
-	//IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, zero, position, gameManager, EntityID, Variant, parent, subtype, seed);
+	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, gameManager, EntityID, Variant, parent, subtype, seed);
+	IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, &gameManager, &EntityID, &Variant, &parent, &subtype, &seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -131,13 +131,13 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
 	if (amount > 0)
 	{
-		//IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-		//IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, amount);
+		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
+		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, &amount);
 	}
 	else if (amount < 0)
 	{
-		//IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
-		//IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, amount);
+		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
+		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, &amount);
 	}
 
 	return amount;
@@ -172,7 +172,7 @@ int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 // Event handling
 	//IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
-	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
+	//IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, &amount);
 
 	return amount;
 }
@@ -200,8 +200,8 @@ void* ShootTearsEvent_Original;
 void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
 {
 // Event handling
-	//IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
-	//IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
+	IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
+	IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -235,8 +235,8 @@ void* ChangeRoomEvent_Original;
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
 // Event handling
-	//IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
-	//IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
+	IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
+	IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()
@@ -267,7 +267,7 @@ Player_TeleportFuncType* Player_TeleportFunc;
 ************** Initialization *************
 *******************************************/
 
-// p = player, but at the moment every p is just a pointer
+//fixed p being everything. p is player, e is entity, v is pointf(vector), t is tearinfo, r is roommanager
 void Hooks_InitEventMasks()
 {
 	eventMasks[PLAYER_EVENT_TAKEPILL] = "pi";
@@ -275,9 +275,9 @@ void Hooks_InitEventMasks()
 	eventMasks[PLAYER_EVENT_HPUP] = "pi";
 	eventMasks[PLAYER_EVENT_HPDOWN] = "pi";
 	eventMasks[PLAYER_EVENT_ADDSOULHEARTS] = "pi";
-	eventMasks[GAME_EVENT_SPAWNENTITY] = "pppiipii";
-	eventMasks[ENEMY_EVENT_SHOOTTEARS] = "pppip";
-	eventMasks[GAME_EVENT_CHANGEROOM] = "pi";
+	eventMasks[GAME_EVENT_SPAWNENTITY] = "vviiieii";
+	eventMasks[ENEMY_EVENT_SHOOTTEARS] = "vveit";
+	eventMasks[GAME_EVENT_CHANGEROOM] = "ri";
 }
 
 void Hooks_HookEvents()

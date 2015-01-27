@@ -27,7 +27,7 @@ bool IPC_SendEvent(int eventID, ...)
 
 	if ((hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE))
 	{
-		if (WaitForSingleObject(hMutex, 100L) == WAIT_OBJECT_0)
+		if (WaitForSingleObject(hMutex, INFINITE) == WAIT_OBJECT_0)
 		{
 			DWORD cbWritten = 0;
 
@@ -41,6 +41,10 @@ bool IPC_SendEvent(int eventID, ...)
 				char* strArg = NULL;
 				float floatArg = 0.0;
 				Player* handleArg = NULL;
+				PointF* pointfArg = NULL;
+				Entity* eArg = NULL;
+				TearInfo* tfArg = NULL;
+				RoomManager* rmArg = NULL;
 
 				char* buff;
 				switch (eventMasks[eventID][i])
@@ -48,6 +52,22 @@ bool IPC_SendEvent(int eventID, ...)
 				case 'p':
 					handleArg = va_arg(ap, Player*);
 					WriteFile(hPipe, handleArg, sizeof(Player), &cbWritten, NULL);
+					break;
+				case 'v':
+					pointfArg = va_arg(ap, PointF*);
+					WriteFile(hPipe, pointfArg, sizeof(PointF), &cbWritten, NULL);
+					break;
+				case 'e':
+					eArg = va_arg(ap, Entity*);
+					WriteFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
+					break;
+				case 't':
+					tfArg = va_arg(ap, TearInfo*);
+					WriteFile(hPipe, tfArg, sizeof(TearInfo), &cbWritten, NULL);
+					break;
+				case 'r':
+					rmArg = va_arg(ap, RoomManager*);
+					WriteFile(hPipe, rmArg, sizeof(RoomManager), &cbWritten, NULL);
 					break;
 				case 'i':
 					intArg = va_arg(ap, int);
@@ -83,7 +103,7 @@ bool IPC_RecieveEvent(int eventID, ...)
 
 	if ((hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE))
 	{
-		if (WaitForSingleObject(hMutex, 100L) == WAIT_OBJECT_0)
+		if (WaitForSingleObject(hMutex, INFINITE) == WAIT_OBJECT_0)
 		{
 			DWORD cbWritten = 0;
 
@@ -97,6 +117,10 @@ bool IPC_RecieveEvent(int eventID, ...)
 				char* strArg = NULL;
 				float* floatArg = NULL;
 				Player* handleArg = NULL;
+				PointF* pointfArg = NULL;
+				Entity* eArg = NULL;
+				TearInfo* tfArg = NULL;
+				RoomManager* rmArg = NULL;
 
 				char* buff;
 				switch (eventMasks[eventID][i])
@@ -105,13 +129,29 @@ bool IPC_RecieveEvent(int eventID, ...)
 					handleArg = va_arg(ap, Player*);
 					ReadFile(hPipe, handleArg, sizeof(Player), &cbWritten, NULL);
 					break;
+				case 'v':
+					pointfArg = va_arg(ap, PointF*);
+					ReadFile(hPipe, pointfArg, sizeof(PointF), &cbWritten, NULL);
+					break;
+				case 'e':
+					eArg = va_arg(ap, Entity*);
+					ReadFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
+					break;
+				case 't':
+					tfArg = va_arg(ap, TearInfo*);
+					ReadFile(hPipe, tfArg, sizeof(TearInfo), &cbWritten, NULL);
+					break;
+				case 'r':
+					rmArg = va_arg(ap, RoomManager*);
+					ReadFile(hPipe, rmArg, sizeof(RoomManager), &cbWritten, NULL);
+					break;
 				case 'i':
 					intArg = va_arg(ap, int*);
-					ReadFile(hPipe, intArg, sizeof(int), &cbWritten, NULL);
+					ReadFile(hPipe, &intArg, sizeof(int), &cbWritten, NULL);
 					break;
 				case 'f':
 					floatArg = va_arg(ap, float*);
-					ReadFile(hPipe, floatArg, sizeof(float), &cbWritten, NULL);
+					ReadFile(hPipe, &floatArg, sizeof(float), &cbWritten, NULL);
 					break;
 				case 's':
 					strArg = va_arg(ap, char*);
