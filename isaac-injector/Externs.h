@@ -2,11 +2,13 @@
 #include "stdafx.h"
 
 // struct for easily printing values behind an unknown pointer
+#pragma pack(1)
 struct DebugStruct
 {
 	int unknown[40];
 };
 
+#pragma pack(1)
 struct PointF
 {
 	float x;
@@ -74,6 +76,7 @@ struct TearInfo
 	float unknown2[0x11];
 };
 
+#pragma pack(1)
 struct RoomManager
 {
 	char* unknown[0x5D9C];
@@ -81,6 +84,7 @@ struct RoomManager
 	DWORD previousRoomIndex;
 };
 
+#pragma pack(1)
 struct RoomInfo
 {
 	int unknown1;
@@ -104,6 +108,7 @@ struct RoomInfo
 	int unknown11;
 };
 
+#pragma pack(1)
 struct Room
 {
 	RoomInfo* info;
@@ -165,6 +170,7 @@ struct Room
 	int index;
 };
 
+#pragma pack(1)
 struct PlayerManager
 {
 	char unknown[0x18];
