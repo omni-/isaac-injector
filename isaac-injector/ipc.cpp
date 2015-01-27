@@ -23,9 +23,6 @@ bool IPC_Init()
 
 bool IPC_SendEvent(int eventID, ...)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\TestEvent.txt", "a+");
-
 	bool IPC_Result = false;
 
 	if ((hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE))
@@ -62,8 +59,6 @@ bool IPC_SendEvent(int eventID, ...)
 					break;
 				case 'e':
 					eArg = va_arg(ap, Entity*);
-					fprintf(f, "sizeOf(Entity)=%d", sizeof(Entity));
-					
 					WriteFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
 					break;
 				case 't':
@@ -99,8 +94,6 @@ bool IPC_SendEvent(int eventID, ...)
 		MessageBoxA(NULL, "mutex is zero", NULL, NULL);
 	else
 		MessageBoxA(NULL, "invalid pipe handle", NULL, NULL);
-
-	fclose(f);
 
 	return IPC_Result;
 }
