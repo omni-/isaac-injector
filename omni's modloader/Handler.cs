@@ -127,7 +127,7 @@ namespace OML
 
                                     foreach (OMLPlugin p in plugins)
                                         p.OnSoulHeartsAdded(ref player, ref shamount);
-
+                                    
                                     write.Write(OML.PLAYER_EVENT_ADDSOULHEARTS);
                                     write.Write(RawSerialize(player));
                                     write.Write(shamount);
