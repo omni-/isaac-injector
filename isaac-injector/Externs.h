@@ -89,9 +89,33 @@ struct TearInfo
 #pragma pack(1)
 struct RoomManager
 {
-	char* unknown[0x5D9C];
+	char unknown[0x5D9C];
 	DWORD currRoomIndex;
 	DWORD previousRoomIndex;
+};
+
+struct RoomEntityInfo
+{
+	int entityID;
+	int unknown1;
+	void* unknown2;
+	int unknown3;
+	void* unknown4;
+	int unknown5;
+	//int _test[30];
+};
+
+struct RoomEntity
+{
+	int unknown1;
+	RoomEntityInfo* info;
+	float unknown2;
+	int unknown3;
+};
+
+struct RoomEntities
+{
+	RoomEntity entity[20];
 };
 
 #pragma pack(1)
@@ -111,7 +135,7 @@ struct RoomInfo
 	//
 	int unknown7;
 	// pointer
-	int unknown8;
+	RoomEntities* Entities;
 	int unknown9;
 	// 
 	int unknown10;

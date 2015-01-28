@@ -26,6 +26,7 @@ void API_AddSoulHearts(Player* player, int amount);
 // player
 void API_AddCollectible(Player* player, int itemID);
 int API_TeleportPlayer(int roomID);
+bool API_PlayerHasItem(Player* player, int itemID);
 
 // spawning
 TearInfo* API_InitTear(int value, TearInfo* tear);

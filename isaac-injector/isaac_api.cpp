@@ -123,6 +123,11 @@ void API_ShootTears(PointF* pos, PointF* velocity, int pattern, TearInfo* tear, 
 	}
 }
 
+bool API_PlayerHasItem(Player* player, int itemID)
+{
+	return player->_items[itemID-1];
+}
+
 char* API_getItemName(int itemID)
 {
 	std::map<int, char*> items;

@@ -34,7 +34,7 @@ __declspec(naked) void TakePillEvent_Hook()
 		mov ecx, edi
 		mov edx, esi
 			call TakePillEvent_Payload
-		test eax, eax
+		test al, al
 		jnz handled
 
 	not_handled :
