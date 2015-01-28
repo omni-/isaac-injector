@@ -89,16 +89,12 @@ void* SpawnEntityEvent_Original;
 
 void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int EntityID, int Variant, Entity* parent, int subtype, unsigned int seed)
 {
-	Entity* dummy = new Entity();
-	if (parent == NULL)
-		IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, dummy, subtype, seed);
-	else
-		IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
+	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
 
-	if (parent == NULL)
-		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, dummy, subtype, seed);
-	else
+	if (parent != NULL)
 		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
+	else
+		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -203,8 +199,8 @@ void* ShootTearsEvent_Original;
 
 void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
 {
-	//IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
-	//IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
+	IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
+	IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -237,8 +233,11 @@ void* ChangeRoomEvent_Original;
 
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
-	//IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
-	//IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
+	IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
+	if (roomMan != NULL)
+		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
+	else
+		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, new RoomManager(), &newRoomIdx);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()

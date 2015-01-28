@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace OML
 {
-    class Program
+    public class Program
     {
         public const string version = "v1.0";
+
+        public static bool verbose = false;
 
         static void Main(string[] args)
         {
             Console.Title = "omni's modloader - " + version;
 
             Console.Write("[INFO] initializing omni's modloader {0}...", version);
+
+            //check for verbose switch
+            verbose = new List<string>(args).Contains("-v");
 
             bool result = Loader.init();
             Console.Write(result ? " success" : "\r\n[ERROR] failed. exiting.");

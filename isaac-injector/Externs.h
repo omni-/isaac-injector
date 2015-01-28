@@ -51,7 +51,17 @@ struct Player : Entity
 	int _hasGoldenKey;
 	int _numBombs;
 	int _numCoins;
-	char _unkB78[0x24E8];
+	char _unk900[0x6C];
+	float _shotspeed;
+	char _unkA00[0x08];
+	float _damage;
+	float _range;
+	char _unkB00[0xBC];
+	float _speed;
+	float _luck;
+	char _unkC00[0xB4];
+	BOOL _items[0x15A];
+	char _unkB78[0x1D88];
 };
 
 #pragma pack(1)

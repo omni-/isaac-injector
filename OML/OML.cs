@@ -133,13 +133,12 @@ namespace OML
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0xC8)]
         byte[] _unk000C;
 
-        PointF position;
+        public PointF position;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x350)]
         byte[] _unk0;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x3E4)]
         byte[] _unk76C;
-
         public int _maxHearts;
         public int _hearts;
         public int _eternalHearts;
@@ -150,8 +149,22 @@ namespace OML
         public int _hasGoldenKey;
         public int _numBombs;
         public int _numCoins;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x24E8)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x6C)]
+        byte[] _unk900;
+        public float _shotspeed;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x08)]
+        byte[] _unkA00;
+        public float _damage;
+        public float _range;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0xBC)]
+        byte[] _unkB00;
+        public float _speed;
+        public float _luck;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0xB4)]
+        byte[] _unkC00;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x15A)]
+        public bool[] _items;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x1D88)]
         byte[] _unkB78;
     }
 

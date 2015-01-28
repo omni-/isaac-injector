@@ -51,6 +51,8 @@ namespace OML
                             switch (_event)
                             {
                                 case OML.PLAYER_EVENT_TAKEPILL: //0
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] take pill event received.");
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int pillid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     foreach (OMLPlugin p in plugins)
@@ -58,8 +60,12 @@ namespace OML
                                     server.Flush();
                                     write.Write(OML.PLAYER_EVENT_TAKEPILL);
                                     write.Write(RawSerialize(player));
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] take pill event sent.");
                                     break;
                                 case OML.PLAYER_EVENT_ADDCOLLECTIBLE: //1
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] add collectible event received.");
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
                                     int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
@@ -68,6 +74,8 @@ namespace OML
                                     foreach (OMLPlugin p in plugins)
                                         p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4);
 
+                                    player._damage = 1000.0f;
+
                                     server.Flush();
 
                                     write.Write(OML.PLAYER_EVENT_ADDCOLLECTIBLE);
@@ -75,8 +83,12 @@ namespace OML
                                     write.Write(a2);
                                     write.Write(id);
                                     write.Write(a4);
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] add collectibile event sent.");
                                     break;
                                 case OML.GAME_EVENT_SPAWNENTITY: //2
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] spawnentity event received.");
                                     PointF velocity = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
                                     PointF position = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
                                     int gameManager = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
@@ -98,8 +110,12 @@ namespace OML
                                     write.Write(RawSerialize(parent));
                                     write.Write(subtype);
                                     write.Write(seed);
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] spawn entity event sent.");
                                     break;
                                 case OML.PLAYER_EVENT_HPUP: //3
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] hp up event received.");
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int hpamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
@@ -109,8 +125,12 @@ namespace OML
                                     write.Write(OML.PLAYER_EVENT_HPUP);
                                     write.Write(RawSerialize(player));
                                     write.Write(hpamount);
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] hp up event sent.");
                                     break;
                                 case OML.PLAYER_EVENT_HPDOWN: //4
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] hp down event received.");
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int hmamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
@@ -120,17 +140,23 @@ namespace OML
                                     write.Write(OML.PLAYER_EVENT_HPDOWN);
                                     write.Write(RawSerialize(player));
                                     write.Write(hmamount);
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] hp down event sent.");
                                     break;
                                 case OML.PLAYER_EVENT_ADDSOULHEARTS: //5
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] add soul hearts event received");
                                     player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
                                     int shamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
 
                                     foreach (OMLPlugin p in plugins)
                                         p.OnSoulHeartsAdded(ref player, ref shamount);
-                                    
+
                                     write.Write(OML.PLAYER_EVENT_ADDSOULHEARTS);
                                     write.Write(RawSerialize(player));
                                     write.Write(shamount);
+                                    if (Program.verbose)
+                                        Console.WriteLine("\r\n[INFO] add soul hearts event sent");
                                     break;
                                 case OML.ENEMY_EVENT_SHOOTTEARS: //6
                                     break;
@@ -150,22 +176,22 @@ namespace OML
             }
             catch (IOException)
             {
-                Console.WriteLine("[ERROR] pipe error occured.");
+                Console.WriteLine("\r\n[ERROR] pipe error occured.");
                 return;
             }
             catch (AbandonedMutexException)
             {
-                Console.WriteLine("[ERROR] mutex abandoned. process crashed?");
+                Console.WriteLine("\r\n[ERROR] mutex abandoned. process crashed?");
                 return;
             }
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("[ERROR] fatal error.");
-            //    Console.WriteLine(ex.Message);
-            //    Console.WriteLine(ex.Source);
-            //    Console.WriteLine(ex.StackTrace);
-            //    throw;
-            //}
+            catch (Exception ex)
+            {
+                Console.WriteLine("\r\n[ERROR] fatal error.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Source);
+                Console.WriteLine(ex.StackTrace);
+                throw;
+            }
             finally
             {
             }

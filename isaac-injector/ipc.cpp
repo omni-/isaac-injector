@@ -51,22 +51,32 @@ bool IPC_SendEvent(int eventID, ...)
 				{
 				case 'p':
 					handleArg = va_arg(ap, Player*);
+					if (handleArg == NULL)
+						handleArg = new Player();
 					WriteFile(hPipe, handleArg, sizeof(Player), &cbWritten, NULL);
 					break;
 				case 'v':
 					pointfArg = va_arg(ap, PointF*);
+					if (pointfArg == NULL)
+						pointfArg = new PointF();
 					WriteFile(hPipe, pointfArg, sizeof(PointF), &cbWritten, NULL);
 					break;
 				case 'e':
 					eArg = va_arg(ap, Entity*);
+					if (eArg == NULL)
+						eArg = new Entity();
 					WriteFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
 					break;
 				case 't':
 					tfArg = va_arg(ap, TearInfo*);
+					if (tfArg == NULL)
+						tfArg = new TearInfo();
 					WriteFile(hPipe, tfArg, sizeof(TearInfo), &cbWritten, NULL);
 					break;
 				case 'r':
 					rmArg = va_arg(ap, RoomManager*);
+					if (rmArg == NULL)
+						rmArg = new RoomManager();
 					WriteFile(hPipe, rmArg, sizeof(RoomManager), &cbWritten, NULL);
 					break;
 				case 'i':
