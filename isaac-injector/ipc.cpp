@@ -110,7 +110,7 @@ bool IPC_SendEvent(int eventID, ...)
 		MessageBoxA(NULL, "mutex is zero", NULL, NULL);
 	return IPC_Result;
 }
-bool IPC_RecieveEvent(int eventID, ...)
+bool IPC_RecieveEvent(...)
 {
 	bool IPC_Result = false;
 
@@ -121,6 +121,7 @@ bool IPC_RecieveEvent(int eventID, ...)
 			__try
 			{
 				DWORD cbWritten = 0;
+				int eventID = -1;
 
 				ReadFile(hPipe, &eventID, sizeof(int), &cbWritten, NULL);
 

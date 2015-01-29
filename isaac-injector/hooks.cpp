@@ -19,7 +19,7 @@ void* TakePillEvent_Original;
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, &pillID);
+	IPC_RecieveEvent(player, &pillID);
 
 	return true;
 }
@@ -66,7 +66,7 @@ void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int
 	//player->_damage = 50;
 	//player->_tearType = 3;
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
+	IPC_RecieveEvent(player, &a2, &itemid, &a4);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -99,9 +99,9 @@ void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, Player
 	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
 
 	if (parent != NULL)
-		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
+		IPC_RecieveEvent(velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
 	else
-		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
+		IPC_RecieveEvent(velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -140,12 +140,12 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 	if (amount > 0)
 	{
 		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, &amount);
+		IPC_RecieveEvent(player, &amount);
 	}
 	else if (amount < 0)
 	{
 		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, &amount);
+		IPC_RecieveEvent(player, &amount);
 	}
 
 	return amount;
@@ -179,7 +179,7 @@ void* AddSoulHeartsEvent_Original;
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, &amount);
+	IPC_RecieveEvent(player, &amount);
 
 	return amount;
 }
@@ -207,7 +207,7 @@ void* ShootTearsEvent_Original;
 void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
 {
 	IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
-	IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
+	IPC_RecieveEvent(direction, startpos, mob, &type, tearInfo);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -242,9 +242,9 @@ void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
 	IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
 	if (roomMan != NULL)
-		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
+		IPC_RecieveEvent(roomMan, &newRoomIdx);
 	else
-		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, new RoomManager(), &newRoomIdx);
+		IPC_RecieveEvent(new RoomManager(), &newRoomIdx);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()
