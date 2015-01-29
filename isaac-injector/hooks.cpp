@@ -58,6 +58,13 @@ void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
+	//player->_scaleX = 2.0f;
+	//player->_scaleY = 2.0f;
+	//player->_luck = 10000;
+	//player->_shotspeed = 7.0f;
+	//player->_speed = 6;
+	//player->_damage = 50;
+	//player->_tearType = 3;
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
 	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
 }
