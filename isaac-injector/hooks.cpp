@@ -8,6 +8,8 @@
 
 #include "isaac_api.h"
 
+using namespace std;
+
 char* eventMasks[8];
 
 /******************************************
@@ -19,7 +21,7 @@ void* TakePillEvent_Original;
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
 	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	IPC_RecieveEvent(player, &pillID);
+	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, &pillID);
 
 	return true;
 }
@@ -58,15 +60,8 @@ void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
-	//player->_scaleX = 2.0f;
-	//player->_scaleY = 2.0f;
-	//player->_luck = 10000;
-	//player->_shotspeed = 7.0f;
-	//player->_speed = 6;
-	//player->_damage = 50;
-	//player->_tearType = 3;
 	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-	IPC_RecieveEvent(player, &a2, &itemid, &a4);
+	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -99,9 +94,9 @@ void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, Player
 	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
 
 	if (parent != NULL)
-		IPC_RecieveEvent(velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
+		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
 	else
-		IPC_RecieveEvent(velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
+		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -140,12 +135,12 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 	if (amount > 0)
 	{
 		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-		IPC_RecieveEvent(player, &amount);
+		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, &amount);
 	}
 	else if (amount < 0)
 	{
 		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
-		IPC_RecieveEvent(player, &amount);
+		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, &amount);
 	}
 
 	return amount;
@@ -179,7 +174,7 @@ void* AddSoulHeartsEvent_Original;
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
 	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
-	IPC_RecieveEvent(player, &amount);
+	IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, &amount);
 
 	return amount;
 }
@@ -199,6 +194,47 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 }
 
 /******************************************
+**************** VFSLoadFile **************
+*******************************************/
+
+void* VFSLoadFile_Original;
+
+char* __cdecl VFSLoadFile_Payload(char* filename)
+{
+	char* result = filename;
+
+	// Testcode:
+
+/*	FILE* f;
+	fopen_s(&f, "C:\\VFSLoadFile_Payload.txt", "a+");
+	fprintf_s(f, "Loading: %s, sizeof(Player)= %d\n", filename, sizeof(Player));
+	
+
+	string* s = new string(filename);
+	if (s->find("itempools.xml") != string::npos)
+	{
+		result = "resources/mods/rewritten/itempools.xml"; 
+		fprintf_s(f, "redirected %s to %s\n", filename, result);
+	}
+
+	fclose(f);*/
+
+	return result;
+}
+
+__declspec(naked) void VFSLoadFile_Hook()
+{
+	_asm
+	{
+		push ebx
+			call VFSLoadFile_Payload
+		add esp, 4
+		mov ebx, eax
+		jmp VFSLoadFile_Original
+	}
+}
+
+/******************************************
 ************* ShootTearsEvent *************
 *******************************************/
 
@@ -207,7 +243,7 @@ void* ShootTearsEvent_Original;
 void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
 {
 	IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
-	IPC_RecieveEvent(direction, startpos, mob, &type, tearInfo);
+	IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -242,9 +278,9 @@ void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
 	IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
 	if (roomMan != NULL)
-		IPC_RecieveEvent(roomMan, &newRoomIdx);
+		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
 	else
-		IPC_RecieveEvent(new RoomManager(), &newRoomIdx);
+		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, new RoomManager(), &newRoomIdx);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()
@@ -324,6 +360,10 @@ void Hooks_HookEvents()
 	// ChangeRoomEvent
 	void* ChangeRoomEvent_SigPtr = SigScan_FindSignature(&Signature_ChangeRoomEvent);
 	ChangeRoomEvent_Original = DetourFunction(PBYTE(ChangeRoomEvent_SigPtr), PBYTE(ChangeRoomEvent_Hook));
+
+	// VFSLoadFile
+	void* VFSLoadFile_SigPtr = SigScan_FindSignature(&Signature_VFSLoadFile);
+	VFSLoadFile_Original = DetourFunction(PBYTE(VFSLoadFile_SigPtr), PBYTE(VFSLoadFile_Hook));
 }
 
 void Hooks_GetFunctions()

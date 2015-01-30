@@ -14,7 +14,7 @@ bool IPC_Init()
 	DWORD error;
 	hPipe = InitPipe(error);
 	Sleep(100);
-	hMutex = CreateMutexA(NULL, FALSE, "omlmutex"); //OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
+	hMutex = CreateMutexA(NULL, false, "omlmutex"); //OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
 	if (hMutex == 0)
 		MessageBoxA(NULL, "OpenMutexA failed", NULL, NULL);
 
@@ -108,9 +108,10 @@ bool IPC_SendEvent(int eventID, ...)
 	}
 	else if (hMutex == 0)
 		MessageBoxA(NULL, "mutex is zero", NULL, NULL);
+
 	return IPC_Result;
 }
-bool IPC_RecieveEvent(...)
+bool IPC_RecieveEvent(int eventID, ...)
 {
 	bool IPC_Result = false;
 
@@ -121,9 +122,9 @@ bool IPC_RecieveEvent(...)
 			__try
 			{
 				DWORD cbWritten = 0;
-				int eventID = -1;
 
-				ReadFile(hPipe, &eventID, sizeof(int), &cbWritten, NULL);
+				int tmpEventID = 0;
+				ReadFile(hPipe, &tmpEventID, sizeof(int), &cbWritten, NULL);
 
 				va_list ap;
 				va_start(ap, eventID);

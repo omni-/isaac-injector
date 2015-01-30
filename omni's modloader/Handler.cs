@@ -63,6 +63,7 @@ namespace OML
                                             server.Flush();
                                             write.Write(OML.PLAYER_EVENT_TAKEPILL);
                                             write.Write(RawSerialize(player));
+                                            write.Write(pillid);
                                             if (Program.verbose)
                                                 Console.WriteLine("\r\n[INFO] takepill event sent.");
                                             break;
@@ -194,7 +195,7 @@ namespace OML
                                             write.Write(OML.GAME_EVENT_CHANGEROOM);
                                             write.Write(RawSerialize(rm));
                                             write.Write(roomid);
-                                            if (Program.verbose)
+                                            if (Program.verbose) 
                                                 Console.WriteLine("\r\n[INFO] changeroom event sent");
                                             break;
                                         default:
