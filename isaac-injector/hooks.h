@@ -9,17 +9,20 @@
 #define PLAYER_EVENT_HPDOWN		    0x04 
 #define PLAYER_EVENT_ADDSOULHEARTS  0x05
 #define ENEMY_EVENT_SHOOTTEARS      0x06
-#define GAME_EVENT_CHANGEROOM		0x07
+#define PLAYER_EVENT_CHANGEROOM		0x07
 
-extern char* eventMasks[];
+// initialization + playermanager
+bool Hooks_Init();
+PlayerManager* Hooks_GetPlayerManager();
 
 // Hooks
-void TakePillEvent_Hook();
-void AddCollectibleEvent_Hook();
-char SpawnEntityEvent_Hook();
-int HpUpEvent_Hook();
-void AddSoulHeartsEvent_Hook();
-void ShootTearsEvent_Hook();
+extern void* TakePillEvent_Original;
+extern void* AddCollectibleEvent_Original;
+extern void* SpawnEntityEvent_Original;
+
+extern void* HpUpEvent_Original;
+extern void* AddSoulHeartsEvent_Original;
+extern void* ShootTearsEvent_Original;
 
 // functions
 using IsaacRandomFuncType = unsigned int __cdecl(void);
@@ -33,7 +36,3 @@ extern InitTearFuncType* InitTearFunc;
 
 using Player_TeleportFuncType = void (void);
 extern Player_TeleportFuncType* Player_TeleportFunc;
-
-// initialization + playermanager
-bool Hooks_Init();
-PlayerManager* Hooks_GetPlayerManager();

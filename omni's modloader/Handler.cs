@@ -14,225 +14,297 @@ namespace OML
         public void Handle(Process proc)
         {
             //init server, mutex, and streams
-            using (var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances,PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 32768, 32768))
+            using (var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.WriteThrough, 32768, 32768))
             {
-                using (Mutex mutex = new Mutex(false, "omlmutex"))
+                var read = new BinaryReader(server);
+                var write = new BinaryWriter(server);
+                var formatter = new BinaryFormatter();
+
+                //load plugins
+                Console.WriteLine("\r\n[INFO] loading plugins...");
+                var plugins = Loader.GetPlugins();
+                foreach (OMLPlugin p in plugins)
+                    Console.Write("\r\nloading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
+                Console.WriteLine("\r\n\r\n[INFO] plugin load completed.");
+
+                //wait for connection
+                Console.Write("\r\n[INFO] waiting for connection...");
+                server.WaitForConnection();
+                Console.WriteLine("successful connection to injected dll.");
+
+                // Peek named pipe arguments
+                byte[] eventID = new byte[1];
+                uint bytesRead = 0;
+                uint bytesAvail = 0;
+                uint bytesLeft = 0;
+
+                while (!proc.HasExited)
                 {
-                    var read = new BinaryReader(server);
-                    var write = new BinaryWriter(server);
-                    var formatter = new BinaryFormatter();
-
-                    //load plugins
-                    Console.WriteLine("\r\n[INFO] loading plugins...");
-                    var plugins = Loader.GetPlugins();
-                    foreach (OMLPlugin p in plugins)
-                        Console.Write("\r\nloading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
-                    Console.WriteLine("\r\n\r\n[INFO] plugin load completed.");
-
-                    //wait for connection
-                    Console.Write("\r\n[INFO] waiting for connection...");
-                    server.WaitForConnection();
-                    Console.WriteLine("successful connection to injected dll.");
-
-                    // Peek named pipe arguments
-                    byte[] buffer = new byte[1];
-                    uint bytesRead = 0;
-                    uint bytesAvail = 0;
-                    uint bytesLeft = 0;
-
-                    while (!proc.HasExited)
+                    try
                     {
-                        if (mutex.WaitOne())
+                        if (NativeMethods.PeekNamedPipe(server.SafePipeHandle, eventID, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
                         {
-                            try
+                            switch (eventID[0])
                             {
-                                if (NativeMethods.PeekNamedPipe(server.SafePipeHandle, buffer, 1, ref bytesRead, ref bytesAvail, ref bytesLeft) && (bytesRead > 0))
-                                {
-                                    Player player;
-                                    int _event = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-#region switch
-                                    switch (_event)
+                                case OML.PLAYER_EVENT_TAKEPILL:
+                                    if (bytesLeft + 1 == TakePillEvent_Notification.size())
                                     {
-                                        case OML.PLAYER_EVENT_TAKEPILL: //0
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] takepill event received.");
-                                            player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                                            int pillid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnPlayerPillUse(ref player, ref pillid);
-                                            server.Flush();
-                                            write.Write(OML.PLAYER_EVENT_TAKEPILL);
-                                            write.Write(RawSerialize(player));
-                                            write.Write(pillid);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] takepill event sent.");
-                                            break;
-                                        case OML.PLAYER_EVENT_ADDCOLLECTIBLE: //1
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] addcollectible event received.");
-                                            player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                                            int a2 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            int id = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            int a4 = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_TAKEPILL received.");
 
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnPlayerAddCollectible(ref player, ref a2, ref id, ref a4);
+                                        TakePillEvent_Notification notification = RawDeserialize<TakePillEvent_Notification>(read.ReadBytes(TakePillEvent_Notification.size()), 0);
+                                        
+                                        Player player = new Player(notification.playerHandle);
+                                        bool handled = true;
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerPillUse(player, notification.pillID, ref handled);
 
-                                            server.Flush();
-
-                                            write.Write(OML.PLAYER_EVENT_ADDCOLLECTIBLE);
-                                            write.Write(RawSerialize(player));
-                                            write.Write(a2);
-                                            write.Write(id);
-                                            write.Write(a4);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] addcollectibile event sent.");
-                                            break;
-                                        case OML.GAME_EVENT_SPAWNENTITY: //2
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] spawnentity event received.");
-                                            PointF velocity = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
-                                            PointF position = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
-                                            int gameManager = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            int entityid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            int variant = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            Entity parent = RawDeserialize<Entity>(read.ReadBytes(Marshal.SizeOf(typeof(Entity))), 0);
-                                            int subtype = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            int seed = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnEntitySpawn(ref velocity, ref velocity, ref gameManager, ref entityid, ref variant, ref parent, ref subtype, ref seed);
-
-                                            write.Write(OML.GAME_EVENT_SPAWNENTITY);
-                                            write.Write(RawSerialize(velocity));
-                                            write.Write(RawSerialize(position));
-                                            write.Write(gameManager);
-                                            write.Write(entityid);
-                                            write.Write(variant);
-                                            write.Write(RawSerialize(parent));
-                                            write.Write(subtype);
-                                            write.Write(seed);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] spawnentity event sent.");
-                                            break;
-                                        case OML.PLAYER_EVENT_HPUP: //3
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] hpup event received.");
-                                            player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                                            int hpamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnPlayerHealthUp(ref player, ref hpamount);
-
-                                            write.Write(OML.PLAYER_EVENT_HPUP);
-                                            write.Write(RawSerialize(player));
-                                            write.Write(hpamount);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] hpup event sent.");
-                                            break;
-                                        case OML.PLAYER_EVENT_HPDOWN: //4
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] hpdown event received.");
-                                            player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                                            int hmamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnPlayerHealthDown(ref player, ref hmamount);
-
-                                            write.Write(OML.PLAYER_EVENT_HPDOWN);
-                                            write.Write(RawSerialize(player));
-                                            write.Write(hmamount);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] hpdown event sent.");
-                                            break;
-                                        case OML.PLAYER_EVENT_ADDSOULHEARTS: //5
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] addsoulhearts event received");
-                                            player = RawDeserialize<Player>(read.ReadBytes(Marshal.SizeOf(typeof(Player))), 0);
-                                            int shamount = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnSoulHeartsAdded(ref player, ref shamount);
-
-                                            write.Write(OML.PLAYER_EVENT_ADDSOULHEARTS);
-                                            write.Write(RawSerialize(player));
-                                            write.Write(shamount);
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] addsoulhearts event sent");
-                                            break;
-                                        case OML.ENEMY_EVENT_SHOOTTEARS: //6
-                                            if (Program.verbose)
-                                                Console.Write("[INFO] shoottears event received");
-
-                                            PointF direction = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
-                                            PointF startpos = RawDeserialize<PointF>(read.ReadBytes(Marshal.SizeOf(typeof(PointF))), 0);
-                                            Entity mob = RawDeserialize<Entity>(read.ReadBytes(Marshal.SizeOf(typeof(Entity))), 0);
-                                            int type = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-                                            TearInfo ti = RawDeserialize<TearInfo>(read.ReadBytes(Marshal.SizeOf(typeof(TearInfo))), 0); 
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnTearShot(ref direction, ref startpos, ref mob, ref type, ref ti);
-
-                                            write.Write(OML.ENEMY_EVENT_SHOOTTEARS);
-                                            write.Write(RawSerialize(direction));
-                                            write.Write(RawSerialize(startpos));
-                                            write.Write(RawSerialize(mob));
-                                            write.Write(type);
-                                            write.Write(RawSerialize(ti));
-
-                                            if (Program.verbose)
-                                                Console.Write("[INFO] shoottears event sent");
-                                            break;
-                                        case OML.GAME_EVENT_CHANGEROOM: //7
-                                            if (Program.verbose)
-                                                Console.WriteLine("\r\n[INFO] changeroom event received");
-                                            RoomManager rm = RawDeserialize<RoomManager>(read.ReadBytes(Marshal.SizeOf(typeof(RoomManager))), 0);
-                                            int roomid = BitConverter.ToInt32(read.ReadBytes(sizeof(int)), 0);
-
-                                            foreach (OMLPlugin p in plugins)
-                                                p.OnRoomChange(ref rm, ref roomid);
-
-                                            write.Write(OML.GAME_EVENT_CHANGEROOM);
-                                            write.Write(RawSerialize(rm));
-                                            write.Write(roomid);
-                                            if (Program.verbose) 
-                                                Console.WriteLine("\r\n[INFO] changeroom event sent");
-                                            break;
-                                        default:
-                                            Console.WriteLine("[WARN] unknown packet recieved. event not implemented?");
-                                            break;
-                                    } // case
-#endregion
-                                    if (server.IsConnected)
                                         server.Flush();
-                                } // if PeekNamedPipe
-                            } // try
-                            catch (IOException)
-                            {
-                                Console.WriteLine("\r\n[ERROR] pipe error occured.");
-                                return;
+
+                                        // Send response
+                                        TakePillEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_TAKEPILL;
+                                        response.handled = handled;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_TAKEPILL response sent.");
+                                    }
+                                    else
+                                    { 
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_TAKEPILL: expected " + TakePillEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft+1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.PLAYER_EVENT_ADDCOLLECTIBLE:
+                                    if (bytesLeft + 1 == AddCollectibleEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDCOLLECTIBLE received.");
+
+                                        AddCollectibleEvent_Notification notification = RawDeserialize<AddCollectibleEvent_Notification>(read.ReadBytes(AddCollectibleEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        AddCollectibleEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_ADDCOLLECTIBLE;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDCOLLECTIBLE response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDCOLLECTIBLE: expected " + AddCollectibleEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.GAME_EVENT_SPAWNENTITY:
+                                    if (bytesLeft + 1 == SpawnEntityEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_SPAWNENTITY received.");
+
+                                        SpawnEntityEvent_Notification notification = RawDeserialize<SpawnEntityEvent_Notification>(read.ReadBytes(SpawnEntityEvent_Notification.size()), 0);
+
+                                        Entity parent = new Entity(notification.parentHandle);
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnEntitySpawn(notification.velocity, notification.position, notification.entityID, notification.variant, notification.subtype, parent);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        SpawnEntityEvent_Response response;
+                                        response.eventID = OML.GAME_EVENT_SPAWNENTITY;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_SPAWNENTITY response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] GAME_EVENT_SPAWNENTITY: expected " + SpawnEntityEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.PLAYER_EVENT_HPUP:
+                                    if (bytesLeft + 1 == HpUpEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPUP received.");
+
+                                        HpUpEvent_Notification notification = RawDeserialize<HpUpEvent_Notification>(read.ReadBytes(HpUpEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        int tmpAmount = notification.amount;
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerHealthUp(player, ref tmpAmount);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        HpUpEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_HPUP;
+                                        response.amount = tmpAmount;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPUP response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPUP: expected " + HpUpEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.PLAYER_EVENT_HPDOWN:
+                                    if (bytesLeft + 1 == HpDownEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPDOWN received.");
+
+                                        HpDownEvent_Notification notification = RawDeserialize<HpDownEvent_Notification>(read.ReadBytes(HpDownEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        int tmpAmount = notification.amount;
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerHealthDown(player, ref tmpAmount);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        HpUpEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_HPDOWN;
+                                        response.amount = tmpAmount;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPDOWN response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPDOWN: expected " + HpDownEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.PLAYER_EVENT_ADDSOULHEARTS:
+                                    if (bytesLeft + 1 == AddSoulHeartsEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDSOULHEARTS received.");
+
+                                        AddSoulHeartsEvent_Notification notification = RawDeserialize<AddSoulHeartsEvent_Notification>(read.ReadBytes(AddSoulHeartsEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        int tmpAmount = notification.amount;
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnSoulHeartsAdded(player, ref tmpAmount);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        AddSoulHeartsEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_ADDSOULHEARTS;
+                                        response.amount = tmpAmount;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDSOULHEARTS response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDSOULHEARTS: expected " + AddSoulHeartsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.ENEMY_EVENT_SHOOTTEARS:
+                                    if (bytesLeft + 1 == ShootTearsEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] ENEMY_EVENT_SHOOTTEARS received.");
+
+                                        ShootTearsEvent_Notification notification = RawDeserialize<ShootTearsEvent_Notification>(read.ReadBytes(ShootTearsEvent_Notification.size()), 0);
+
+                                        Entity sourceEntity = new Entity(notification.sourceEntityHandle);
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnEnemyTearShot(notification.velocity, notification.position, sourceEntity, notification.pattern, notification.tearInfo);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        ShootTearsEvent_Response response;
+                                        response.eventID = OML.ENEMY_EVENT_SHOOTTEARS;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] ENEMY_EVENT_SHOOTTEARS response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] ENEMY_EVENT_SHOOTTEARS: expected " + ShootTearsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
+
+                                case OML.PLAYER_EVENT_CHANGEROOM:
+                                    if (bytesLeft + 1 == ChangeRoomEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_CHANGEROOM received.");
+
+                                        ChangeRoomEvent_Notification notification = RawDeserialize<ChangeRoomEvent_Notification>(read.ReadBytes(ChangeRoomEvent_Notification.size()), 0);
+
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnRoomChange(notification.newRoomIndex);
+
+                                        server.Flush();
+
+                                        // Send response
+                                        ChangeRoomEvent_Response response;
+                                        response.eventID = OML.ENEMY_EVENT_SHOOTTEARS;
+
+                                        write.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_CHANGEROOM response sent.");
+                                    }
+                                    else
+                                    {
+                                        if (Program.verbose)
+                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    }
+                                    break;
                             }
-                            catch (AbandonedMutexException)
-                            {
-                                Console.WriteLine("\r\n[ERROR] mutex abandoned. process crashed?");
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine("\r\n[ERROR] fatal error.");
-                                Console.WriteLine(ex.Message);
-                                Console.WriteLine(ex.Source);
-                                Console.WriteLine(ex.StackTrace);
-                                throw;
-                            }
-                            finally
-                            {
-                                mutex.ReleaseMutex();
-                            }
-                        } // if mutex.waitone
-                    } // while (!proc.HasExited)
-                } // using
-            } // using
+
+                            if (server.IsConnected)
+                                server.Flush();
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        Console.WriteLine("\r\n[ERROR] pipe error occured.");
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("\r\n[ERROR] fatal error.");
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Source);
+                        Console.WriteLine(ex.StackTrace);
+                        throw;
+                    }
+                }
+            }
         }
 
         static byte[] GetBytes(string str, int len)

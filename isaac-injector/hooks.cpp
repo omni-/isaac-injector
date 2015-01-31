@@ -10,8 +10,6 @@
 
 using namespace std;
 
-char* eventMasks[8];
-
 /******************************************
 ************** TakePillEvent **************
 *******************************************/
@@ -20,10 +18,18 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	IPC_SendEvent(PLAYER_EVENT_TAKEPILL, player, pillID);
-	IPC_RecieveEvent(PLAYER_EVENT_TAKEPILL, player, &pillID);
+	API_HPUp(player, 4);
+	API_HPDown(player, 2);
+	API_SpawnEntity(5,100,226,1,1,NULL);
 
-	return true;
+	TakePillEvent_Response response(false);
+	TakePillEvent_Notification notification(player, pillID);
+
+	IPC_BeginEvent(&notification, sizeof(TakePillEvent_Notification));	
+		
+	IPC_EndEvent(&response, sizeof(TakePillEvent_Response), IPC_DEFAULT_TIMEOUT);
+
+	return response.handled;
 }
 
 __declspec(naked) void TakePillEvent_Hook()
@@ -53,15 +59,18 @@ __declspec(naked) void TakePillEvent_Hook()
 }
 
 /******************************************
-************** TakePillEvent **************
+*********** AddCollectibleEvent ***********
 *******************************************/
 
 void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
 {
-	IPC_SendEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, a2, itemid, a4);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDCOLLECTIBLE, player, &a2, &itemid, &a4);
+	AddCollectibleEvent_Notification notification(player, a2, itemid, a4);
+	AddCollectibleEvent_Response response;
+	
+	IPC_BeginEvent(&notification, sizeof(AddCollectibleEvent_Notification));		
+	IPC_EndEvent(&response, sizeof(AddCollectibleEvent_Response), IPC_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -89,14 +98,13 @@ __declspec(naked) void AddCollectibleEvent_Hook()
 
 void* SpawnEntityEvent_Original;
 
-void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int EntityID, int Variant, Entity* parent, int subtype, unsigned int seed)
+void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int entityID, int variant, Entity* parent, int subtype, unsigned int seed)
 {
-	IPC_SendEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
-
-	if (parent != NULL)
-		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, parent, subtype, seed);
-	else
-		IPC_RecieveEvent(GAME_EVENT_SPAWNENTITY, velocity, position, playerManager, EntityID, Variant, new Entity(), subtype, seed);
+	SpawnEntityEvent_Notification notification(*velocity, *position, entityID, variant, subtype, parent);
+	SpawnEntityEvent_Response response;
+	
+	IPC_BeginEvent(&notification, sizeof(SpawnEntityEvent_Notification));		
+	IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -134,16 +142,26 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 {
 	if (amount > 0)
 	{
-		IPC_SendEvent(PLAYER_EVENT_HPUP, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPUP, player, &amount);
+		HpUpEvent_Notification notification(player, amount);
+		HpUpEvent_Response response(amount);
+	
+		IPC_BeginEvent(&notification, sizeof(HpUpEvent_Notification));		
+		IPC_EndEvent(&response, sizeof(HpUpEvent_Response), IPC_DEFAULT_TIMEOUT);
+
+		return response.amount;
 	}
 	else if (amount < 0)
 	{
-		IPC_SendEvent(PLAYER_EVENT_HPDOWN, player, amount);
-		IPC_RecieveEvent(PLAYER_EVENT_HPDOWN, player, &amount);
-	}
+		HpDownEvent_Notification notification(player, -amount);
+		HpDownEvent_Response response(-amount);
+	
+		IPC_BeginEvent(&notification, sizeof(HpDownEvent_Notification));		
+		IPC_EndEvent(&response, sizeof(HpDownEvent_Response), IPC_DEFAULT_TIMEOUT);
 
-	return amount;
+		return -response.amount;
+	}
+	else
+		return amount;
 }
 
 __declspec(naked) int HpUpEvent_Hook() // Player* player, int amount
@@ -173,10 +191,13 @@ void* AddSoulHeartsEvent_Original;
 
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
-	IPC_SendEvent(PLAYER_EVENT_ADDSOULHEARTS, player, amount);
-	IPC_RecieveEvent(PLAYER_EVENT_ADDSOULHEARTS, player, &amount);
+	AddSoulHeartsEvent_Notification notification(player, amount);
+	AddSoulHeartsEvent_Response response(amount);
+	
+	IPC_BeginEvent(&notification, sizeof(AddSoulHeartsEvent_Notification));		
+	IPC_EndEvent(&response, sizeof(AddSoulHeartsEvent_Response), IPC_DEFAULT_TIMEOUT);
 
-	return amount;
+	return response.amount;
 }
 
 __declspec(naked) void AddSoulHeartsEvent_Hook()
@@ -240,10 +261,13 @@ __declspec(naked) void VFSLoadFile_Hook()
 
 void* ShootTearsEvent_Original;
 
-void __cdecl ShootTearsEvent_Payload(PointF* direction, PointF* startpos, Entity* mob, int type, TearInfo* tearInfo)
+void __cdecl ShootTearsEvent_Payload(PointF* velocity, PointF* position, Entity* sourceEntity, int pattern, TearInfo* tearInfo)
 {
-	IPC_SendEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, type, tearInfo);
-	IPC_RecieveEvent(ENEMY_EVENT_SHOOTTEARS, direction, startpos, mob, &type, tearInfo);
+	ShootTearsEvent_Notification notification(*velocity, *position, sourceEntity, pattern, *tearInfo);
+	ShootTearsEvent_Response response;
+	
+	IPC_BeginEvent(&notification, sizeof(ShootTearsEvent_Notification));
+	IPC_EndEvent(&response, sizeof(ShootTearsEvent_Response), IPC_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -276,11 +300,11 @@ void* ChangeRoomEvent_Original;
 
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
-	IPC_SendEvent(GAME_EVENT_CHANGEROOM, roomMan, newRoomIdx);
-	if (roomMan != NULL)
-		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, roomMan, &newRoomIdx);
-	else
-		IPC_RecieveEvent(GAME_EVENT_CHANGEROOM, new RoomManager(), &newRoomIdx);
+	ChangeRoomEvent_Notification notification(newRoomIdx);
+	ChangeRoomEvent_Response response;
+	
+	IPC_BeginEvent(&notification, sizeof(ChangeRoomEvent_Notification));
+	IPC_EndEvent(&response, sizeof(ChangeRoomEvent_Response), IPC_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()
@@ -310,26 +334,6 @@ Player_TeleportFuncType* Player_TeleportFunc;
 /******************************************
 ************** Initialization *************
 *******************************************/
-
-// p = Player
-// v = PointF
-// e = Entity
-// t = TearInfo
-// r = RoomManager
-// i = int
-// f = float
-// s = string
-void Hooks_InitEventMasks()
-{
-	eventMasks[PLAYER_EVENT_TAKEPILL] = "pi";
-	eventMasks[PLAYER_EVENT_ADDCOLLECTIBLE] = "piii";
-	eventMasks[PLAYER_EVENT_HPUP] = "pi";
-	eventMasks[PLAYER_EVENT_HPDOWN] = "pi";
-	eventMasks[PLAYER_EVENT_ADDSOULHEARTS] = "pi";
-	eventMasks[GAME_EVENT_SPAWNENTITY] = "vviiieii";
-	eventMasks[ENEMY_EVENT_SHOOTTEARS] = "vveit";
-	eventMasks[GAME_EVENT_CHANGEROOM] = "ri";
-}
 
 void Hooks_HookEvents()
 {
@@ -399,8 +403,6 @@ bool Hooks_Init()
 {
 	if (SigScan_GetImageInfo())
 	{
-		Hooks_InitEventMasks();
-
 		Hooks_GetPlayerManagerPtr();
 
 		Hooks_GetFunctions();

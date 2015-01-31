@@ -3,6 +3,11 @@
 #include "hooks.h"
 #include "isaac_api.h"
 
+PlayerManager* API_GetPlayerManager()
+{
+	return Hooks_GetPlayerManager();
+}
+
 void API_Effect_GoodPill(Player* player)
 {
 	GoodPillEffectFunc(player);
@@ -14,7 +19,7 @@ void API_HPUp(Player* player, int amount)
 	{
 		mov eax, player
 		mov ecx, amount
-		call HpUpEvent_Hook
+		call HpUpEvent_Original
 	}
 }
 
@@ -25,7 +30,7 @@ void API_HPDown(Player* player, int amount)
 	{
 		mov eax, player
 		mov ecx, amount
-		call HpUpEvent_Hook
+		call HpUpEvent_Original
 	}
 }
 
@@ -35,7 +40,7 @@ void API_AddSoulHearts(Player* player, int amount)
 	{
 		mov eax, player
 		mov ecx, amount
-		call AddSoulHeartsEvent_Hook
+		call AddSoulHeartsEvent_Original
 	}
 }
 
@@ -66,7 +71,7 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 			push playerMan
 			mov ebx, pos
 			mov eax, velocity
-			call SpawnEntityEvent_Hook
+			call SpawnEntityEvent_Original
 		}
 	}
 	else
@@ -106,7 +111,7 @@ void API_AddCollectible(Player* player, int itemID)
 		push 0
 		push 0
 		push itemID
-		call AddCollectibleEvent_Hook
+		call AddCollectibleEvent_Original
 	}
 }
 
@@ -119,7 +124,7 @@ void API_ShootTears(PointF* pos, PointF* velocity, int pattern, TearInfo* tear, 
 		push source
 		mov edx, pos
 		mov ecx, velocity
-		call ShootTearsEvent_Hook
+		call ShootTearsEvent_Original
 	}
 }
 

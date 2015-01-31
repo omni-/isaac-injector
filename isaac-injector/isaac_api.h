@@ -18,6 +18,8 @@
 #define SHOTPATTERN_CROSS		7
 #define SHOTPATTERN_CIRCLE		8
 
+PlayerManager* API_GetPlayerManager();
+
 // player stats
 void API_HPUp(Player* player, int amount);
 void API_HPDown(Player* player, int amount);

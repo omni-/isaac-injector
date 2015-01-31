@@ -4,194 +4,49 @@
 #include "stdarg.h"
 #include "hooks.h"
 
-HANDLE hPipe;
-HANDLE hMutex;
-
-//////// The code contains some debug-message boxes because of the pipes not working properly at the moment ////////
+HANDLE hEventPipe;
+HANDLE hCallPipe;
 
 bool IPC_Init()
 {
 	DWORD error;
-	hPipe = InitPipe(error);
-	Sleep(100);
-	hMutex = CreateMutexA(NULL, false, "omlmutex"); //OpenMutexA(MUTEX_ALL_ACCESS, FALSE, "omlmutex");
-	if (hMutex == 0)
-		MessageBoxA(NULL, "OpenMutexA failed", NULL, NULL);
+	hEventPipe = InitPipe(error);
 
-	return (hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE);
+	return (hEventPipe != INVALID_HANDLE_VALUE);
 }
 
-bool IPC_SendEvent(int eventID, ...)
+bool IPC_BeginEvent(void* eventMsg, size_t msgSize)
 {
-	bool IPC_Result = false;
-	if ((hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE))
+	bool result = false;
+	if ((hEventPipe != INVALID_HANDLE_VALUE) && (eventMsg != NULL) && (msgSize > 0))
 	{
-		if (WaitForSingleObject(hMutex, INFINITE) == WAIT_OBJECT_0)
-		{
-			__try
-			{
-				DWORD cbWritten = 0;
-
-				WriteFile(hPipe, &eventID, sizeof(int), &cbWritten, NULL);
-
-				va_list ap;
-				va_start(ap, eventID);
-				for (int i = 0; i < strlen(eventMasks[eventID]); i++)
-				{
-					int intArg = 0;
-					char* strArg = NULL;
-					float floatArg = 0.0;
-					Player* handleArg = NULL;
-					PointF* pointfArg = NULL;
-					Entity* eArg = NULL;
-					TearInfo* tfArg = NULL;
-					RoomManager* rmArg = NULL;
-
-					char* buff;
-					switch (eventMasks[eventID][i])
-					{
-					case 'p':
-						handleArg = va_arg(ap, Player*);
-						if (handleArg == NULL)
-							handleArg = new Player();
-						WriteFile(hPipe, handleArg, sizeof(Player), &cbWritten, NULL);
-						break;
-					case 'v':
-						pointfArg = va_arg(ap, PointF*);
-						if (pointfArg == NULL)
-							pointfArg = new PointF();
-						WriteFile(hPipe, pointfArg, sizeof(PointF), &cbWritten, NULL);
-						break;
-					case 'e':
-						eArg = va_arg(ap, Entity*);
-						if (eArg == NULL)
-							eArg = new Entity();
-						WriteFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
-						break;
-					case 't':
-						tfArg = va_arg(ap, TearInfo*);
-						if (tfArg == NULL)
-							tfArg = new TearInfo();
-						WriteFile(hPipe, tfArg, sizeof(TearInfo), &cbWritten, NULL);
-						break;
-					case 'r':
-						rmArg = va_arg(ap, RoomManager*);
-						if (rmArg == NULL)
-							rmArg = new RoomManager();
-						WriteFile(hPipe, rmArg, sizeof(RoomManager), &cbWritten, NULL);
-						break;
-					case 'i':
-						intArg = va_arg(ap, int);
-						WriteFile(hPipe, &intArg, sizeof(int), &cbWritten, NULL);
-						break;
-					case 'f':
-						floatArg = va_arg(ap, float);
-						WriteFile(hPipe, &floatArg, sizeof(float), &cbWritten, NULL);
-						break;
-					case 's':
-						strArg = va_arg(ap, char*);
-						WriteFile(hPipe, strArg, strlen(strArg), &cbWritten, NULL);
-						break;
-					}
-				}
-				va_end(ap);
-
-				IPC_Result = true;
-			}
-			__finally
-			{
-				ReleaseMutex(hMutex);
-			}
-		}
-		else
-			MessageBoxA(NULL, "invalid pipe handle", NULL, NULL);
+		DWORD bw = 0;
+		result = WriteFile(hEventPipe, eventMsg, msgSize, &bw, NULL) && (bw == msgSize);
 	}
-	else if (hMutex == 0)
-		MessageBoxA(NULL, "mutex is zero", NULL, NULL);
 
-	return IPC_Result;
+	return result;
 }
-bool IPC_RecieveEvent(int eventID, ...)
+
+bool IPC_EndEvent(void* responseMsg, size_t msgSize, DWORD timeout)
 {
-	bool IPC_Result = false;
-
-	if ((hMutex != 0) && (hPipe != INVALID_HANDLE_VALUE))
+	bool result = false;
+	if ((hEventPipe != INVALID_HANDLE_VALUE) && (responseMsg != NULL) && (msgSize > 0))
 	{
-		if (WaitForSingleObject(hMutex, INFINITE) == WAIT_OBJECT_0)
+		DWORD startTime = GetTickCount();
+
+		DWORD br = 0;
+		DWORD ba = 0;
+		DWORD bl = 0;
+		do
 		{
-			__try
+			if (PeekNamedPipe(hEventPipe, NULL, 0, &br, &ba, &bl) && (bl == msgSize))
 			{
-				DWORD cbWritten = 0;
-
-				int tmpEventID = 0;
-				ReadFile(hPipe, &tmpEventID, sizeof(int), &cbWritten, NULL);
-
-				va_list ap;
-				va_start(ap, eventID);
-				for (int i = 0; i < strlen(eventMasks[eventID]); i++)
-				{
-					int* intArg = NULL;
-					char* strArg = NULL;
-					float* floatArg = NULL;
-					Player* handleArg = NULL;
-					PointF* pointfArg = NULL;
-					Entity* eArg = NULL;
-					TearInfo* tfArg = NULL;
-					RoomManager* rmArg = NULL;
-
-					char* buff;
-					switch (eventMasks[eventID][i])
-					{
-					case 'p':
-						handleArg = va_arg(ap, Player*);
-						ReadFile(hPipe, handleArg, sizeof(Player), &cbWritten, NULL);
-						break;
-					case 'v':
-						pointfArg = va_arg(ap, PointF*);
-						ReadFile(hPipe, pointfArg, sizeof(PointF), &cbWritten, NULL);
-						break;
-					case 'e':
-						eArg = va_arg(ap, Entity*);
-						ReadFile(hPipe, eArg, sizeof(Entity), &cbWritten, NULL);
-						break;
-					case 't':
-						tfArg = va_arg(ap, TearInfo*);
-						ReadFile(hPipe, tfArg, sizeof(TearInfo), &cbWritten, NULL);
-						break;
-					case 'r':
-						rmArg = va_arg(ap, RoomManager*);
-						ReadFile(hPipe, rmArg, sizeof(RoomManager), &cbWritten, NULL);
-						break;
-					case 'i':
-						intArg = va_arg(ap, int*);
-						ReadFile(hPipe, &intArg, sizeof(int), &cbWritten, NULL);
-						break;
-					case 'f':
-						floatArg = va_arg(ap, float*);
-						ReadFile(hPipe, &floatArg, sizeof(float), &cbWritten, NULL);
-						break;
-					case 's':
-						strArg = va_arg(ap, char*);
-						ReadFile(hPipe, strArg, strlen(strArg), &cbWritten, NULL);
-						break;
-					}
-				}
-				va_end(ap);
-
-				IPC_Result = true;
-			}
-			__finally
-			{
-				ReleaseMutex(hMutex);
+				result = ReadFile(hEventPipe, responseMsg, msgSize, &br, NULL) && (br == msgSize);
+				break;
 			}
 		}
-		else
-			MessageBoxA(NULL, "mutex locked", NULL, NULL);
+		while ((GetTickCount() - startTime) < timeout);
 	}
-	else if (hMutex == 0)
-		MessageBoxA(NULL, "mutex is zero", NULL, NULL);
-	else
-		MessageBoxA(NULL, "invalid pipe handle", NULL, NULL);
 
-	return IPC_Result;
+	return result;
 }

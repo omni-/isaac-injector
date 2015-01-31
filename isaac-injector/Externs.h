@@ -67,23 +67,23 @@ struct Player : Entity
 #pragma pack(1)
 struct TearInfo
 {
-	float _stuff0;
-	float _stuff4;
-	float _shotheight;
-	float _shotspeed_strange;
-	float _shotspeed;
-	float _damage;
-	float _stuff24;
-	float _stuff28;
-	float _stuff32;
-	float _stuff36;
-	float _tearcolor_red;
-	float _tearcolor_green;
-	float _tearcolor_blue;
-	float _tearcolor_alpha;
-	float unknown[0x0F];
-	int _type;
-	float unknown2[0x11];
+	float unknown0;
+	float unknown4;
+	float shotheight;
+	float shotspeed_strange;
+	float shotspeed;
+	float damage;
+	float unknown24;
+	float unknown28;
+	float unknown32;
+	float unknown36;
+	float tearcolor_red;
+	float tearcolor_green;
+	float tearcolor_blue;
+	float tearcolor_alpha;
+	float unknown56[0x0F];
+	int type;
+	float unknown64[0x11];
 };
 
 #pragma pack(1)
