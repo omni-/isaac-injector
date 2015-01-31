@@ -23,17 +23,6 @@ void API_HPUp(Player* player, int amount)
 	}
 }
 
-void API_HPDown(Player* player, int amount)
-{
-	amount = -amount;
-	_asm
-	{
-		mov eax, player
-		mov ecx, amount
-		call HpUpEvent_Original
-	}
-}
-
 void API_AddSoulHearts(Player* player, int amount)
 {
 	_asm

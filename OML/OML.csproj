@@ -40,6 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OML.cs" />
+    <Compile Include="OMLAPI.cs" />
+    <Compile Include="OMLAPITypes.cs" />
+    <Compile Include="OMLAPIEvents.cs" />
+    <Compile Include="OMLTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
