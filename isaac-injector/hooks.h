@@ -10,6 +10,7 @@
 #define PLAYER_EVENT_ADDSOULHEARTS  0x05
 #define ENEMY_EVENT_SHOOTTEARS      0x06
 #define PLAYER_EVENT_CHANGEROOM		0x07
+#define GAME_EVENT_UPDATE			0x08
 
 // initialization + playermanager
 bool Hooks_Init();
@@ -19,7 +20,7 @@ PlayerManager* Hooks_GetPlayerManager();
 extern void* TakePillEvent_Original;
 extern void* AddCollectibleEvent_Original;
 extern void* SpawnEntityEvent_Original;
-
+extern void* GameUpdateEvent_Original;
 extern void* HpUpEvent_Original;
 extern void* AddSoulHeartsEvent_Original;
 extern void* ShootTearsEvent_Original;
