@@ -86,8 +86,9 @@
     <ClInclude Include="Externs.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="ipc.h" />
+    <ClInclude Include="ipc_messages_api.h" />
+    <ClInclude Include="ipc_messages_event.h" />
     <ClInclude Include="isaac_api.h" />
-    <ClInclude Include="pipe.h" />
     <ClInclude Include="signatures.h" />
     <ClInclude Include="sigscan.h" />
     <ClInclude Include="stdafx.h" />
@@ -98,7 +99,6 @@
     <ClCompile Include="ipc.cpp" />
     <ClCompile Include="isaac_api.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="pipe.cpp" />
     <ClCompile Include="sigscan.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -3,9 +3,8 @@
 #include "Windows.h"
 #include "hooks.h"
 
-#define IPC_DEFAULT_TIMEOUT 100
-
-extern HANDLE hPipe;
+#define IPC_EVENT_DEFAULT_TIMEOUT 100
+#define IPC_API_DEFAULT_TIMEOUT 10
 
 bool IPC_Init();
 
@@ -232,3 +231,6 @@ struct GameUpdateEvent_Response
 {
 	int eventID = GAME_EVENT_UPDATE;
 };
+
+unsigned int IPC_HandleAPICall(DWORD timeout);
+void IPC_ProcessEvent();

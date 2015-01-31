@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "hooks.h"
 #include "ipc.h"
+#include "ipc_messages_event.h"
 #include "Externs.h"
 #include "detours.h"
 #include "sigscan.h"
@@ -18,16 +19,12 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	API_HPUp(player, 4);
-	API_HPDown(player, 2);
-	API_SpawnEntity(5,100,226,1,1,NULL);
-
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
 
 	IPC_BeginEvent(&notification, sizeof(TakePillEvent_Notification));	
-		
-	IPC_EndEvent(&response, sizeof(TakePillEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(TakePillEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 
 	return response.handled;
 }
@@ -70,7 +67,7 @@ void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int
 	AddCollectibleEvent_Response response;
 	
 	IPC_BeginEvent(&notification, sizeof(AddCollectibleEvent_Notification));		
-	IPC_EndEvent(&response, sizeof(AddCollectibleEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(AddCollectibleEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void AddCollectibleEvent_Hook()
@@ -104,7 +101,7 @@ void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, Player
 	SpawnEntityEvent_Response response;
 	
 	IPC_BeginEvent(&notification, sizeof(SpawnEntityEvent_Notification));		
-	IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()
@@ -146,7 +143,7 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 		HpUpEvent_Response response(amount);
 	
 		IPC_BeginEvent(&notification, sizeof(HpUpEvent_Notification));		
-		IPC_EndEvent(&response, sizeof(HpUpEvent_Response), IPC_DEFAULT_TIMEOUT);
+		IPC_EndEvent(&response, sizeof(HpUpEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 
 		return response.amount;
 	}
@@ -156,7 +153,7 @@ int __cdecl HpUpEvent_Payload(Player* player, int amount)
 		HpDownEvent_Response response(-amount);
 	
 		IPC_BeginEvent(&notification, sizeof(HpDownEvent_Notification));		
-		IPC_EndEvent(&response, sizeof(HpDownEvent_Response), IPC_DEFAULT_TIMEOUT);
+		IPC_EndEvent(&response, sizeof(HpDownEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 
 		return -response.amount;
 	}
@@ -195,7 +192,7 @@ int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 	AddSoulHeartsEvent_Response response(amount);
 	
 	IPC_BeginEvent(&notification, sizeof(AddSoulHeartsEvent_Notification));		
-	IPC_EndEvent(&response, sizeof(AddSoulHeartsEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(AddSoulHeartsEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 
 	return response.amount;
 }
@@ -267,7 +264,7 @@ void __cdecl ShootTearsEvent_Payload(PointF* velocity, PointF* position, Entity*
 	ShootTearsEvent_Response response;
 	
 	IPC_BeginEvent(&notification, sizeof(ShootTearsEvent_Notification));
-	IPC_EndEvent(&response, sizeof(ShootTearsEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(ShootTearsEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void ShootTearsEvent_Hook()
@@ -304,7 +301,7 @@ void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 	ChangeRoomEvent_Response response;
 	
 	IPC_BeginEvent(&notification, sizeof(ChangeRoomEvent_Notification));
-	IPC_EndEvent(&response, sizeof(ChangeRoomEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(ChangeRoomEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void ChangeRoomEvent_Hook()

@@ -22,7 +22,6 @@ PlayerManager* API_GetPlayerManager();
 
 // player stats
 void API_HPUp(Player* player, int amount);
-void API_HPDown(Player* player, int amount);
 void API_AddSoulHearts(Player* player, int amount);
 
 // player
