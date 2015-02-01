@@ -208,3 +208,16 @@ struct ChangeRoomEvent_Response
 {
 	int eventID = PLAYER_EVENT_CHANGEROOM;
 };
+
+//GameUpdateEvent
+#pragma pack(1)
+struct GameUpdateEvent_Notification
+{
+	int eventID = GAME_EVENT_UPDATE;
+};
+
+#pragma pack(1)
+struct GameUpdateEvent_Response
+{
+	int eventID = GAME_EVENT_UPDATE;
+};

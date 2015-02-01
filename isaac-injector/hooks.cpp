@@ -331,7 +331,7 @@ void __stdcall GameUpdate_Hook(void)
 	GameUpdateEvent_Response response;
 
 	IPC_BeginEvent(&notification, sizeof(GameUpdateEvent_Notification));
-	IPC_EndEvent(&response, sizeof(GameUpdateEvent_Response), IPC_DEFAULT_TIMEOUT);
+	IPC_EndEvent(&response, sizeof(GameUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 	MessageBoxA(NULL, "weed", NULL, NULL);
 }
 
