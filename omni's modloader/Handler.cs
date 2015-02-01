@@ -70,12 +70,10 @@ namespace OML
                                         TakePillEvent_Notification notification = RawDeserialize<TakePillEvent_Notification>(ServerIn.ReadBytes(TakePillEvent_Notification.size()), 0);
 
                                         Player player = new Player(notification.playerHandle);
-                                        bool handled = true;
+                                        bool handled = false;
 
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerPillUse(player, notification.pillID, ref handled);
-
-                                        player.HpUp(2);
 
                                         new API_EndCall(OML.Connection).Call();
             

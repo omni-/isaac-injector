@@ -51,32 +51,32 @@ namespace OML
 
         public const int PLAYER_EVENT_TAKEPILL = 0x00;
         public const int PLAYER_EVENT_ADDCOLLECTIBLE = 0x01;
-        public const int GAME_EVENT_SPAWNENTITY = 0x02;
-        public const int PLAYER_EVENT_HPUP = 0x03;
-        public const int PLAYER_EVENT_HPDOWN = 0x04;
+        public const int GAME_EVENT_SPAWNENTITY     = 0x02;
+        public const int PLAYER_EVENT_HPUP          = 0x03;
+        public const int PLAYER_EVENT_HPDOWN        = 0x04;
         public const int PLAYER_EVENT_ADDSOULHEARTS = 0x05;
-        public const int ENEMY_EVENT_SHOOTTEARS = 0x06;
-        public const int PLAYER_EVENT_CHANGEROOM = 0x07;
+        public const int ENEMY_EVENT_SHOOTTEARS     = 0x06;
+        public const int PLAYER_EVENT_CHANGEROOM    = 0x07;
 
-        public const uint APICALL_NULL = 0x00;
+        public const uint APICALL_NULL              = 0x00;
 
-        public const uint APICALL_HPUP = 0x01;
-        public const uint APICALL_ADDSOULHEARTS = 0x02;
-        public const uint APICALL_GETKEYS = 0x03;
-        public const uint APICALL_SETKEYS = 0x04;
-        public const uint APICALL_GETBOMBS = 0x05;
-        public const uint APICALL_SETBOMBS = 0x06;
-        public const uint APICALL_GETCOINS = 0x07;
-        public const uint APICALL_SETCOINS = 0x08;
-        public const uint APICALL_GETTRINKET = 0x09;
-        public const uint APICALL_SETTRINKET = 0x0A;
-        public const uint APICALL_ADDCOLLECTIBLE = 0x0B;
-        public const uint APICALL_HASITEM = 0x0C;
-        public const uint APICALL_GETPOSITION = 0x0D;
-        public const uint APICALL_SETPOSITION = 0x0E;
-        public const uint APICALL_TELEPORT = 0x0F;
+        public const uint APICALL_HPUP              = 0x01;
+        public const uint APICALL_ADDSOULHEARTS     = 0x02;
+        public const uint APICALL_GETKEYS           = 0x03;
+        public const uint APICALL_SETKEYS           = 0x04;
+        public const uint APICALL_GETBOMBS          = 0x05;
+        public const uint APICALL_SETBOMBS          = 0x06;
+        public const uint APICALL_GETCOINS          = 0x07;
+        public const uint APICALL_SETCOINS          = 0x08;
+        public const uint APICALL_GETTRINKET        = 0x09;
+        public const uint APICALL_SETTRINKET        = 0x0A;
+        public const uint APICALL_ADDCOLLECTIBLE    = 0x0B;
+        public const uint APICALL_HASITEM           = 0x0C;
+        public const uint APICALL_GETPOSITION       = 0x0D;
+        public const uint APICALL_SETPOSITION       = 0x0E;
+        public const uint APICALL_TELEPORT          = 0x0F;
 
-        public const uint APICALL_END = 0xFFFFFFFF;
+        public const uint APICALL_END               = 0xFFFFFFFF;
 
         public static Player GetPlayer(IntPtr handle)
         {

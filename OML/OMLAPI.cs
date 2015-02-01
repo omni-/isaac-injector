@@ -120,4 +120,142 @@ namespace OML.API.Calls
             HpUp_Response response = RawDeserialize<HpUp_Response>(connection.inStream.ReadBytes(SizeOf(typeof(HpUp_Response))));
         }
     }
+
+    public class API_GetKeysCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetKeys_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetKeys_Response
+        {
+            public uint id;
+            public int amount;
+        };
+
+        private GetKeys_Request request;
+
+        public API_GetKeysCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
+        {
+            request.id = OML.APICALL_GETKEYS;
+            request.playerHandle = _player;
+        }
+
+        public int Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GetKeys_Response response = RawDeserialize<GetKeys_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetKeys_Response))));
+
+            return response.amount;
+        }
+    }
+
+    public class API_SetKeysCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetKeys_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int amount;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetKeys_Response
+        {
+            public uint id;
+        };
+
+        private SetKeys_Request request;
+
+        public API_SetKeysCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
+        {
+            request.id = OML.APICALL_SETKEYS;
+            request.playerHandle = _player;
+            request.amount = _amount;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SetKeys_Response response = RawDeserialize<SetKeys_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetKeys_Response))));
+        }
+    }
+
+    public class API_GetBombsCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetBombs_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetBombs_Response
+        {
+            public uint id;
+            public int amount;
+        };
+
+        private GetBombs_Request request;
+
+        public API_GetBombsCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
+        {
+            request.id = OML.APICALL_GETBOMBS;
+            request.playerHandle = _player;
+        }
+
+        public int Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GetBombs_Response response = RawDeserialize<GetBombs_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetBombs_Response))));
+
+            return response.amount;
+        }
+    }
+
+    public class API_SetBombsCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetBombs_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int amount;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetBombs_Response
+        {
+            public uint id;
+        };
+
+        private SetBombs_Request request;
+
+        public API_SetBombsCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
+        {
+            request.id = OML.APICALL_SETBOMBS;
+            request.playerHandle = _player;
+            request.amount = _amount;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SetBombs_Response response = RawDeserialize<SetBombs_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetBombs_Response))));
+        }
+    }
 }

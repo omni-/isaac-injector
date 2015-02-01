@@ -36,7 +36,7 @@ struct API_EndResult
 #pragma pack(1)
 struct API_HpUpCall
 {
-	unsigned int id = PLAYER_EVENT_HPUP;
+	unsigned int id = APICALL_HPUP;
 	Player* player;
 	int amount;
 };
@@ -44,5 +44,61 @@ struct API_HpUpCall
 #pragma pack(1)
 struct API_HpUpResult
 {
-	unsigned int id = PLAYER_EVENT_HPUP;
+	unsigned int id = APICALL_HPUP;
+};
+
+#pragma pack(1)
+struct API_GetKeysCall
+{
+	unsigned int id = APICALL_GETKEYS;
+	Player* player;
+};
+
+#pragma pack(1)
+struct API_GetKeysResult
+{
+	unsigned int id = APICALL_GETKEYS;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetKeysCall
+{
+	unsigned int id = APICALL_SETKEYS;
+	Player* player;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetKeysResult
+{
+	unsigned int id = APICALL_SETKEYS;
+};
+
+#pragma pack(1)
+struct API_GetBombsCall
+{
+	unsigned int id = APICALL_GETBOMBS;
+	Player* player;
+};
+
+#pragma pack(1)
+struct API_GetBombsResult
+{
+	unsigned int id = APICALL_GETBOMBS;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetBombsCall
+{
+	unsigned int id = APICALL_SETBOMBS;
+	Player* player;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetBombsResult
+{
+	unsigned int id = APICALL_SETBOMBS;
 };

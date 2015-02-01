@@ -95,6 +95,56 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_HpUpResult), &br, NULL);
 					}
 					break;
+
+				case APICALL_GETKEYS:
+					if (bl + sizeof(int) == sizeof(API_GetKeysCall))
+					{
+						API_GetKeysCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GetKeysCall), &br, NULL);
+
+						API_GetKeysResult response;
+						response.amount = request.player->_keys;
+						WriteFile(hCallPipe, &response, sizeof(API_GetKeysResult), &br, NULL);
+					}
+					break;
+
+				case APICALL_SETKEYS:
+					if (bl + sizeof(int) == sizeof(API_SetKeysCall))
+					{
+						API_SetKeysCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SetKeysCall), &br, NULL);
+
+						request.player->_keys = request.amount;
+
+						API_SetKeysResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SetKeysResult), &br, NULL);
+					}
+					break;
+
+				case APICALL_GETBOMBS:
+					if (bl + sizeof(int) == sizeof(API_GetBombsCall))
+					{
+						API_GetBombsCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GetBombsCall), &br, NULL);
+
+						API_GetKeysResult response;
+						response.amount = request.player->_numBombs;
+						WriteFile(hCallPipe, &response, sizeof(API_GetBombsResult), &br, NULL);
+					}
+					break;
+
+				case APICALL_SETBOMBS:
+					if (bl + sizeof(int) == sizeof(API_SetBombsCall))
+					{
+						API_SetBombsCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SetBombsCall), &br, NULL);
+
+						request.player->_numBombs = request.amount;
+
+						API_SetBombsResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SetBombsResult), &br, NULL);
+					}
+					break;
 			}
 		}
 	}
