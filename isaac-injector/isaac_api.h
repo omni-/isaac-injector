@@ -18,6 +18,14 @@
 #define SHOTPATTERN_CROSS		7
 #define SHOTPATTERN_CIRCLE		8
 
+#define PLAYERSTAT_SPEED		0
+#define PLAYERSTAT_RANGE		1
+#define PLAYERSTAT_FIRERATE		2
+#define	PLAYERSTAT_SHOTSPEED	3
+#define PLAYERSTAT_DAMAGE		4
+#define PLAYERSTAT_LUCK			5
+
+
 PlayerManager* API_GetPlayerManager();
 
 // player stats

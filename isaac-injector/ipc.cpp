@@ -145,6 +145,67 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_SetBombsResult), &br, NULL);
 					}
 					break;
+				case APICALL_GETSTAT:
+					if (bl + sizeof(int) == sizeof(API_GetStatCall))
+					{
+						API_GetStatCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GetStatCall), &br, NULL);
+
+						API_GetStatResult response;
+
+						switch (request.stat)
+						{
+						case PLAYERSTAT_SPEED:
+							response.amount = request.player->_speed;
+							break;
+						case PLAYERSTAT_RANGE:
+							response.amount = request.player->_range;
+							break;
+						case PLAYERSTAT_FIRERATE:
+							response.amount = -1; //should be request.player->_firerate. we don't know where firerate is yet.
+							break;
+						case PLAYERSTAT_SHOTSPEED:
+							response.amount = request.player->_shotspeed;
+							break;
+						case PLAYERSTAT_DAMAGE:
+							response.amount = request.player->_damage;
+							break;
+						case PLAYERSTAT_LUCK:
+							response.amount = request.player->_luck;
+							break;
+						}
+						WriteFile(hCallPipe, &response, sizeof(API_GetStatResult), &br, NULL);
+					}
+				case APICALL_SETSTAT:
+					if (bl + sizeof(int) == sizeof(API_SetStatCall))
+					{
+						API_SetStatCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SetStatCall), &br, NULL);
+
+						switch (request.stat)
+						{
+						case PLAYERSTAT_SPEED:
+							request.amount = request.player->_speed;
+							break;
+						case PLAYERSTAT_RANGE:
+							request.amount = request.player->_range;
+							break;
+						case PLAYERSTAT_FIRERATE:
+							request.amount = -1; //should be request.player->_firerate. we don't know where firerate is yet.
+							break;
+						case PLAYERSTAT_SHOTSPEED:
+							request.amount = request.player->_shotspeed;
+							break;
+						case PLAYERSTAT_DAMAGE:
+							request.amount = request.player->_damage;
+							break;
+						case PLAYERSTAT_LUCK:
+							request.amount = request.player->_luck;
+							break;
+						}
+						API_SetStatResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SetStatResult), &br, NULL);
+					}
 			}
 		}
 	}

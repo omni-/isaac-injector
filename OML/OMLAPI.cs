@@ -258,4 +258,77 @@ namespace OML.API.Calls
             SetBombs_Response response = RawDeserialize<SetBombs_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetBombs_Response))));
         }
     }
+    public class API_GetStatCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetStat_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int stat;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetStat_Response
+        {
+            public uint id;
+            public int amount;
+        };
+
+        private GetStat_Request request;
+
+        public API_GetStatCall(API_ConnectionInfo _connection, IntPtr _player, PlayerStat _stat)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_GETSTAT
+            request.playerHandle = _player;
+            request.stat = _stat;
+        }
+
+        public int Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GetStat_Response response = RawDeserialize<GetStat_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetStat_Response))));
+
+            return response.amount;
+        }
+    }
+    public class API_SetStatCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetStat_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int amount;
+            public int stat;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetStat_Response
+        {
+            public uint id;
+        };
+
+        private SetStat_Request request;
+
+        public API_SetStatCall(API_ConnectionInfo _connection, IntPtr _player, int _amount, PlayerStat _stat)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_SETSTAT;
+            request.playerHandle = _player;
+            request.amount = _amount;
+            request.stat = _stat;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SetStat_Response response = RawDeserialize<SetStat_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetStat_Response))));
+        }
+    }
 }

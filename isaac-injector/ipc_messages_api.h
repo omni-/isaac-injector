@@ -18,6 +18,8 @@
 #define APICALL_GETPOSITION    0x0D
 #define APICALL_SETPOSITION    0x0E
 #define APICALL_TELEPORT       0x0F
+#define APICALL_GETSTAT		   0x10
+#define APICALL_SETSTAT		   0x11
 
 #define APICALL_END            0xFFFFFFFF
 
@@ -101,4 +103,34 @@ struct API_SetBombsCall
 struct API_SetBombsResult
 {
 	unsigned int id = APICALL_SETBOMBS;
+};
+
+#pragma pack (1)
+struct API_GetStatCall
+{
+	unsigned int id = APICALL_GETSTAT;
+	Player* player;
+	int stat;
+};
+
+#pragma pack (1)
+struct API_GetStatResult
+{
+	unsigned int id = APICALL_GETSTAT;
+	int amount;
+};
+
+#pragma pack (1)
+struct API_SetStatCall
+{
+	unsigned int id = APICALL_GETSTAT;
+	Player* player;
+	int amount;
+	int stat;
+};
+
+#pragma pack (1)
+struct API_SetStatResult
+{
+	unsigned int id = APICALL_GETSTAT;
 };
