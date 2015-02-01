@@ -6,9 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using OML.API.Calls;
-using OML.API.Types;
-using OML.Types;
 
 namespace OML
 {

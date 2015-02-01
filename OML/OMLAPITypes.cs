@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace OML.API.Types
+namespace OML
 {
     [Serializable()]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

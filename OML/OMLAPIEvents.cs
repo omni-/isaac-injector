@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using OML.API.Types;
 
-namespace OML.API.Events
+namespace OML
 {
     // TakePillEvent
     [Serializable()]

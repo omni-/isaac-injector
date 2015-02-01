@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace OML.API.Calls
+namespace OML
 {
     public class API_ConnectionInfo
     {
@@ -87,7 +87,7 @@ namespace OML.API.Calls
         }
     }
 
-    public class API_HpUpCall : API_BaseCall
+    internal class API_HpUpCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -121,7 +121,7 @@ namespace OML.API.Calls
         }
     }
 
-    public class API_GetKeysCall : API_BaseCall
+    internal class API_GetKeysCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -156,7 +156,7 @@ namespace OML.API.Calls
         }
     }
 
-    public class API_SetKeysCall : API_BaseCall
+    internal class API_SetKeysCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -190,7 +190,7 @@ namespace OML.API.Calls
         }
     }
 
-    public class API_GetBombsCall : API_BaseCall
+    internal class API_GetBombsCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -225,7 +225,7 @@ namespace OML.API.Calls
         }
     }
 
-    public class API_SetBombsCall : API_BaseCall
+    internal class API_SetBombsCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -258,7 +258,7 @@ namespace OML.API.Calls
             SetBombs_Response response = RawDeserialize<SetBombs_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetBombs_Response))));
         }
     }
-    public class API_GetStatCall : API_BaseCall
+    internal class API_GetStatCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -282,9 +282,9 @@ namespace OML.API.Calls
         public API_GetStatCall(API_ConnectionInfo _connection, IntPtr _player, PlayerStat _stat)
             : base(_connection)
         {
-            request.id = OML.APICALL_GETSTAT
+            request.id = OML.APICALL_GETSTAT;
             request.playerHandle = _player;
-            request.stat = _stat;
+            request.stat = (int)_stat;
         }
 
         public int Call()
@@ -295,7 +295,7 @@ namespace OML.API.Calls
             return response.amount;
         }
     }
-    public class API_SetStatCall : API_BaseCall
+    internal class API_SetStatCall : API_BaseCall
     {
         [Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -322,7 +322,7 @@ namespace OML.API.Calls
             request.id = OML.APICALL_SETSTAT;
             request.playerHandle = _player;
             request.amount = _amount;
-            request.stat = _stat;
+            request.stat = (int)_stat;
         }
 
         public void Call()

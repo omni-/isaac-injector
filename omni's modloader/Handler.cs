@@ -6,9 +6,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
-using OML.Types;
-using OML.API.Calls;
-using OML.API.Events;
 
 namespace OML
 {
@@ -76,7 +73,7 @@ namespace OML
                                             p.OnPlayerPillUse(player, notification.pillID, ref handled);
 
                                         new API_EndCall(OML.Connection).Call();
-            
+
                                         server.Flush();
 
                                         // Send response
@@ -89,10 +86,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_TAKEPILL response sent.");
                                     }
                                     else
-                                    { 
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_TAKEPILL: expected " + TakePillEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft+1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_TAKEPILL: expected " + TakePillEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.PLAYER_EVENT_ADDCOLLECTIBLE:
@@ -107,6 +101,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -118,10 +114,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDCOLLECTIBLE response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDCOLLECTIBLE: expected " + AddCollectibleEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDCOLLECTIBLE: expected " + AddCollectibleEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.GAME_EVENT_SPAWNENTITY:
@@ -136,6 +129,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnEntitySpawn(notification.velocity, notification.position, notification.entityID, notification.variant, notification.subtype, parent);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -147,10 +142,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_SPAWNENTITY response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] GAME_EVENT_SPAWNENTITY: expected " + SpawnEntityEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] GAME_EVENT_SPAWNENTITY: expected " + SpawnEntityEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.PLAYER_EVENT_HPUP:
@@ -166,6 +158,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerHealthUp(player, ref tmpAmount);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -178,10 +172,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPUP response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPUP: expected " + HpUpEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPUP: expected " + HpUpEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.PLAYER_EVENT_HPDOWN:
@@ -197,6 +188,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerHealthDown(player, ref tmpAmount);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -209,10 +202,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_HPDOWN response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPDOWN: expected " + HpDownEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_HPDOWN: expected " + HpDownEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.PLAYER_EVENT_ADDSOULHEARTS:
@@ -228,6 +218,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnSoulHeartsAdded(player, ref tmpAmount);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -240,10 +232,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_ADDSOULHEARTS response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDSOULHEARTS: expected " + AddSoulHeartsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_ADDSOULHEARTS: expected " + AddSoulHeartsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.ENEMY_EVENT_SHOOTTEARS:
@@ -258,6 +247,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnEnemyTearShot(notification.velocity, notification.position, sourceEntity, notification.pattern, notification.tearInfo);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -269,10 +260,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] ENEMY_EVENT_SHOOTTEARS response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] ENEMY_EVENT_SHOOTTEARS: expected " + ShootTearsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] ENEMY_EVENT_SHOOTTEARS: expected " + ShootTearsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case OML.PLAYER_EVENT_CHANGEROOM:
@@ -286,6 +274,8 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnRoomChange(notification.newRoomIndex);
 
+                                        new API_EndCall(OML.Connection).Call();
+
                                         server.Flush();
 
                                         // Send response
@@ -297,10 +287,7 @@ namespace OML
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_CHANGEROOM response sent.");
                                     }
                                     else
-                                    {
-                                        if (Program.verbose)
-                                            Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
-                                    }
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
                             }
 

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OML.API.Calls;
 
-namespace OML.Types
+namespace OML
 {
     public class Entity
     {
@@ -52,6 +51,16 @@ namespace OML.Types
         public void HpDown(int amount)
         {
             new API_HpUpCall(OML.Connection, Handle, -amount).Call();
+        }
+
+        public void GetStat(PlayerStat stat, int amount)
+        {
+            new API_GetStatCall(OML.Connection, Handle, stat);
+        }
+
+        public void SetStat(PlayerStat stat, int amount)
+        {
+            new API_SetStatCall(OML.Connection, Handle, amount, stat);
         }
     }
 }
