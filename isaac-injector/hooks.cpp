@@ -320,6 +320,22 @@ __declspec(naked) void ChangeRoomEvent_Hook()
 }
 
 /******************************************
+************* GameUpdateEvent *************
+*******************************************/
+
+void* GameUpdateEvent_Original;
+
+void __stdcall GameUpdate_Hook(void)
+{
+	GameUpdateEvent_Notification notification;
+	GameUpdateEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(GameUpdateEvent_Notification));
+	IPC_EndEvent(&response, sizeof(GameUpdateEvent_Response), IPC_DEFAULT_TIMEOUT);
+	MessageBoxA(NULL, "weed", NULL, NULL);
+}
+
+/******************************************
 *************** Functions *****************
 *******************************************/
 
@@ -365,6 +381,10 @@ void Hooks_HookEvents()
 	// VFSLoadFile
 	void* VFSLoadFile_SigPtr = SigScan_FindSignature(&Signature_VFSLoadFile);
 	VFSLoadFile_Original = DetourFunction(PBYTE(VFSLoadFile_SigPtr), PBYTE(VFSLoadFile_Hook));
+
+	//GameUpdateEvent
+	//void* GameUpdateEvent_SigPtr = SigScan_FindSignature(&Signature_GameUpdate);
+	//GameUpdateEvent_Original = DetourFunction(PBYTE(GameUpdateEvent_SigPtr), PBYTE(GameUpdate_Hook));
 }
 
 void Hooks_GetFunctions()
