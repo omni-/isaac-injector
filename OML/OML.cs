@@ -21,6 +21,9 @@ namespace OML
         public virtual void OnEntitySpawn(PointF velocity, PointF position, int entityID, int variant, int subtype, Entity parent)
         {
         }
+        public virtual void OnPlayerCardUse(Player player, int cardID, ref bool handled)
+        {
+        }
         public virtual void OnPlayerPillUse(Player player, int pillID, ref bool handled)
         {
         }
@@ -39,11 +42,9 @@ namespace OML
         public virtual void OnEnemyTearShot(PointF velocity, PointF position, Entity sourceEntity, int pattern, TearInfo tearInfo)
         {
         }
-
         public virtual void OnGameUpdate()
         {
         }
-
         public virtual void OnPlayerUpdate(Player player)
         {
         }
@@ -64,6 +65,7 @@ namespace OML
         public const int PLAYER_EVENT_CHANGEROOM     = 0x07;
         public const int GAME_EVENT_UPDATE           = 0x08;
         public const int PLAYER_EVENT_UPDATE         = 0x09;
+        public const int PLAYER_EVENT_USECARD        = 0x0A;
 
 
         public const uint APICALL_NULL               = 0x00;

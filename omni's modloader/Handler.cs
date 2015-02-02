@@ -392,6 +392,37 @@ namespace OML
                                     else
                                         Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
+
+                                case OML.PLAYER_EVENT_USECARD:
+                                    if (bytesLeft + 1 == UseCardEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_USECARD received.");
+
+                                        UseCardEvent_Notification notification = RawDeserialize<UseCardEvent_Notification>(ServerIn.ReadBytes(UseCardEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        bool handled = false;
+
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerCardUse(player, notification.cardID, ref handled);
+
+                                        new API_EndCall(OML.Connection).Call();
+
+                                        server.Flush();
+
+                                        // Send response
+                                        UseCardEvent_Response response;
+                                        response.eventID = OML.PLAYER_EVENT_USECARD;
+                                        response.handled = handled;
+
+                                        ServerOut.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] PLAYER_EVENT_USECARD response sent.");
+                                    }
+                                    else
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_USECARD: expected " + UseCardEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    break;
                             }
 
                             if (server.IsConnected)

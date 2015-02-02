@@ -123,7 +123,7 @@ struct API_GetStatResult
 #pragma pack (1)
 struct API_SetStatCall
 {
-	unsigned int id = APICALL_GETSTAT;
+	unsigned int id = APICALL_SETSTAT;
 	Player* player;
 	int amount;
 	int stat;
@@ -132,5 +132,5 @@ struct API_SetStatCall
 #pragma pack (1)
 struct API_SetStatResult
 {
-	unsigned int id = APICALL_GETSTAT;
+	unsigned int id = APICALL_SETSTAT;
 };

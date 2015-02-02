@@ -7,6 +7,34 @@ using System.Runtime.InteropServices;
 
 namespace OML
 {
+    // UseCardEvent
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UseCardEvent_Notification
+    {
+        public int eventID;
+        public IntPtr playerHandle;
+        public int cardID;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(UseCardEvent_Notification));
+        }
+    }
+
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UseCardEvent_Response
+    {
+        public int eventID;
+        public bool handled;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(UseCardEvent_Response));
+        }
+    }
+
     // TakePillEvent
     [Serializable()]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

@@ -12,6 +12,7 @@
 #define PLAYER_EVENT_CHANGEROOM		0x07
 #define GAME_EVENT_UPDATE			0x08
 #define PLAYER_EVENT_UPDATE         0x09
+#define PLAYER_EVENT_USECARD        0x0A
 
 // initialization + playermanager
 bool Hooks_Init();

@@ -1,6 +1,33 @@
 #pragma once
 #include "hooks.h"
 
+// UseCardEvent
+#pragma pack(1)
+struct UseCardEvent_Notification
+{
+	int eventID = PLAYER_EVENT_USECARD;
+	void* playerHandle;
+	int cardID;
+
+	UseCardEvent_Notification(void* _player, int _cardID)
+	{
+		playerHandle = _player;
+		cardID = _cardID;
+	}
+};
+
+#pragma pack(1)
+struct UseCardEvent_Response
+{
+	int eventID = PLAYER_EVENT_USECARD;
+	BOOL handled;
+
+	UseCardEvent_Response(BOOL _handled)
+	{
+		handled = _handled;
+	}
+};
+
 // TakePillEvent
 #pragma pack(1)
 struct TakePillEvent_Notification

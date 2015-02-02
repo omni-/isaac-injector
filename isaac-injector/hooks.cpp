@@ -12,6 +12,52 @@
 using namespace std;
 
 /******************************************
+************** UseCardEvent ***************
+*******************************************/
+
+void* UseCardEvent_Original;
+
+BOOL __cdecl UseCardEvent_Payload(Player* player, int cardID)
+{
+	UseCardEvent_Notification notification(player, cardID);
+	UseCardEvent_Response response(false);
+	
+	IPC_BeginEvent(&notification, sizeof(UseCardEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(UseCardEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+
+	return response.handled;
+}
+
+__declspec(naked) void UseCardEvent_Hook()
+{
+	// eax = cardID, ebx = player, save edi+ecx
+	_asm
+	{
+		push ebx
+		push ecx
+		push edi
+		push eax
+			push eax
+			push ebx
+				call UseCardEvent_Payload
+			add esp, 8
+			test eax, eax
+			jnz handled
+		pop eax
+		jmp not_handled
+	handled:
+		pop eax
+		mov eax, 9999
+	not_handled:
+		pop edi
+		pop ecx
+		pop ebx
+		jmp UseCardEvent_Original
+	}
+}
+
+/******************************************
 ************** TakePillEvent **************
 *******************************************/
 
@@ -303,6 +349,8 @@ void* ChangeRoomEvent_Original;
 
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
+	API_SpawnEntity(5,300,17,1,1,NULL);
+
 	ChangeRoomEvent_Notification notification(newRoomIdx);
 	ChangeRoomEvent_Response response;
 	
@@ -395,6 +443,10 @@ Player_TeleportFuncType* Player_TeleportFunc;
 
 void Hooks_HookEvents()
 {
+	// UseCardEvent
+	void* UseCardEvent_SigPtr = SigScan_FindSignature(&Signature_UseCardEvent);
+	UseCardEvent_Original = DetourFunction(PBYTE(UseCardEvent_SigPtr), PBYTE(UseCardEvent_Hook));
+
 	// TakePillEvent
 	void* TakePillEvent_SigPtr = SigScan_FindSignature(&Signature_TakePillEvent);
 	TakePillEvent_Original = DetourFunction(PBYTE(TakePillEvent_SigPtr), PBYTE(TakePillEvent_Hook));
