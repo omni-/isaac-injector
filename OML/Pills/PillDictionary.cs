@@ -8,24 +8,24 @@ namespace OML.Pills
 {
     public static class PillDictionary
     {
-        protected static List<Pill> PillDictionary = new List<Pill>();
-        protected static int StartIndex = 28;
+        private static readonly List<Pill> PillDict = new List<Pill>();
+        private static readonly int StartIndex = 28;
 
         public static int AddPill(Pill p)
         {
             //TODO: Actually add it to REAL isaac
-            PillDictionary.Add(p);
-            return StartIndex + PillDictionary.Count;
+            PillDict.Add(p);
+            return StartIndex + PillDict.Count;
         }
 
         public static Pill GetPill(int id)
         {
             int idx = id - StartIndex;
 
-            if (idx < 0 || idx >= PillDictionary.Count)
+            if (idx < 0 || idx >= PillDict.Count)
                 return null;
 
-            return PillDictionary[idx];
+            return PillDict[idx];
         }
     }
 }
