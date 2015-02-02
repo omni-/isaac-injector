@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Isaac-injector by omni-</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Isaac-injector</h1>
+        <h2>Modding The Binding of Isaac: Rebirth through dynamic code injection.</h2>
+        <a href="https://github.com/omni-/isaac-injector" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h3>
+<a id="welcome-to-isaac-injector" class="anchor" href="#welcome-to-isaac-injector" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to isaac-injector</h3>
+
+<p>isaac-injector is a project dedicated to creating a simple, easy-to-use modding API for The Binding of Isaac: Rebirth. We do not claim any ownership of the game, and by using software in any form, you are agreeing that you own a legitimate copy of the game (sorry for the legalese, I'd rather not get sued). You may find the game <a href="http://store.steampowered.com/app/250900/">here</a>. If you wish to add to the project, please do so! Create a local fork, and make a pull request!</p>
+
+<pre><code>$ git clone https://github.com/omni-/isaac-injector.git 
+$ cd isaac-injector
+</code></pre>
+
+<p>If you're using Mac, I'm sorry. So far we only support Windows.</p>
+
+<h3>
+<a id="how-do-i-work-this-thing" class="anchor" href="#how-do-i-work-this-thing" aria-hidden="true"><span class="octicon octicon-link"></span></a>How do I work this thing?</h3>
+
+<p>My best advice to you would be to slowly sift through the source. The C++ end can be especially hard to understand, since there are a lot of WinAPI calls and other low level stuff. Basically the C++ DLL is injected by the .NET console app. The DLL waits for the game to hit certain addresses in memory, then raises events back to the .NET app. A high-level wrapper around the whole thing in .NET allows for custom plugin development without months of research on the topic.</p>
+
+<h3>
+<a id="recommended-reading" class="anchor" href="#recommended-reading" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recommended Reading</h3>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Hooking">http://en.wikipedia.org/wiki/Hooking</a></li>
+<li><a href="https://wiki.alliedmods.net/Signature_scanning">https://wiki.alliedmods.net/Signature_scanning</a></li>
+<li><a href="http://www.unknowncheats.me/forum/c-and-c/72416-simplest-function-hooking-ida-detours-and-c.html">http://www.unknowncheats.me/forum/c-and-c/72416-simplest-function-hooking-ida-detours-and-c.html</a></li>
+</ul>
+
+<h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>Project lead/executive developer - <a href="https://github.com/omni-" class="user-mention">@omni-</a>
+Project lead/executive developer - <a href="https://github.com/Cjreek" class="user-mention">@Cjreek</a>
+Developer - @UnrealSpartan
+Developer - <a href="https://github.com/adewey" class="user-mention">@adewey</a>
+Special thanks to - <a href="https://github.com/UnderscoreKilburn" class="user-mention">@UnderscoreKilburn</a></p>
+
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>first and foremost, create an issue on github. 
+If that doesn't work, email us at <code>support@code-cast.net</code> or <code>isaac-injector@code-cast.net</code>.
+If even that fails, look for <code>omnichroma</code> or <code>Cjreek</code> on steam.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/omni-/isaac-injector/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/omni-/isaac-injector/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/omni-/isaac-injector"></a> is maintained by <a href="https://github.com/omni-">omni-</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
