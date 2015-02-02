@@ -51,7 +51,8 @@ struct Player : Entity
 	char* _charname;
 	char _unk900[0x44];
 	float _shotspeed;
-	char _unkA00[0x08];
+	int _firerate;
+	char _unkA00[0x04];
 	float _damage;
 	float _range;
 	char _unkB00[0xBC];// 89

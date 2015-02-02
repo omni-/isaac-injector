@@ -61,7 +61,7 @@ namespace OML
                             waitForAbort = true;
                         }
                         else
-                            h.commands.Enqueue(cmd);
+                            h.commandQueue.Enqueue(cmd);
                     }
                 }
             }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace OML
 {
@@ -17,7 +18,19 @@ namespace OML
         public int IsWorking = 0;
         public int Abort = 0;
 
-        public ConcurrentQueue<string> commands = new ConcurrentQueue<string>();
+        public ConcurrentQueue<string> commandQueue = new ConcurrentQueue<string>();
+
+        public Dictionary<string, Command> commands = new Dictionary<string, Command>();
+
+        public Handler()
+        {
+            commands.Add("modstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }));
+        }
+
+        public void SetStat_Wrapper(object[] _params)
+        {
+           ((Player) _params[0]).SetStat((PlayerStat)_params[0], (int)_params[1]);
+        }
 
         public void Handle()
         {
@@ -336,15 +349,28 @@ namespace OML
                                             p.OnPlayerUpdate(player);
 
                                         // "Surprise" calls
-                                        for (int i = 0; i < commands.Count; i++)
+                                        for (int i = 0; i < commandQueue.Count; i++)
                                         {
                                             string cmd = "";
-                                            commands.TryDequeue(out cmd);
-                                            switch (cmd)
+                                            commandQueue.TryDequeue(out cmd);
+                                            if (commands.ContainsKey(cmd))
                                             {
-                                                case "dmg":
-                                                    player.SetStat(PlayerStat.Damage, 100);
-                                                    break;
+                                                string[] _params = cmd.Split(' ');
+                                                string command = _params[0];
+
+                                                List<object> result = new List<object>();
+                                                for(int j = 0; j < commands[command].typeinfo.Count; j++)
+                                                {
+                                                    Type type = commands[command].typeinfo[j];
+                                                    if (type == player.GetType())
+                                                        result.Add(player);
+                                                    else
+                                                    {
+                                                        object o = Convert.ChangeType(_params[j + 1], commands[command].typeinfo[j]);
+                                                        result.Add(o);
+                                                    }
+                                                }
+                                                commands[command].callback(result.ToArray());
                                             }
                                         }
 
