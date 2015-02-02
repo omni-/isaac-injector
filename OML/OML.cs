@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using OML.Pills;
 
 namespace OML
 {
@@ -14,7 +15,11 @@ namespace OML
         public string PluginName;
         public string PluginVersion;
         public string PluginAuthor;
+        public Dictionary<string, Command> Commands = new Dictionary<string,Command>();
 
+        public virtual void PluginInit()
+        {
+        }
         public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
         {
         }
@@ -26,6 +31,12 @@ namespace OML
         }
         public virtual void OnPlayerPillUse(Player player, int pillID, ref bool handled)
         {
+            Pill p = PillDictionary.GetPill(pillID);
+
+            if (p == null)
+                return;
+
+            p.OnUse(player);
         }
         public virtual void OnPlayerHealthDown(Player player, ref int amount)
         {
@@ -48,7 +59,6 @@ namespace OML
         public virtual void OnPlayerUpdate(Player player)
         {
         }
-
     }
 
     public static class OML
