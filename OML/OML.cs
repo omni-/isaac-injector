@@ -14,7 +14,11 @@ namespace OML
         public string PluginName;
         public string PluginVersion;
         public string PluginAuthor;
+        public Dictionary<string, Command> Commands = new Dictionary<string,Command>();
 
+        public virtual void PluginInit()
+        {
+        }
         public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
         {
         }
@@ -39,15 +43,12 @@ namespace OML
         public virtual void OnEnemyTearShot(PointF velocity, PointF position, Entity sourceEntity, int pattern, TearInfo tearInfo)
         {
         }
-
         public virtual void OnGameUpdate()
         {
         }
-
         public virtual void OnPlayerUpdate(Player player)
         {
         }
-
     }
 
     public static class OML
