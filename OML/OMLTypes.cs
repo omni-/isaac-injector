@@ -43,6 +43,13 @@ namespace OML
             set { new API_SetBombsCall(OML.Connection, Handle, value).Call(); }
         }
 
+        public int Coins
+        {
+            get { return new API_GetCoinsCall(OML.Connection, Handle).Call(); }
+
+            set { new API_SetCoinsCall(OML.Connection, Handle, value).Call();  }
+        }
+
         public void HpUp(int amount)
         {
             new API_HpUpCall(OML.Connection, Handle, amount).Call();

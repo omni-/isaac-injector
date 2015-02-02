@@ -258,6 +258,76 @@ namespace OML
             SetBombs_Response response = RawDeserialize<SetBombs_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetBombs_Response))));
         }
     }
+
+    internal class API_GetCoinsCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetCoins_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetCoins_Response
+        {
+            public uint id;
+            public int amount;
+        };
+
+        private GetCoins_Request request;
+
+        public API_GetCoinsCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
+        {
+            request.id = OML.APICALL_GETCOINS;
+            request.playerHandle = _player;
+        }
+
+        public int Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GetCoins_Response response = RawDeserialize<GetCoins_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetCoins_Response))));
+
+            return response.amount;
+        }
+    }
+
+    internal class API_SetCoinsCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetCoins_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int amount;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetCoins_Response
+        {
+            public uint id;
+        };
+
+        private SetCoins_Request request;
+
+        public API_SetCoinsCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
+        {
+            request.id = OML.APICALL_SETCOINS;
+            request.playerHandle = _player;
+            request.amount = _amount;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SetCoins_Response response = RawDeserialize<SetCoins_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetCoins_Response))));
+        }
+    }
+
     internal class API_GetStatCall : API_BaseCall
     {
         [Serializable()]
