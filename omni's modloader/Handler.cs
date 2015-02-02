@@ -379,10 +379,10 @@ namespace OML
                                                         else
                                                         {
                                                             if (type.IsEnum)
-                                                                result.Add(Enum.Parse(type, _params[j], true));
+                                                                result.Add(Enum.Parse(type, _params[j+1], true));
                                                             else
                                                             {
-                                                                object o = Convert.ChangeType(_params[j], type);
+                                                                object o = Convert.ChangeType(_params[j+1], type);
                                                                 result.Add(o);
                                                             }
                                                         }

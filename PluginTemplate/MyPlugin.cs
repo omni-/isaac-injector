@@ -9,7 +9,7 @@ namespace PluginTemplate
 {
     public class MyPlugin : OMLPlugin
     {
-        public MyPlugin()
+        public MyPlugin() 
         {
             PluginName = "TestPlugin";
             PluginVersion = "1.1";
@@ -28,7 +28,7 @@ namespace PluginTemplate
         }
         public void MyCallback(object[] args)
         {
-            Console.WriteLine(args[1]); //args[0] is the name of the command
+            Console.WriteLine(args[0]);
         }
     }
 }
