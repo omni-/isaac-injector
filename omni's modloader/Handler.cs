@@ -29,7 +29,7 @@ namespace OML
 
         public void SetStat_Wrapper(object[] _params)
         {
-           ((Player) _params[0]).SetStat((PlayerStat)_params[0], (int)_params[1]);
+           ((Player) _params[0]).SetStat((PlayerStat)_params[1], (int)_params[2]);
         }
 
         public void Handle()
@@ -353,11 +353,11 @@ namespace OML
                                         {
                                             string cmd = "";
                                             commandQueue.TryDequeue(out cmd);
-                                            if (commands.ContainsKey(cmd))
-                                            {
-                                                string[] _params = cmd.Split(' ');
-                                                string command = _params[0];
+                                            string[] _params = cmd.Split(' ');
+                                            string command = _params[0];
 
+                                            if (commands.ContainsKey(command))
+                                            {
                                                 List<object> result = new List<object>();
                                                 for(int j = 0; j < commands[command].typeinfo.Count; j++)
                                                 {
@@ -366,8 +366,13 @@ namespace OML
                                                         result.Add(player);
                                                     else
                                                     {
-                                                        object o = Convert.ChangeType(_params[j + 1], commands[command].typeinfo[j]);
-                                                        result.Add(o);
+                                                        if (type.IsEnum)
+                                                            result.Add(Enum.Parse(type, _params[j], true));
+                                                        else
+                                                        {
+                                                            object o = Convert.ChangeType(_params[j], type);
+                                                            result.Add(o);
+                                                        }
                                                     }
                                                 }
                                                 commands[command].callback(result.ToArray());

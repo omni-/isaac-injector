@@ -182,10 +182,10 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SetStatCall request;
 						ReadFile(hCallPipe, &request, sizeof(API_SetStatCall), &br, NULL);
 
-						FILE* f;
-						fopen_s(&f, "C:\\APICALL_SETSTAT.txt", "a+");
-						fprintf_s(f, "Stat: %d, value: %d\n", request.stat, request.amount);
-						fclose(f);
+						//FILE* f;
+						//fopen_s(&f, "C:\\APICALL_SETSTAT.txt", "a+");
+						//fprintf_s(f, "Stat: %d, value: %d\n", request.stat, request.amount);
+						//fclose(f);
 
 						switch (request.stat)
 						{
