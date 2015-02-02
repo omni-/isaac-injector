@@ -221,3 +221,22 @@ struct GameUpdateEvent_Response
 {
 	int eventID = GAME_EVENT_UPDATE;
 };
+
+//GameUpdateEvent
+#pragma pack(1)
+struct PlayerUpdateEvent_Notification
+{
+	int eventID = PLAYER_EVENT_UPDATE;
+	void* player;
+
+	PlayerUpdateEvent_Notification(void* _player)
+	{
+		player = _player;
+	}
+};
+
+#pragma pack(1)
+struct PlayerUpdateEvent_Response
+{
+	int eventID = PLAYER_EVENT_UPDATE;
+};

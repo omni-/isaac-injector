@@ -15,6 +15,7 @@ struct PointF
 	float y;
 };
 
+// Entity + 0xB9C	charName
 #pragma pack(1)
 struct Entity
 {
@@ -22,17 +23,12 @@ char _unk0000[0xC];
 	int _id;
 	unsigned int _variant;
 	int _subtype;
-char _unk0018[0x10];
-	void* Paralysis;
-char _unk0021[0x48];
+char _unk0018[0x5C];
 	int _tearType;
 char _unk0020[0x23C];
 	float _scaleX;
 	float _scaleY;
-char _unk000D[0x88];
-	float dmg;  // no
-	float dmg2; // no
-char _unk000C[0xC8];
+char _unk000D[0x158];
 	PointF position;
 char _unk0[0x350];
 };
@@ -51,17 +47,29 @@ struct Player : Entity
 	int _hasGoldenKey;
 	int _numBombs;
 	int _numCoins;
-	char _unk900[0x6C];
+	char _unkB78[0x24];
+	char* _charname;
+	char _unk900[0x44];
 	float _shotspeed;
 	char _unkA00[0x08];
 	float _damage;
 	float _range;
-	char _unkB00[0xBC];
-	float _speed;
+	char _unkB00[0xBC];// 89
+	float _speed;  
 	float _luck;
-	char _unkC00[0xB4];
+	char _unkB01[0x10];
+	int _charges;
+	char _unkC01[0x94];
+	int _trinketID1;
+	int _trinketID2;
+	char _unkD01[0x04];
 	BOOL _items[0x15A];
-	char _unkB78[0x1D88];
+	char _unkD02[0x1CBC];
+	int _pillCardID1;
+	BOOL _isCard1;
+	int _pillCardID2;
+	BOOL _isCard2;
+	char _unkE00[0xBC];
 };
 
 #pragma pack(1)
@@ -207,8 +215,8 @@ struct Room
 #pragma pack(1)
 struct PlayerManager
 {
-	char unknown[0x18];
+	char unknown1[0x18];
 	Room rooms[50]; // unknown size.. 50 for now
-	char unknown2[0x3BB8];
+	char unknown3[0x3BB8];
 	int RoomCount;
 };

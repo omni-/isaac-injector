@@ -11,6 +11,7 @@
 #define ENEMY_EVENT_SHOOTTEARS      0x06
 #define PLAYER_EVENT_CHANGEROOM		0x07
 #define GAME_EVENT_UPDATE			0x08
+#define PLAYER_EVENT_UPDATE         0x09
 
 // initialization + playermanager
 bool Hooks_Init();

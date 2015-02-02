@@ -40,6 +40,14 @@ namespace OML
         {
         }
 
+        public virtual void OnGameUpdate()
+        {
+        }
+
+        public virtual void OnPlayerUpdate(Player player)
+        {
+        }
+
     }
 
     public static class OML
@@ -54,6 +62,9 @@ namespace OML
         public const int PLAYER_EVENT_ADDSOULHEARTS  = 0x05;
         public const int ENEMY_EVENT_SHOOTTEARS      = 0x06;
         public const int PLAYER_EVENT_CHANGEROOM     = 0x07;
+        public const int GAME_EVENT_UPDATE           = 0x08;
+        public const int PLAYER_EVENT_UPDATE         = 0x09;
+
 
         public const uint APICALL_NULL               = 0x00;
 

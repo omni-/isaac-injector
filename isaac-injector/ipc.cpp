@@ -182,25 +182,30 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SetStatCall request;
 						ReadFile(hCallPipe, &request, sizeof(API_SetStatCall), &br, NULL);
 
+						FILE* f;
+						fopen_s(&f, "C:\\APICALL_SETSTAT.txt", "a+");
+						fprintf_s(f, "Stat: %d, value: %d\n", request.stat, request.amount);
+						fclose(f);
+
 						switch (request.stat)
 						{
 						case PLAYERSTAT_SPEED:
-							request.amount = request.player->_speed;
+							request.player->_speed = request.amount;
 							break;
 						case PLAYERSTAT_RANGE:
-							request.amount = request.player->_range;
+							request.player->_range = request.amount;
 							break;
 						case PLAYERSTAT_FIRERATE:
 							request.amount = -1; //should be request.player->_firerate. we don't know where firerate is yet.
 							break;
 						case PLAYERSTAT_SHOTSPEED:
-							request.amount = request.player->_shotspeed;
+							request.player->_shotspeed = request.amount; 
 							break;
 						case PLAYERSTAT_DAMAGE:
-							request.amount = request.player->_damage;
+							request.player->_damage = request.amount;
 							break;
 						case PLAYERSTAT_LUCK:
-							request.amount = request.player->_luck;
+							request.player->_luck = request.amount;
 							break;
 						}
 						API_SetStatResult response;

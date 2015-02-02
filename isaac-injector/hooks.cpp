@@ -332,7 +332,7 @@ __declspec(naked) void ChangeRoomEvent_Hook()
 
 void* GameUpdateEvent_Original;
 
-void __stdcall GameUpdate_Hook(void)
+void __cdecl GameUpdate_Payload()
 {
 	GameUpdateEvent_Notification notification;
 	GameUpdateEvent_Response response;
@@ -340,7 +340,44 @@ void __stdcall GameUpdate_Hook(void)
 	IPC_BeginEvent(&notification, sizeof(GameUpdateEvent_Notification));
 	IPC_ProcessEvent();
 	IPC_EndEvent(&response, sizeof(GameUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
-	MessageBoxA(NULL, "weed", NULL, NULL);
+}
+
+__declspec(naked) void GameUpdate_Hook()
+{
+	_asm
+	{
+		call GameUpdate_Payload
+		jmp GameUpdateEvent_Original
+	}
+}
+
+/******************************************
+************* PlayerUpdateEvent *************
+*******************************************/
+
+void* PlayerUpdateEvent_Original;
+
+void __cdecl PlayerUpdateEvent_Payload(Player* player)
+{
+	PlayerUpdateEvent_Notification notification(player);
+	PlayerUpdateEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(PlayerUpdateEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(PlayerUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+}
+
+__declspec(naked) void PlayerUpdateEvent_Hook()
+{
+	_asm
+	{
+		push ecx
+			push ecx
+				call PlayerUpdateEvent_Payload
+			add esp, 4
+		pop ecx
+		jmp PlayerUpdateEvent_Original
+	}
 }
 
 /******************************************
@@ -391,8 +428,12 @@ void Hooks_HookEvents()
 	VFSLoadFile_Original = DetourFunction(PBYTE(VFSLoadFile_SigPtr), PBYTE(VFSLoadFile_Hook));
 
 	//GameUpdateEvent
-	//void* GameUpdateEvent_SigPtr = SigScan_FindSignature(&Signature_GameUpdate);
-	//GameUpdateEvent_Original = DetourFunction(PBYTE(GameUpdateEvent_SigPtr), PBYTE(GameUpdate_Hook));
+	void* GameUpdateEvent_SigPtr = SigScan_FindSignature(&Signature_GameUpdate);
+	GameUpdateEvent_Original = DetourFunction(PBYTE(GameUpdateEvent_SigPtr), PBYTE(GameUpdate_Hook));
+
+	//PlayerUpdateEvent
+	void* PlayerUpdateEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerUpdate);
+	PlayerUpdateEvent_Original = DetourFunction(PBYTE(PlayerUpdateEvent_SigPtr), PBYTE(PlayerUpdateEvent_Hook));
 }
 
 void Hooks_GetFunctions()

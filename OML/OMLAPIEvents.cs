@@ -234,4 +234,55 @@ namespace OML
             return Marshal.SizeOf(typeof(ChangeRoomEvent_Response));
         }
     }
+
+// GameUpdate
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct GameUpdateEvent_Notification
+    {
+        public int eventID;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(GameUpdateEvent_Notification));
+        }
+    }
+
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct GameUpdateEvent_Response
+    {
+        public int eventID;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(GameUpdateEvent_Response));
+        }
+    }
+
+// PlayerUpdate
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PlayerUpdateEvent_Notification
+    {
+        public int eventID;
+        public IntPtr playerHandle;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(PlayerUpdateEvent_Notification));
+        }
+    }
+
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PlayerUpdateEvent_Response
+    {
+        public int eventID;
+
+        public static int size()
+        {
+            return Marshal.SizeOf(typeof(PlayerUpdateEvent_Response));
+        }
+    }
 }

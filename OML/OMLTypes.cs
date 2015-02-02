@@ -53,14 +53,14 @@ namespace OML
             new API_HpUpCall(OML.Connection, Handle, -amount).Call();
         }
 
-        public void GetStat(PlayerStat stat, int amount)
+        public void GetStat(PlayerStat stat)
         {
-            new API_GetStatCall(OML.Connection, Handle, stat);
+            new API_GetStatCall(OML.Connection, Handle, stat).Call();
         }
 
         public void SetStat(PlayerStat stat, int amount)
         {
-            new API_SetStatCall(OML.Connection, Handle, amount, stat);
+            new API_SetStatCall(OML.Connection, Handle, amount, stat).Call();
         }
     }
 }

@@ -6,12 +6,20 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace OML
 {
     public class Handler
     {
-        public void Handle(Process proc)
+        public Process proc;
+        public int IsWorking = 0;
+        public int Abort = 0;
+
+        public ConcurrentQueue<string> commands = new ConcurrentQueue<string>();
+
+        public void Handle()
         {
             //init server and streams
             using (var server = new NamedPipeServerStream("omlpipe", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.WriteThrough, 32768, 32768))
@@ -50,7 +58,9 @@ namespace OML
                 uint bytesAvail = 0;
                 uint bytesLeft = 0;
 
-                while (!proc.HasExited)
+                Interlocked.Exchange(ref IsWorking, 1);
+
+                while ((!proc.HasExited) && (Abort == 0))
                 {
                     try
                     {
@@ -71,6 +81,8 @@ namespace OML
 
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerPillUse(player, notification.pillID, ref handled);
+
+                                        player.SetStat(PlayerStat.Damage, 100);
 
                                         new API_EndCall(OML.Connection).Call();
 
@@ -288,6 +300,66 @@ namespace OML
                                     }
                                     else
                                         Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    break;
+
+                                case OML.GAME_EVENT_UPDATE:
+                                    if (bytesLeft + 1 == GameUpdateEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        GameUpdateEvent_Notification notification = RawDeserialize<GameUpdateEvent_Notification>(ServerIn.ReadBytes(GameUpdateEvent_Notification.size()), 0);
+
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnGameUpdate();
+
+                                        new API_EndCall(OML.Connection).Call();
+
+                                        server.Flush();
+
+                                        // Send response
+                                        GameUpdateEvent_Response response;
+                                        response.eventID = OML.GAME_EVENT_UPDATE;
+
+                                        ServerOut.Write(RawSerialize(response));
+                                    }
+                                    else
+                                        Console.WriteLine("\r\n[WARNING] GAME_EVENT_UPDATE: expected " + GameUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    break;
+
+                                case OML.PLAYER_EVENT_UPDATE:
+                                    if (bytesLeft + 1 == PlayerUpdateEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        PlayerUpdateEvent_Notification notification = RawDeserialize<PlayerUpdateEvent_Notification>(ServerIn.ReadBytes(PlayerUpdateEvent_Notification.size()), 0);
+
+                                        Player player = new Player(notification.playerHandle);
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnPlayerUpdate(player);
+
+                                        // "Surprise" calls
+                                        for (int i = 0; i < commands.Count; i++)
+                                        {
+                                            string cmd = "";
+                                            commands.TryDequeue(out cmd);
+                                            switch (cmd)
+                                            {
+                                                case "dmg":
+                                                    player.SetStat(PlayerStat.Damage, 100);
+                                                    break;
+                                            }
+                                        }
+
+                                        new API_EndCall(OML.Connection).Call();
+
+                                        server.Flush();
+
+                                        // Send response
+                                        PlayerUpdateEvent_Response response;
+                                        response.eventID = OML.GAME_EVENT_UPDATE;
+
+                                        ServerOut.Write(RawSerialize(response));
+                                    }
+                                    else
+                                        Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
                             }
 

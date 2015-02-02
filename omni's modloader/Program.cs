@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace OML
 {
@@ -31,9 +32,40 @@ namespace OML
             if (hresult != hResult.Error && proc != null)
             {
                 Handler h = new Handler();
-                h.Handle(proc);
+                h.proc = proc;
+                Thread handlerThread = new Thread(new ThreadStart(h.Handle));
+                handlerThread.Start();
+
+                while (!handlerThread.IsAlive) ; // Wait for Thread to be started
+
+                // Listen for Player input/commands
+                bool canEnterCommands = false;
+                bool waitForAbort = false;
+                while (handlerThread.IsAlive)
+                {
+                    if (!canEnterCommands)
+                    {
+                        canEnterCommands = Interlocked.CompareExchange(ref h.IsWorking, 1, 1) == 1;
+                        if (canEnterCommands)
+                            Console.WriteLine();
+                    }
+                    else
+                    if (!waitForAbort)
+                    {
+                        Console.Write("[OML]: ");
+                        string cmd = Console.ReadLine();
+                        
+                        if (cmd.Equals("exit"))
+                        {
+                            Interlocked.Increment(ref h.Abort);
+                            waitForAbort = true;
+                        }
+                        else
+                            h.commands.Enqueue(cmd);
+                    }
+                }
             }
-            Console.WriteLine("\r\nprocess exited/error encountered. press any key to exit...");
+            Console.Write("\r\nprocess exited/error encountered. press any key to exit...");
             Console.ReadKey();
         }
     }
