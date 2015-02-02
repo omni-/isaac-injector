@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using OML.Pills;
 
 namespace OML
 {
@@ -27,6 +28,12 @@ namespace OML
         }
         public virtual void OnPlayerPillUse(Player player, int pillID, ref bool handled)
         {
+            Pill p = PillDictionary.GetPill(pillID);
+
+            if (p == null)
+                return;
+
+            p.OnUse(player);
         }
         public virtual void OnPlayerHealthDown(Player player, ref int amount)
         {
