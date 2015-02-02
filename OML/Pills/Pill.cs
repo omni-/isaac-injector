@@ -4,10 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OML.Pills
+namespace OML
 {
     public abstract class Pill
     {
+        public Pill(bool isGood)
+        {
+            IsGood = isGood;
+        }
+
+        public bool IsGood;
         public abstract void OnUse(Player player);
     }
 }
