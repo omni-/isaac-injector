@@ -52,7 +52,7 @@ namespace OML
                     else
                     if (!waitForAbort)
                     {
-                        Console.Write("[OML]: ");
+                        Console.Write("<OML> ");
                         string cmd = Console.ReadLine();
                         
                         if (cmd.Equals("exit"))

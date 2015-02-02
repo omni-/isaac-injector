@@ -24,12 +24,17 @@ namespace OML
 
         public Handler()
         {
-            commands.Add("modstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }));
+            commands.Add("setstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }));
         }
 
         public void SetStat_Wrapper(object[] _params)
         {
            ((Player) _params[0]).SetStat((PlayerStat)_params[1], (int)_params[2]);
+        }
+
+        public void SpawnItem_Wrapper(object[] _params)
+        {
+            
         }
 
         public void Handle()
@@ -45,7 +50,12 @@ namespace OML
                 Console.WriteLine("\r\n[INFO] loading plugins...");
                 var plugins = Loader.GetPlugins();
                 foreach (OMLPlugin p in plugins)
+                {
                     Console.Write("\r\nloading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
+                    p.PluginInit();
+                    foreach (KeyValuePair<string, Command> kvp in p.Commands)
+                        commands.Add(kvp.Key, kvp.Value);
+                }
                 Console.WriteLine("\r\n\r\n[INFO] plugin load completed.");
 
                 //wait for connection on event pipe
@@ -358,24 +368,35 @@ namespace OML
 
                                             if (commands.ContainsKey(command))
                                             {
-                                                List<object> result = new List<object>();
-                                                for(int j = 0; j < commands[command].typeinfo.Count; j++)
+                                                try
                                                 {
-                                                    Type type = commands[command].typeinfo[j];
-                                                    if (type == player.GetType())
-                                                        result.Add(player);
-                                                    else
+                                                    List<object> result = new List<object>();
+                                                    for (int j = 0; j < commands[command].typeinfo.Count; j++)
                                                     {
-                                                        if (type.IsEnum)
-                                                            result.Add(Enum.Parse(type, _params[j], true));
+                                                        Type type = commands[command].typeinfo[j];
+                                                        if (type == player.GetType())
+                                                            result.Add(player);
                                                         else
                                                         {
-                                                            object o = Convert.ChangeType(_params[j], type);
-                                                            result.Add(o);
+                                                            if (type.IsEnum)
+                                                                result.Add(Enum.Parse(type, _params[j], true));
+                                                            else
+                                                            {
+                                                                object o = Convert.ChangeType(_params[j], type);
+                                                                result.Add(o);
+                                                            }
                                                         }
                                                     }
+                                                    commands[command].callback(result.ToArray());
                                                 }
-                                                commands[command].callback(result.ToArray());
+                                                catch (IndexOutOfRangeException)
+                                                {
+                                                    Console.WriteLine("[ERROR] invalid argument count. usage: " + commands[command].cmdusage);
+                                                }
+                                                catch (InvalidCastException)
+                                                {
+                                                    Console.WriteLine("[ERROR] command failed. usage: " + commands[command].cmdusage);
+                                                }
                                             }
                                         }
 
