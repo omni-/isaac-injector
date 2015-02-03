@@ -149,4 +149,5 @@ struct API_SpawnEntityCall
 struct API_SpawnEntityResult
 {
 	unsigned int id = APICALL_SPAWNENTITY;
+	Entity* entity;
 };
