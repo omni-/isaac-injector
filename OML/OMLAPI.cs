@@ -418,6 +418,7 @@ namespace OML
         internal struct SpawnEntity_Response
         {
             public uint id;
+            public IntPtr entityHandle
         };
 
         private SpawnEntity_Request request;
@@ -434,10 +435,12 @@ namespace OML
             request.parentHandle = _parentHandle;
         }
 
-        public void Call()
+        public IntPtr Call()
         {
             connection.outStream.Write(RawSerialize(request));
             SpawnEntity_Response response = RawDeserialize<SpawnEntity_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SpawnEntity_Response))));
+        
+            return response.entityHandle;
         }
     }
 }
