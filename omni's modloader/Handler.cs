@@ -109,8 +109,6 @@ namespace OML
                                         foreach (OMLPlugin p in plugins)
                                             p.OnPlayerPillUse(player, notification.pillID, ref handled);
 
-                                        player.SetStat(PlayerStat.Damage, 100);
-
                                         new API_EndCall(OML.Connection).Call();
 
                                         server.Flush();
@@ -449,6 +447,33 @@ namespace OML
                                     }
                                     else
                                         Console.WriteLine("\r\n[WARNING] PLAYER_EVENT_USECARD: expected " + UseCardEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                    break;
+
+                                case OML.GAME_EVENT_GOTOFLOOR:
+                                    if (bytesLeft + 1 == GotoFloorEvent_Notification.size())
+                                    {
+                                        // Receive event
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_GOTOFLOOR received.");
+
+                                        GotoFloorEvent_Notification notification = RawDeserialize<GotoFloorEvent_Notification>(ServerIn.ReadBytes(GotoFloorEvent_Notification.size()), 0);
+
+                                        foreach (OMLPlugin p in plugins)
+                                            p.OnGotoFloor((Floor)notification.nextFloorNo);
+
+                                        new API_EndCall(OML.Connection).Call();
+
+                                        server.Flush();
+
+                                        // Send response
+                                        GotoFloorEvent_Response response;
+                                        response.eventID = OML.GAME_EVENT_GOTOFLOOR;
+
+                                        ServerOut.Write(RawSerialize(response));
+
+                                        if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_GOTOFLOOR response sent.");
+                                    }
+                                    else
+                                        Console.WriteLine("\r\n[WARNING] GAME_EVENT_GOTOFLOOR: expected " + GotoFloorEvent_Response.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
                             }
 

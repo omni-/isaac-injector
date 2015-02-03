@@ -25,12 +25,39 @@
 #define PLAYERSTAT_DAMAGE		4
 #define PLAYERSTAT_LUCK			5
 
+#define FLOOR_ALTERNATE		0x80000000
+
+#define FLOOR_BASEMENT1		0x01
+//#define FLOOR_CELLAR1		0x01 | FLOOR_ALTERNATE
+#define FLOOR_BASEMENT2		0x02
+//#define FLOOR_CELAR2		0x02 | FLOOR_ALTERNATE
+#define FLOOR_CAVES1		0x03
+//#define FLOOR_CATACOMBS1	0x03 | FLOOR_ALTERNATE
+#define FLOOR_CAVES2		0x04 
+//#define FLOOR_CATACOMBS2	0x04 | FLOOR_ALTERNATE
+#define FLOOR_DEPTHS1		0x05
+//#define FLOOR_NECROPOLIS1	0x05 | FLOOR_ALTERNATE
+#define FLOOR_DEPTHS2		0x06
+//#define FLOOR_NECROPOLIS2	0x06 | FLOOR_ALTERNATE
+#define FLOOR_WOMB1			0x07
+//#define FLOOR_UTERO1        0x07 | FLOOR_ALTERNATE
+#define FLOOR_WOMB2			0x08 
+//#define FLOOR_UTERO2		0x08 | FLOOR_ALTERNATE
+#define FLOOR_SHEOL			0x09
+#define FLOOR_CATHEDRAL		0x09 | FLOOR_ALTERNATE
+#define FLOOR_DARKROOM		0x0B
+#define FLOOR_CHEST			0x0B | FLOOR_ALTERNATE
+
 
 PlayerManager* API_GetPlayerManager();
 
 // player stats
 void API_HPUp(Player* player, int amount);
 void API_AddSoulHearts(Player* player, int amount);
+
+
+// game
+void API_GotoFloor(unsigned int floorNo);
 
 // player
 void API_AddCollectible(Player* player, int itemID);

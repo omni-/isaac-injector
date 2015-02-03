@@ -349,8 +349,6 @@ void* ChangeRoomEvent_Original;
 
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
-	API_SpawnEntity(5,300,17,1,1,NULL);
-
 	ChangeRoomEvent_Notification notification(newRoomIdx);
 	ChangeRoomEvent_Response response;
 	
@@ -400,7 +398,7 @@ __declspec(naked) void GameUpdate_Hook()
 }
 
 /******************************************
-************* PlayerUpdateEvent *************
+************* PlayerUpdateEvent ***********
 *******************************************/
 
 void* PlayerUpdateEvent_Original;
@@ -427,6 +425,47 @@ __declspec(naked) void PlayerUpdateEvent_Hook()
 		jmp PlayerUpdateEvent_Original
 	}
 }
+
+/******************************************
+************* GotoFloorEvent ***********
+*******************************************/
+
+void* GotoFloorEvent_Original;
+
+void __cdecl GotoFloorEvent_Payload(BOOL showForgetMeNow, BOOL skipOneFloor, int a3)
+{
+	PlayerManager* pman = API_GetPlayerManager();
+	int nextFloorNo = pman->_floorNo;
+	if (skipOneFloor)
+		nextFloorNo++;
+
+	GotoFloorEvent_Notification notification(nextFloorNo);
+	GotoFloorEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(GotoFloorEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(GotoFloorEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+}
+
+__declspec(naked) void GotoFloorEvent_Hook()
+{
+	_asm
+	{
+		push eax
+		push ecx
+		push edi
+			push edi
+			push ecx
+			push eax
+				call GotoFloorEvent_Payload
+			add esp, 12
+		pop edi
+		pop ecx
+		pop eax
+		jmp GotoFloorEvent_Original
+	}
+}
+
 
 /******************************************
 *************** Functions *****************
@@ -486,6 +525,10 @@ void Hooks_HookEvents()
 	//PlayerUpdateEvent
 	void* PlayerUpdateEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerUpdate);
 	PlayerUpdateEvent_Original = DetourFunction(PBYTE(PlayerUpdateEvent_SigPtr), PBYTE(PlayerUpdateEvent_Hook));
+
+	// GotoFloorEvent
+	void* GotoFloorEvent_SigPtr = SigScan_FindSignature(&Signature_GotoFloor);
+	GotoFloorEvent_Original = DetourFunction(PBYTE(GotoFloorEvent_SigPtr), PBYTE(GotoFloorEvent_Hook));
 }
 
 void Hooks_GetFunctions()

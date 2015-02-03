@@ -314,3 +314,29 @@ namespace OML
         }
     }
 }
+
+// GotoFloor
+[Serializable()]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct GotoFloorEvent_Notification
+{
+    public int eventID;
+    public int nextFloorNo;
+
+    public static int size()
+    {
+        return Marshal.SizeOf(typeof(GotoFloorEvent_Notification));
+    }
+}
+
+[Serializable()]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct GotoFloorEvent_Response
+{
+    public int eventID;
+
+    public static int size()
+    {
+        return Marshal.SizeOf(typeof(GotoFloorEvent_Response));
+    }
+}

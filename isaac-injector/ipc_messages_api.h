@@ -21,6 +21,7 @@
 #define APICALL_GETSTAT		   0x10
 #define APICALL_SETSTAT		   0x11
 #define APICALL_SPAWNENTITY	   0x12
+#define APICALL_GOTOFLOOR	   0x13
 
 #define APICALL_END            0xFFFFFFFF
 
@@ -150,4 +151,17 @@ struct API_SpawnEntityResult
 {
 	unsigned int id = APICALL_SPAWNENTITY;
 	Entity* entity;
+};
+
+#pragma pack(1)
+struct API_GotoFloorCall
+{
+	unsigned int id = APICALL_GOTOFLOOR;
+	unsigned floorNo;
+};
+
+#pragma pack(1)
+struct API_GotoFloorResult
+{
+	unsigned int id = APICALL_GOTOFLOOR;
 };

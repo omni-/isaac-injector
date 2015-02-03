@@ -443,4 +443,36 @@ namespace OML
             return response.entityHandle;
         }
     }
+
+    internal class API_GotoFloorCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GotoFloor_Request
+        {
+            public uint id;
+            public uint floorNo;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GotoFloor_Response
+        {
+            public uint id;
+        };
+
+        private GotoFloor_Request request;
+
+        public API_GotoFloorCall(API_ConnectionInfo _connection, uint _floorNo) : base(_connection)
+        {
+            request.id = OML.APICALL_GOTOFLOOR;
+            request.floorNo = _floorNo;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GotoFloor_Response response = RawDeserialize<GotoFloor_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GotoFloor_Response))));
+        }
+    }
 }

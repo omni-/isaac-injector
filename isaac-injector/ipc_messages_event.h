@@ -267,3 +267,22 @@ struct PlayerUpdateEvent_Response
 {
 	int eventID = PLAYER_EVENT_UPDATE;
 };
+
+//GameUpdateEvent
+#pragma pack(1)
+struct GotoFloorEvent_Notification
+{
+	int eventID = GAME_EVENT_GOTOFLOOR;
+	int nextFloorNo;
+
+	GotoFloorEvent_Notification(int _nextFloorNo)
+	{
+		nextFloorNo = _nextFloorNo;
+	}
+};
+
+#pragma pack(1)
+struct GotoFloorEvent_Response
+{
+	int eventID = GAME_EVENT_GOTOFLOOR;
+};

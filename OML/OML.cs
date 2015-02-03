@@ -59,6 +59,9 @@ namespace OML
         public virtual void OnGameUpdate()
         {
         }
+        public virtual void OnGotoFloor(Floor nextFloor)
+        {
+        }
         public virtual void OnPlayerUpdate(Player player)
         {
         }
@@ -79,7 +82,7 @@ namespace OML
         public const int GAME_EVENT_UPDATE           = 0x08;
         public const int PLAYER_EVENT_UPDATE         = 0x09;
         public const int PLAYER_EVENT_USECARD        = 0x0A;
-
+        public const int GAME_EVENT_GOTOFLOOR        = 0x0B;
 
         public const uint APICALL_NULL               = 0x00;
 
@@ -101,6 +104,7 @@ namespace OML
         public const uint APICALL_GETSTAT            = 0x10;
         public const uint APICALL_SETSTAT            = 0x11;
         public const uint APICALL_SPAWNENTITY        = 0x12;
+        public const uint APICALL_GOTOFLOOR          = 0x13;
 
         public const uint APICALL_END                = 0xFFFFFFFF;
 
@@ -118,6 +122,22 @@ namespace OML
         ShotSpeed,
         Damage,
         Luck
+    }
+
+    public enum Floor
+    {
+        Basement1 = 1,
+        Basement2 = 2,
+        Caves1    = 3,
+        Caves2    = 4,
+        Depths1   = 5,
+        Depths2   = 6,
+        Womb1     = 7,
+        Womb2     = 8,
+        Sheol     = 9,
+        DarkRoom  = 11,
+        Cathedral = unchecked((int)(9 | 0x80000000)),
+        Chest     = unchecked((int)(11 | 0x80000000))
     }
 }
 

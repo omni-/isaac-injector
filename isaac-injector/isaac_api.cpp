@@ -8,6 +8,20 @@ PlayerManager* API_GetPlayerManager()
 	return Hooks_GetPlayerManager();
 }
 
+void API_GotoFloor(unsigned int floorNo)
+{
+	PlayerManager* pman = API_GetPlayerManager();
+	pman->_floorNo = floorNo & (~FLOOR_ALTERNATE);
+	pman->_alternateFloor = (floorNo & FLOOR_ALTERNATE) > 0;
+	_asm
+	{
+		mov eax, 0                   // 1 = forgetMeNow animation
+		mov ecx, 1                   // 0 = +1 floor further?!
+		mov di, 0					 // ??
+		call GotoFloorEvent_Original
+	}
+}
+
 void API_Effect_GoodPill(Player* player)
 {
 	GoodPillEffectFunc(player);

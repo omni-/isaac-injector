@@ -82,5 +82,10 @@ namespace OML
             IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
             return new Entity(entityHandle);
         }
+
+        public static void GotoFloor(Floor floor)
+        {
+            new API_GotoFloorCall(OML.Connection, (uint)floor).Call();
+        }
     }
 }

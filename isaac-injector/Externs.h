@@ -36,7 +36,7 @@ char _unk0[0x350];
 #pragma pack(1)
 struct Player : Entity
 {
-	char _unk76C[0x3E4];
+	char _unk76C[0x3E4]; // 0xB50
 	int _maxHearts;
 	int _hearts;
 	int _eternalHearts;
@@ -47,7 +47,8 @@ struct Player : Entity
 	int _hasGoldenKey;
 	int _numBombs;
 	int _numCoins;
-	char _unkB78[0x24];
+	char _unkB78[0x20];
+	int _charID;
 	char* _charname;
 	char _unk900[0x44];
 	float _shotspeed;
@@ -60,7 +61,9 @@ struct Player : Entity
 	float _luck;
 	char _unkB01[0x10];
 	int _charges;
-	char _unkC01[0x94];
+	char _unkC02[0x4];
+	int _liftedItem;
+	char _unkC01[0x8C];
 	int _trinketID1;
 	int _trinketID2;
 	char _unkD01[0x04];
@@ -130,7 +133,7 @@ struct RoomEntities
 #pragma pack(1)
 struct RoomInfo
 {
-	int unknown1;
+	int flags; // 101 (5) = Map + Compass, 111 = map + compass + blue map ?
 	int type;
 	int variant;
 	char name[16];
@@ -170,8 +173,8 @@ struct Room
 	int* unknown2;
 	// zero (mostly)
 	int unknown3;
-	int unknown4;
-	int unknown5;
+	int curses;
+	int curses2;
 	// pointers
 	DebugStruct* unknown6;
 	DebugStruct* unknown7;
@@ -213,11 +216,22 @@ struct Room
 	int index;
 };
 
+// d0061D214 this is the current level structure
+
 #pragma pack(1)
 struct PlayerManager
 {
-	char unknown1[0x18];
+	// f8 = curses (uint)  bitmap
+	int _floorNo;
+	bool _alternateFloor;
+	char unknown1[0x08];
+	bool _seeForever;
+	char unknown2[0x0A];
 	Room rooms[50]; // unknown size.. 50 for now
 	char unknown3[0x3BB8];
-	int RoomCount;
+	int RoomCount; 
+	char unknown4[0x23D1];
+	bool unknown5;
+	// f23936 = floor Seed
+	// f23920 = current seed
 };

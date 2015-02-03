@@ -222,6 +222,19 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_SpawnEntityResult), &br, NULL);
 					}
 					break;
+				case APICALL_GOTOFLOOR:
+					if (bl + sizeof(int) == sizeof(API_GotoFloorCall))
+					{
+						API_GotoFloorCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GotoFloorCall), &br, NULL);
+
+						API_GotoFloor(request.floorNo);
+
+						API_GotoFloorResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_GotoFloorResult), &br, NULL);
+					}
+					break;
+
 				default:
 					MessageBoxA(NULL, "unknown bytecode", NULL, NULL);
 					break;
