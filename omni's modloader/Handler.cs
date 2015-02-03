@@ -502,8 +502,4 @@ namespace OML
             return rawDatas;
         }
     }
-    internal class Wrappers
-    {
-
-    }
 }

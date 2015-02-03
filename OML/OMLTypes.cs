@@ -74,11 +74,11 @@ namespace OML
     {
         public static void SpawnItem(int itemID, float x = 0, float y = 0)
         {
-            new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, x, y, IntPtr.Zero);
+            new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, x, y, IntPtr.Zero).Call();
         }
         public static void SpawnEntity(int entityID, int variant, int subtype, float x, float y, IntPtr parentHandle)
         {
-            new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle);
+            new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
         }
     }
 }

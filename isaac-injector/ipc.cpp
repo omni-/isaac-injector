@@ -214,7 +214,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 					}
 					break;
 				case APICALL_SPAWNENTITY:
-					MessageBoxA(NULL, "apicall entered", NULL, NULL);
+					//MessageBoxA(NULL, "apicall entered", NULL, NULL);
 					if (bl + sizeof(int) == sizeof(API_SpawnEntityCall))
 					{
 						API_SpawnEntityCall request;
