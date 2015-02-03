@@ -418,7 +418,7 @@ namespace OML
         internal struct SpawnEntity_Response
         {
             public uint id;
-            public IntPtr entityHandle
+            public IntPtr entityHandle;
         };
 
         private SpawnEntity_Request request;

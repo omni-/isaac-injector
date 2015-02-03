@@ -215,7 +215,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SpawnEntityCall request;
 						ReadFile(hCallPipe, &request, sizeof(API_SpawnEntityCall), &br, NULL);
 
-						Entity entity = API_SpawnEntity(request.entityID, request.variant, request.subtype, request.x, request.y, request.parent);
+						Entity* entity = API_SpawnEntity(request.entityID, request.variant, request.subtype, request.x, request.y, request.parent);
 
 						API_SpawnEntityResult response;
 						response.entity = entity;
