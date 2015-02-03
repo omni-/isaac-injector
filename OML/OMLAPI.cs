@@ -443,4 +443,36 @@ namespace OML
             return response.entityHandle;
         }
     }
+    internal class API_TeleportCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct Teleport_Request
+        {
+            public uint id;
+            public int roomid;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct Teleport_Response
+        {
+            public uint id;
+        };
+
+        private Teleport_Request request;
+
+        public API_TeleportCall(API_ConnectionInfo _connection, int _roomid)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_TELEPORT;
+            request.roomid = _roomid;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            Teleport_Response response = RawDeserialize<Teleport_Response>(connection.inStream.ReadBytes(SizeOf(typeof(Teleport_Response))));
+        }
+    }
 }

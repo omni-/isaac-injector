@@ -151,3 +151,16 @@ struct API_SpawnEntityResult
 	unsigned int id = APICALL_SPAWNENTITY;
 	Entity* entity;
 };
+
+#pragma pack (1)
+struct API_TeleportCall
+{
+	unsigned int id = APICALL_TELEPORT;
+	int roomid;
+};
+
+#pragma pack(1)
+struct API_TeleportResult
+{
+	unsigned int id = APICALL_TELEPORT;
+};

@@ -209,7 +209,6 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 					}
 					break;
 				case APICALL_SPAWNENTITY:
-					//MessageBoxA(NULL, "apicall entered", NULL, NULL);
 					if (bl + sizeof(int) == sizeof(API_SpawnEntityCall))
 					{
 						API_SpawnEntityCall request;
@@ -220,6 +219,18 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SpawnEntityResult response;
 						response.entity = entity;
 						WriteFile(hCallPipe, &response, sizeof(API_SpawnEntityResult), &br, NULL);
+					}
+					break;
+				case APICALL_TELEPORT:
+					if (bl + sizeof(int) == sizeof(API_TeleportCall))
+					{
+						API_TeleportCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_TeleportCall), &br, NULL);
+
+						API_TeleportPlayer(request.roomid);
+
+						API_TeleportResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_TeleportResult), &br, NULL);
 					}
 					break;
 				default:

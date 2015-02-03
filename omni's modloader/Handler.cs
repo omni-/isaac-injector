@@ -9,6 +9,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace OML
 {
@@ -24,21 +26,22 @@ namespace OML
 
         public Handler()
         {
-            commands.Add("setstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }, false));
-            commands.Add("spawnitem", new Command(SpawnItem_Wrapper, "args: 1 - itemid - id of item. 2 - x - x position to spawn. 3 - y - y position to spawn.", new List<Type>() { typeof(int), typeof(float), typeof(float) }, true));
-        }
-
-        public void SetStat_Wrapper(object[] _params)
-        {
-           ((Player) _params[0]).SetStat((PlayerStat)_params[1], (int)_params[2]);
-        }
-
-        public void SpawnItem_Wrapper(object[] _params)
-        {
-            if (_params.Length >= 3)
-                API.SpawnItem((int)_params[0], (float)_params[1], (float)_params[2]);
-            else
-                API.SpawnItem((int)_params[0]);
+            commands.Add("setstat", new Command(Wrappers.SetStat_Wrapper, 
+                "args: \r\n1. playerstat - either type a playerstat or an int between 0 and 5.\r\n2. amount - how much you want to change the stat by.",
+                new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }, 
+                false));
+            commands.Add("spawnitem", new Command(Wrappers.SpawnItem_Wrapper, 
+                "args: \r\n1. itemid - id of item.\r\n2. x - x position to spawn.\r\n3. y - y position to spawn.", 
+                new List<Type>() { typeof(int), typeof(float), typeof(float) }, 
+                true));
+            commands.Add("spawnentity", new Command(Wrappers.SpawnEntity_Wrapper, 
+                "to be implemented", 
+                new List<Type> { typeof(int), typeof(int), typeof(int), typeof(float), typeof(float), typeof(IntPtr) }, 
+                true));
+            commands.Add("teleport", new Command(Wrappers.Teleport_Wrapper,
+                "args: \r\n1. roomid - id of the room to teleport to",
+                new List<Type> { typeof(int) },
+                false));
         }
 
         public void Handle()
@@ -367,7 +370,7 @@ namespace OML
                                         {
                                             string cmd = "";
                                             commandQueue.TryDequeue(out cmd);
-                                            string[] _params = cmd.Split(' ');
+                                            string[] _params = Regex.Matches(cmd, @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(s => s.Value).ToArray<string>();
                                             string command = _params[0];
 
                                             if (commands.ContainsKey(command))
@@ -375,11 +378,17 @@ namespace OML
                                                 try
                                                 {
                                                     List<object> result = new List<object>();
-                                                    for (int j = 0; j < commands[command].typeinfo.Count; j++)
+                                                    List<Type> tempCmdInfo = new List<Type>(commands[command].typeinfo);
+
+                                                    for (int j = 0; j < tempCmdInfo.Count; j++)
                                                     {
-                                                        Type type = commands[command].typeinfo[j];
+                                                        Type type = tempCmdInfo[j];
                                                         if (type == player.GetType())
+                                                        {
                                                             result.Add(player);
+                                                            tempCmdInfo.RemoveAt(j);
+                                                            j--;
+                                                        }
                                                         else
                                                         {
                                                             if (type.IsEnum)
@@ -398,6 +407,10 @@ namespace OML
                                                     Console.WriteLine("\r\n[ERROR] invalid argument count. usage: " + commands[command].cmdusage);
                                                 }
                                                 catch (InvalidCastException)
+                                                {
+                                                    Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
+                                                }
+                                                catch (ArgumentException)
                                                 {
                                                     Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
                                                 }

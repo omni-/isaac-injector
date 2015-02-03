@@ -44,9 +44,10 @@
     <Compile Include="OMLAPITypes.cs" />
     <Compile Include="OMLAPIEvents.cs" />
     <Compile Include="OMLTypes.cs" />
-    <Compile Include="Pills\Pill.cs" />
-    <Compile Include="Pills\PillDictionary.cs" />
+    <Compile Include="Pill.cs" />
+    <Compile Include="PillDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wrappers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -82,5 +82,9 @@ namespace OML
             IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
             return new Entity(entityHandle);
         }
+        public static void Teleport(int roomid)
+        {
+            new API_TeleportCall(OML.Connection, roomid);
+        }
     }
 }
