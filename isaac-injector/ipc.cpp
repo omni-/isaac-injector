@@ -183,11 +183,6 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SetStatCall request;
 						ReadFile(hCallPipe, &request, sizeof(API_SetStatCall), &br, NULL);
 
-						//FILE* f;
-						//fopen_s(&f, "C:\\APICALL_SETSTAT.txt", "a+");
-						//fprintf_s(f, "Stat: %d, value: %d\n", request.stat, request.amount);
-						//fclose(f);
-
 						switch (request.stat)
 						{
 						case PLAYERSTAT_SPEED:
@@ -220,7 +215,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SpawnEntityCall request;
 						ReadFile(hCallPipe, &request, sizeof(API_SpawnEntityCall), &br, NULL);
 
-						API_SpawnEntity(request.id, request.variant, request.subtype, request.x, request.y, request.parent);
+						API_SpawnEntity(request.entityID, request.variant, request.subtype, request.x, request.y, request.parent);
 
 						API_SpawnEntityResult response;
 						WriteFile(hCallPipe, &response, sizeof(API_SpawnEntityResult), &br, NULL);
