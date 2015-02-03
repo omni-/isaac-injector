@@ -72,13 +72,15 @@ namespace OML
     }
     public class API
     {
-        public static void SpawnItem(int itemID, float x = 0, float y = 0)
+        public static Entity SpawnItem(int itemID, float x = 0, float y = 0)
         {
-            new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, x, y, IntPtr.Zero).Call();
+            IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, x, y, IntPtr.Zero).Call();
+            return new Entity(entityHandle);
         }
-        public static void SpawnEntity(int entityID, int variant, int subtype, float x, float y, IntPtr parentHandle)
+        public static Entity SpawnEntity(int entityID, int variant, int subtype, float x, float y, IntPtr parentHandle)
         {
-            new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
+            IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
+            return new Entity(entityHandle);
         }
     }
 }
