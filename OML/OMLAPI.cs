@@ -401,4 +401,43 @@ namespace OML
             SetStat_Response response = RawDeserialize<SetStat_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetStat_Response))));
         }
     }
+    internal class API_SpawnEntityCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SpawnEntity_Request
+        {
+            public uint id;
+            public int entityID, variant, subtype;
+            public float x, y;
+            public IntPtr parentHandle;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SpawnEntity_Response
+        {
+            public uint id;
+        };
+
+        private SpawnEntity_Request request;
+
+        public API_SpawnEntityCall(API_ConnectionInfo _connection, int _entityID, int _variant, int _subtype, float _x, float _y, IntPtr _parentHandle)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_SPAWNENTITY;
+            request.entityID = _entityID;
+            request.variant = _variant;
+            request.subtype = _subtype;
+            request.x = _x;
+            request.y = _y;
+            request.parentHandle = _parentHandle;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SpawnEntity_Response response = RawDeserialize<SpawnEntity_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SpawnEntity_Response))));
+        }
+    }
 }

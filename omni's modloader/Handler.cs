@@ -24,7 +24,8 @@ namespace OML
 
         public Handler()
         {
-            commands.Add("setstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }));
+            commands.Add("setstat", new Command(SetStat_Wrapper, "args: 1 - playerstat - either type a playerstat or an int between 0 and 5. 2 - amount - how much you want to change the stat by.", new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }, false));
+            commands.Add("spawnitem", new Command(SpawnItem_Wrapper, "args: 1 - itemid - id of item. 2 - x - x position to spawn. 3 - y - y position to spawn.", new List<Type>() { typeof(int), typeof(float), typeof(float) }, true));
         }
 
         public void SetStat_Wrapper(object[] _params)
@@ -34,7 +35,10 @@ namespace OML
 
         public void SpawnItem_Wrapper(object[] _params)
         {
-            
+            if (_params.Length >= 3)
+                API.SpawnItem((int)_params[0], (float)_params[1], (float)_params[2]);
+            else
+                API.SpawnItem((int)_params[0]);
         }
 
         public void Handle()
@@ -379,10 +383,10 @@ namespace OML
                                                         else
                                                         {
                                                             if (type.IsEnum)
-                                                                result.Add(Enum.Parse(type, _params[j+1], true));
+                                                                result.Add(Enum.Parse(type, _params[j + 1], true));
                                                             else
                                                             {
-                                                                object o = Convert.ChangeType(_params[j+1], type);
+                                                                object o = Convert.ChangeType(_params[j + 1], type);
                                                                 result.Add(o);
                                                             }
                                                         }
@@ -391,13 +395,15 @@ namespace OML
                                                 }
                                                 catch (IndexOutOfRangeException)
                                                 {
-                                                    Console.WriteLine("[ERROR] invalid argument count. usage: " + commands[command].cmdusage);
+                                                    Console.WriteLine("\r\n[ERROR] invalid argument count. usage: " + commands[command].cmdusage);
                                                 }
                                                 catch (InvalidCastException)
                                                 {
-                                                    Console.WriteLine("[ERROR] command failed. usage: " + commands[command].cmdusage);
+                                                    Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
                                                 }
                                             }
+                                            else
+                                                Console.WriteLine("\r\n[ERROR] cmd not found.\r\n<OML> ");
                                         }
 
                                         new API_EndCall(OML.Connection).Call();
@@ -495,5 +501,9 @@ namespace OML
             Marshal.FreeHGlobal(buffer);
             return rawDatas;
         }
+    }
+    internal class Wrappers
+    {
+
     }
 }

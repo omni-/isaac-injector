@@ -54,7 +54,7 @@ namespace OML
                     {
                         Console.Write("<OML> ");
                         string cmd = Console.ReadLine();
-                        
+
                         if (cmd.Equals("exit"))
                         {
                             Interlocked.Increment(ref h.Abort);

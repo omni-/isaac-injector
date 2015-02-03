@@ -44,12 +44,14 @@ namespace OML
         public Action<object[]> callback;
         public string cmdusage;
         public List<Type> typeinfo;
+        public bool optionalargs;
 
-        public Command(Action<object[]> callback, string cmdusage, List<Type> typeinfo)
+        public Command(Action<object[]> callback, string cmdusage, List<Type> typeinfo, bool optionalargs)
         {
             this.callback = callback;
             this.cmdusage = cmdusage;
             this.typeinfo = typeinfo;
+            this.optionalargs = optionalargs;
         }
     }
 }

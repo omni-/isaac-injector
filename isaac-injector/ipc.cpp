@@ -176,6 +176,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						}
 						WriteFile(hCallPipe, &response, sizeof(API_GetStatResult), &br, NULL);
 					}
+					break;
 				case APICALL_SETSTAT:
 					if (bl + sizeof(int) == sizeof(API_SetStatCall))
 					{
@@ -196,7 +197,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 							request.player->_range = request.amount;
 							break;
 						case PLAYERSTAT_FIRERATE:
-							request.amount = -1; //should be request.player->_firerate. we don't know where firerate is yet.
+							request.amount = request.player->_firerate;
 							break;
 						case PLAYERSTAT_SHOTSPEED:
 							request.player->_shotspeed = request.amount; 
@@ -211,6 +212,23 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						API_SetStatResult response;
 						WriteFile(hCallPipe, &response, sizeof(API_SetStatResult), &br, NULL);
 					}
+					break;
+				case APICALL_SPAWNENTITY:
+					MessageBoxA(NULL, "apicall entered", NULL, NULL);
+					if (bl + sizeof(int) == sizeof(API_SpawnEntityCall))
+					{
+						API_SpawnEntityCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SpawnEntityCall), &br, NULL);
+
+						API_SpawnEntity(request.id, request.variant, request.subtype, request.x, request.y, request.parent);
+
+						API_SpawnEntityResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SpawnEntityResult), &br, NULL);
+					}
+					break;
+				default:
+					MessageBoxA(NULL, "unknown bytecode", NULL, NULL);
+					break;
 			}
 		}
 	}

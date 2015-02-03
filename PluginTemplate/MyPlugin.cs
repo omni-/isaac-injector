@@ -17,7 +17,7 @@ namespace PluginTemplate
         }
         public override void PluginInit()
         {
-            Commands.Add("echo", new Command(MyCallback, "", new List<Type>() { typeof(string) }));
+            Commands.Add("echo", new Command(MyCallback, "", new List<Type>() { typeof(string) }, false));
             base.PluginInit();
         }
         public override void OnPlayerAddCollectible(Player player, int a2, int id, int a4)

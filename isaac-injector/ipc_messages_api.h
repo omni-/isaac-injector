@@ -20,6 +20,7 @@
 #define APICALL_TELEPORT       0x0F
 #define APICALL_GETSTAT		   0x10
 #define APICALL_SETSTAT		   0x11
+#define APICALL_SPAWNENTITY	   0x12
 
 #define APICALL_END            0xFFFFFFFF
 
@@ -133,4 +134,19 @@ struct API_SetStatCall
 struct API_SetStatResult
 {
 	unsigned int id = APICALL_SETSTAT;
+};
+
+#pragma pack (1)
+struct API_SpawnEntityCall
+{
+	unsigned int id = APICALL_SPAWNENTITY;
+	int entityID, variant, subtype;
+	float x, y;
+	Entity* parent;
+};
+
+#pragma pack (1)
+struct API_SpawnEntityResult
+{
+	unsigned int id = APICALL_SPAWNENTITY;
 };

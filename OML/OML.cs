@@ -100,6 +100,7 @@ namespace OML
         public const uint APICALL_TELEPORT           = 0x0F;
         public const uint APICALL_GETSTAT            = 0x10;
         public const uint APICALL_SETSTAT            = 0x11;
+        public const uint APICALL_SPAWNENTITY        = 0x12;
 
         public const uint APICALL_END                = 0xFFFFFFFF;
 

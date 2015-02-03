@@ -1,0 +1,7 @@
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\obj\Debug\PluginTemplate.csprojResolveAssemblyReference.cache
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\bin\Debug\PluginTemplate.dll
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\bin\Debug\PluginTemplate.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\bin\Debug\OML.dll
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\bin\Debug\OML.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\obj\Debug\PluginTemplate.dll
+C:\Users\Cooper\Documents\GitHub\isaac-injector\PluginTemplate\obj\Debug\PluginTemplate.pdb
