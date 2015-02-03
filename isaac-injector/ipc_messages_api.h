@@ -165,3 +165,16 @@ struct API_GotoFloorResult
 {
 	unsigned int id = APICALL_GOTOFLOOR;
 };
+
+#pragma pack (1)
+struct API_TeleportCall
+{
+	unsigned int id = APICALL_TELEPORT;
+	int roomid;
+};
+
+#pragma pack(1)
+struct API_TeleportResult
+{
+	unsigned int id = APICALL_TELEPORT;
+};

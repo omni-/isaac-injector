@@ -443,7 +443,7 @@ namespace OML
             return response.entityHandle;
         }
     }
-
+    
     internal class API_GotoFloorCall : API_BaseCall
     {
         [Serializable()]
@@ -452,15 +452,15 @@ namespace OML
         {
             public uint id;
             public uint floorNo;
-        };
-
-        [Serializable()]
+		}
+		
+		[Serializable()]
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         internal struct GotoFloor_Response
         {
-            public uint id;
-        };
-
+			public uint id;
+        }
+        
         private GotoFloor_Request request;
 
         public API_GotoFloorCall(API_ConnectionInfo _connection, uint _floorNo) : base(_connection)
@@ -468,11 +468,43 @@ namespace OML
             request.id = OML.APICALL_GOTOFLOOR;
             request.floorNo = _floorNo;
         }
-
+        
         public void Call()
         {
             connection.outStream.Write(RawSerialize(request));
             GotoFloor_Response response = RawDeserialize<GotoFloor_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GotoFloor_Response))));
+        }
+	}
+		
+    internal class API_TeleportCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct Teleport_Request
+        {
+            public uint id;
+            public int roomid;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct Teleport_Response
+        {
+            public uint id;
+        };
+
+        private Teleport_Request request;
+
+        public API_TeleportCall(API_ConnectionInfo _connection, int _roomid) : base(_connection)
+        {
+            request.id = OML.APICALL_TELEPORT;
+            request.roomid = _roomid;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            Teleport_Response response = RawDeserialize<Teleport_Response>(connection.inStream.ReadBytes(SizeOf(typeof(Teleport_Response))));
         }
     }
 }
