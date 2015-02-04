@@ -15,10 +15,7 @@ namespace OML
 
         public static void SpawnItem_Wrapper(object[] _params)
         {
-            if (_params.Length >= 3)
-                API.SpawnItem((int)_params[0], (float)_params[1], (float)_params[2]);
-            else
-                API.SpawnItem((int)_params[0]);
+            API.SpawnItem((Player)_params[0], (int)_params[1]);
         }
         public static void SpawnEntity_Wrapper(object[] _params)
         {
@@ -27,6 +24,10 @@ namespace OML
         public static void Teleport_Wrapper(object[] _params)
         {
             API.Teleport((int)_params[0]);
+        }
+        public static void JumpFloor_Wrapper(object[] _params)
+        {
+            API.GotoFloor((Floor)_params[0]);
         }
     }
 }

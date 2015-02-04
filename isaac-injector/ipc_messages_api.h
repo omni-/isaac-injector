@@ -178,3 +178,17 @@ struct API_TeleportResult
 {
 	unsigned int id = APICALL_TELEPORT;
 };
+
+#pragma pack (1)
+struct API_GetPositionCall
+{
+	unsigned int id = APICALL_GETPOSITION;
+	Player* player;
+};
+
+#pragma pack (1)
+struct API_GetPositionResult
+{
+	unsigned int id = APICALL_GETPOSITION;
+	PointF position;
+};

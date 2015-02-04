@@ -32,7 +32,7 @@ namespace OML
                 false));
             commands.Add("spawnitem", new Command(Wrappers.SpawnItem_Wrapper, 
                 "args: \r\n1. itemid - id of item.\r\n2. x - x position to spawn.\r\n3. y - y position to spawn.", 
-                new List<Type>() { typeof(int), typeof(float), typeof(float) }, 
+                new List<Type>() { typeof(Player), typeof(int) }, 
                 true));
             commands.Add("spawnentity", new Command(Wrappers.SpawnEntity_Wrapper, 
                 "to be implemented", 
@@ -40,6 +40,10 @@ namespace OML
                 true));
             commands.Add("teleport", new Command(Wrappers.Teleport_Wrapper,
                 "args: \r\n1. roomid - id of the room to teleport to",
+                new List<Type> { typeof(int) },
+                false));
+            commands.Add("jumpfloor", new Command(Wrappers.JumpFloor_Wrapper,
+                "args: \r\n1. floorid - id of floor to jump to",
                 new List<Type> { typeof(int) },
                 false));
         }

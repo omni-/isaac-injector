@@ -50,6 +50,12 @@ namespace OML
             set { new API_SetCoinsCall(OML.Connection, Handle, value).Call();  }
         }
 
+        public PointF Position
+        {
+            get { return new API_GetPositionCall(OML.Connection, Handle).Call(); }
+            set { new API_SetPositionCall(OML.Connection, Handle, value).Call(); }
+        }
+
         public void HpUp(int amount)
         {
             new API_HpUpCall(OML.Connection, Handle, amount).Call();
@@ -60,9 +66,9 @@ namespace OML
             new API_HpUpCall(OML.Connection, Handle, -amount).Call();
         }
 
-        public void GetStat(PlayerStat stat)
+        public int GetStat(PlayerStat stat)
         {
-            new API_GetStatCall(OML.Connection, Handle, stat).Call();
+            return new API_GetStatCall(OML.Connection, Handle, stat).Call();
         }
 
         public void SetStat(PlayerStat stat, int amount)
@@ -72,9 +78,9 @@ namespace OML
     }
     public class API
     {
-        public static Entity SpawnItem(int itemID, float x = 0, float y = 0)
+        public static Entity SpawnItem(Player player, int itemID)
         {
-            IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, x, y, IntPtr.Zero).Call();
+            IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }
         public static Entity SpawnEntity(int entityID, int variant, int subtype, float x, float y, IntPtr parentHandle)
@@ -89,6 +95,13 @@ namespace OML
         public static void Teleport(int roomid)
         {
             new API_TeleportCall(OML.Connection, roomid).Call();
+        }
+        public static PointF NormalizePointF(PointF pf)
+        {
+            PointF result = new PointF();
+            result.x = (pf.x - 120) / 40;
+            result.y = (pf.y - 160) / 40;
+            return result;
         }
     }
 }

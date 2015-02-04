@@ -507,4 +507,74 @@ namespace OML
             Teleport_Response response = RawDeserialize<Teleport_Response>(connection.inStream.ReadBytes(SizeOf(typeof(Teleport_Response))));
         }
     }
+    internal class API_GetPositionCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetPosition_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetPosition_Response
+        {
+            public uint id;
+            public PointF position;
+        };
+
+        private GetPosition_Request request;
+
+        public API_GetPositionCall(API_ConnectionInfo _connection, IntPtr _player)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_GETPOSITION;
+            request.playerHandle = _player;
+        }
+
+        public PointF Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            GetPosition_Response response = RawDeserialize<GetPosition_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetPosition_Response))));
+
+            return response.position;
+        }
+    }
+
+    internal class API_SetPositionCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetPosition_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public PointF position;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct SetPosition_Response
+        {
+            public uint id;
+        };
+
+        private SetPosition_Request request;
+
+        public API_SetPositionCall(API_ConnectionInfo _connection, IntPtr _player, PointF _position)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_GETPOSITION;
+            request.playerHandle = _player;
+            request.position = _position;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            SetPosition_Response response = RawDeserialize<SetPosition_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetPosition_Response))));
+        }
+    }
 }

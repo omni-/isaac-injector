@@ -246,9 +246,20 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_TeleportResult), &br, NULL);
 					}
 					break;
+				case APICALL_GETPOSITION:
+					if (bl + sizeof(int) == sizeof(API_GetPositionCall))
+					{
+						API_GetPositionCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GetPositionCall), &br, NULL);
 
+						API_GetPositionResult response;
+						response.position = request.player->position;
+
+						WriteFile(hCallPipe, &response, sizeof(API_GetPositionResult), &br, NULL);
+					}
+					break;
 				default:
-					MessageBoxA(NULL, "unknown bytecode", NULL, NULL);
+					MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
 					break;
 			}
 		}
