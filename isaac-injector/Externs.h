@@ -173,8 +173,8 @@ struct Room
 	int* unknown2;
 	// zero (mostly)
 	int unknown3;
-	int curses;
-	int curses2;
+	int unknown4;
+	int unknown5;
 	// pointers
 	DebugStruct* unknown6;
 	DebugStruct* unknown7;
@@ -224,14 +224,16 @@ struct PlayerManager
 	// f8 = curses (uint)  bitmap
 	int _floorNo;
 	bool _alternateFloor;
-	char unknown1[0x08];
+	char unknown1[0x03];
+	int _curses;
+	char unknown2[0x01];
 	bool _seeForever;
-	char unknown2[0x0A];
+	char unknown3[0x0A];
 	Room rooms[50]; // unknown size.. 50 for now
-	char unknown3[0x3BB8];
+	char unknown4[0x3BB8];
 	int RoomCount; 
-	char unknown4[0x23D1];
-	bool unknown5;
+	char unknown5[0x23D1];
+	bool unknown6;
 	// f23936 = floor Seed
 	// f23920 = current seed
 };
