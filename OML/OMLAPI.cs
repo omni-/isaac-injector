@@ -566,7 +566,7 @@ namespace OML
         public API_SetPositionCall(API_ConnectionInfo _connection, IntPtr _player, PointF _position)
             : base(_connection)
         {
-            request.id = OML.APICALL_GETPOSITION;
+            request.id = OML.APICALL_SETPOSITION;
             request.playerHandle = _player;
             request.position = _position;
         }
@@ -575,6 +575,75 @@ namespace OML
         {
             connection.outStream.Write(RawSerialize(request));
             SetPosition_Response response = RawDeserialize<SetPosition_Response>(connection.inStream.ReadBytes(SizeOf(typeof(SetPosition_Response))));
+        }
+    }
+    internal class API_HasItemCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct HasItem_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int itemid;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct HasItem_Response
+        {
+            public uint id;
+            public bool hasitem;
+        };
+
+        private HasItem_Request request;
+
+        public API_HasItemCall(API_ConnectionInfo _connection, IntPtr _player, int _itemid)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_HASITEM;
+            request.playerHandle = _player;
+            request.itemid = _itemid;
+        }
+
+        public bool Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            return RawDeserialize<HasItem_Response>(connection.inStream.ReadBytes(SizeOf(typeof(HasItem_Response)))).hasitem;
+        }
+    }
+    internal class API_AddCollectibleCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCollectible_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            public int itemid;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCollectible_Response
+        {
+            public uint id;
+        };
+
+        private AddCollectible_Request request;
+
+        public API_AddCollectibleCall(API_ConnectionInfo _connection, IntPtr _player, int _itemid)
+            : base(_connection)
+        {
+            request.id = OML.APICALL_ADDCOLLECTIBLE;
+            request.playerHandle = _player;
+            request.itemid = _itemid;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            AddCollectible_Response response = RawDeserialize<AddCollectible_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCollectible_Response))));
         }
     }
 }

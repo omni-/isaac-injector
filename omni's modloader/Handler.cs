@@ -26,17 +26,21 @@ namespace OML
 
         public Handler()
         {
-            commands.Add("setstat", new Command(Wrappers.SetStat_Wrapper, 
-                "args: \r\n1. playerstat - either type a playerstat or an int between 0 and 5.\r\n2. amount - how much you want to change the stat by.",
-                new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) }, 
+            commands.Add("setstat", new Command(Wrappers.SetStat_Wrapper,
+                "args: \r\n1. playerstat - either type a playerstat or an int between 0 and 5\r\n2. amount - how much you want to change the stat by",
+                new List<Type> { typeof(Player), typeof(PlayerStat), typeof(int) },
                 false));
-            commands.Add("spawnitem", new Command(Wrappers.SpawnItem_Wrapper, 
-                "args: \r\n1. itemid - id of item.\r\n2. x - x position to spawn.\r\n3. y - y position to spawn.", 
-                new List<Type>() { typeof(Player), typeof(int) }, 
+            commands.Add("spawnitem", new Command(Wrappers.SpawnItem_Wrapper,
+                "args: \r\n1. itemid - id of item",
+                new List<Type>() { typeof(Player), typeof(int) },
                 true));
-            commands.Add("spawnentity", new Command(Wrappers.SpawnEntity_Wrapper, 
-                "to be implemented", 
-                new List<Type> { typeof(int), typeof(int), typeof(int), typeof(float), typeof(float), typeof(IntPtr) }, 
+            commands.Add("spawnitem-s", new Command(Wrappers.SpawnItem_Wrapper,
+                "args: \r\n1. itemname - name of item (enclosed in double quotes)",
+                 new List<Type>() { typeof(Player), typeof(string) },
+                true));
+            commands.Add("spawnentity", new Command(Wrappers.SpawnEntity_Wrapper,
+                "to be implemented",
+                new List<Type> { typeof(int), typeof(int), typeof(int), typeof(float), typeof(float), typeof(IntPtr) },
                 true));
             commands.Add("teleport", new Command(Wrappers.Teleport_Wrapper,
                 "args: \r\n1. roomid - id of the room to teleport to",
@@ -45,6 +49,18 @@ namespace OML
             commands.Add("jumpfloor", new Command(Wrappers.JumpFloor_Wrapper,
                 "args: \r\n1. floorid - id of floor to jump to",
                 new List<Type> { typeof(int) },
+                false));
+            commands.Add("hasitem", new Command(Wrappers.HasItem_Wrapper,
+                "args: \r\n1. itemid - id of query item",
+                new List<Type> { typeof(Player), typeof(int) },
+                false));
+            commands.Add("hasitem-s", new Command(Wrappers.HasItem_Wrapper,
+                "args: \r\n1. itemname - name of item (enclosed in double quotes)",
+                new List<Type> { typeof(Player), typeof(string) },
+                false));
+            commands.Add("setpos", new Command(Wrappers.JumpFloor_Wrapper,
+               "args: \r\n1. x - x coordinate\r\n2. y - y coordinate (CAUTION: sometimes x and y get inverted)",
+                new List<Type> { typeof(Player), typeof(float), typeof(float) },
                 false));
         }
 
@@ -372,11 +388,17 @@ namespace OML
                                         {
                                             string cmd = "";
                                             commandQueue.TryDequeue(out cmd);
-                                            string[] _params = Regex.Matches(cmd, @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(s => s.Value).ToArray<string>();
+                                            cmd.ToLower();
+                                            string[] _params = Regex.Matches(cmd, @"[^\s""]+|""[^""]*""").Cast<Match>().Select(s => s.Value.Replace("\"", "")).ToArray<string>();
                                             string command = _params[0];
 
-                                            if (commands.ContainsKey(command))
+                                            if (commands.ContainsKey(command) || command == "help")
                                             {
+                                                if (command == "help")
+                                                {
+                                                    Wrappers.Help(commands);
+                                                    continue;
+                                                }
                                                 try
                                                 {
                                                     List<object> result = new List<object>();
@@ -413,6 +435,14 @@ namespace OML
                                                     Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
                                                 }
                                                 catch (ArgumentException)
+                                                {
+                                                    Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
+                                                }
+                                                catch (InvalidOperationException)
+                                                {
+                                                    Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
+                                                }
+                                                catch (FormatException)
                                                 {
                                                     Console.WriteLine("\r\n[ERROR] command failed. usage: " + commands[command].cmdusage);
                                                 }

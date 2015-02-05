@@ -75,11 +75,49 @@ namespace OML
         {
             new API_SetStatCall(OML.Connection, Handle, amount, stat).Call();
         }
+
+        public void AddCollectible(int itemid)
+        {
+            new API_AddCollectibleCall(OML.Connection, Handle, itemid).Call();
+        }
+
+        public void AddCollectible(string itemname)
+        {
+            int id = OML.GetItemID(itemname);
+            new API_AddCollectibleCall(OML.Connection, Handle, id).Call();
+        }
+
+        public bool HasItem(int itemID)
+        {
+            return new API_HasItemCall(OML.Connection, Handle, itemID).Call();
+        }
+
+        public bool HasItem(string name)
+        {
+            int id = OML.GetItemID(name);
+            return new API_HasItemCall(OML.Connection, Handle, id).Call();
+        }
     }
     public class API
     {
         public static Entity SpawnItem(Player player, int itemID)
         {
+            if (!OML.IsValidItemID(itemID))
+            {
+                Console.WriteLine("\r\n[ERROR] invalid item id");
+                return null;
+            }
+            IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
+            return new Entity(entityHandle);
+        }
+        public static Entity SpawnItem(Player player, string itemname)
+        {
+            int itemID = OML.GetItemID(itemname);
+            if (itemID == -1)
+            {
+                Console.WriteLine("\r\n[ERROR] invalid item name");
+                return null;
+            }
             IntPtr entityHandle = new API_SpawnEntityCall(OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }

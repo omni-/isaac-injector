@@ -20,6 +20,7 @@ namespace OML
             //check for verbose switch
             verbose = new List<string>(args).Contains("-v");
 
+            OML.Init();
             bool result = Loader.init();
             Console.Write(result ? " success" : "\r\n[ERROR] failed. exiting.");
             if (!result) return;

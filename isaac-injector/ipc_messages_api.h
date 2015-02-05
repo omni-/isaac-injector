@@ -192,3 +192,46 @@ struct API_GetPositionResult
 	unsigned int id = APICALL_GETPOSITION;
 	PointF position;
 };
+
+#pragma pack (1)
+struct API_SetPositionCall
+{
+	unsigned int id = APICALL_SETPOSITION;
+	Player* player;
+	PointF position;
+};
+
+#pragma pack (1)
+struct API_SetPositionResult
+{
+	unsigned int id = APICALL_SETPOSITION;
+};
+
+#pragma pack (1)
+struct API_AddCollectibleCall
+{
+	unsigned int id = APICALL_ADDCOLLECTIBLE;
+	Player* player;
+	int itemid;
+};
+
+#pragma pack (1)
+struct API_AddCollectibleResult
+{
+	unsigned int id = APICALL_ADDCOLLECTIBLE;
+};
+
+#pragma pack (1)
+struct API_HasItemCall
+{
+	unsigned int id = APICALL_HASITEM;
+	Player* player;
+	int itemid;
+};
+
+#pragma pack (1)
+struct API_HasItemResult
+{
+	unsigned int id = APICALL_HASITEM;
+	bool hasitem;
+};

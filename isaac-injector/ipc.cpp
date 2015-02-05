@@ -258,6 +258,42 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_GetPositionResult), &br, NULL);
 					}
 					break;
+				case APICALL_SETPOSITION:
+					if (bl + sizeof(int) == sizeof(API_SetPositionCall))
+					{
+						API_SetPositionCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SetPositionCall), &br, NULL);
+
+						request.player->position = request.position;
+
+						API_SetPositionResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SetPositionResult), &br, NULL);
+					}
+					break;
+				case APICALL_ADDCOLLECTIBLE:
+					if (bl + sizeof(int) == sizeof(API_AddCollectibleCall))
+					{
+						API_AddCollectibleCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_AddCollectibleCall), &br, NULL);
+
+						API_AddCollectible(request.player, request.itemid);
+
+						API_AddCollectibleResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_AddCollectibleResult), &br, NULL);
+					}
+					break;
+				case APICALL_HASITEM:
+					if (bl + sizeof(int) == sizeof(API_HasItemCall))
+					{
+						API_HasItemCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_HasItemCall), &br, NULL);
+
+						API_HasItemResult response;
+						response.hasitem = API_PlayerHasItem(request.player, request.itemid);
+
+						WriteFile(hCallPipe, &response, sizeof(API_HasItemResult), &br, NULL);
+					}
+					break;
 				default:
 					MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
 					break;

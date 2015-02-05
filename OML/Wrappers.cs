@@ -8,14 +8,22 @@ namespace OML
 {
     public class Wrappers
     {
+        public static void Help(Dictionary<string, Command> commands)
+        {
+            Console.WriteLine("\r\n[INFO] available commands: ");
+            foreach (var kv in commands)
+                Console.WriteLine("* " + kv.Key);
+        }
         public static void SetStat_Wrapper(object[] _params)
         {
             ((Player)_params[0]).SetStat((PlayerStat)_params[1], (int)_params[2]);
         }
-
         public static void SpawnItem_Wrapper(object[] _params)
         {
-            API.SpawnItem((Player)_params[0], (int)_params[1]);
+            if (_params[1].GetType() == typeof(int))
+                API.SpawnItem((Player)_params[0], (int)_params[1]);
+            else if (_params[1].GetType() == typeof(string))
+                API.SpawnItem((Player)_params[0], (string)_params[1]);
         }
         public static void SpawnEntity_Wrapper(object[] _params)
         {
@@ -28,6 +36,39 @@ namespace OML
         public static void JumpFloor_Wrapper(object[] _params)
         {
             API.GotoFloor((Floor)_params[0]);
+        }
+        public static void HasItem_Wrapper(object[] _params)
+        {
+            if (_params[1].GetType() == typeof(int))
+                Console.WriteLine(((Player)_params[0]).HasItem((int)_params[1]));
+            else if (_params[1].GetType() == typeof(string))
+                Console.WriteLine(((Player)_params[0]).HasItem((string)_params[1]));
+        }
+        public static void AddCollectible_Wrapper(object[] _params)
+        {
+            if (_params[1].GetType() == typeof(int))
+                ((Player)_params[0]).AddCollectible((int)_params[1]);
+            else if (_params[1].GetType() == typeof(string))
+                ((Player)_params[0]).AddCollectible((string)_params[1]);
+        }
+        public static void SetInv_Wrapper(object[] _params)
+        {
+            switch((PlayerInv)_params[1])
+            {
+                case PlayerInv.Coins:
+                    ((Player)_params[0]).Coins = (int)_params[2];
+                    break;
+                case PlayerInv.Bombs:
+                    ((Player)_params[0]).Bombs = (int)_params[2];
+                    break;
+                case PlayerInv.Keys:
+                    ((Player)_params[0]).Keys = (int)_params[2];
+                    break;
+            }
+        }
+        public static void SetPlayerPosition_Wrapper(object[] _params)
+        {
+            ((Player)_params[0]).Position = new PointF { x = (float)_params[1], y = (float)_params[2] };
         }
     }
 }
