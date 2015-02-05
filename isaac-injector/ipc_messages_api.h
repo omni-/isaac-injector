@@ -107,6 +107,35 @@ struct API_SetBombsResult
 	unsigned int id = APICALL_SETBOMBS;
 };
 
+#pragma pack(1)
+struct API_GetCoinsCall
+{
+	unsigned int id = APICALL_GETCOINS;
+	Player* player;
+};
+
+#pragma pack(1)
+struct API_GetCoinsResult
+{
+	unsigned int id = APICALL_GETCOINS;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetCoinsCall
+{
+	unsigned int id = APICALL_SETCOINS;
+	Player* player;
+	int amount;
+};
+
+#pragma pack(1)
+struct API_SetCoinsResult
+{
+	unsigned int id = APICALL_SETCOINS;
+};
+
+
 #pragma pack (1)
 struct API_GetStatCall
 {

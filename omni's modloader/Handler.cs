@@ -62,6 +62,10 @@ namespace OML
                "args: \r\n1. x - x coordinate\r\n2. y - y coordinate (CAUTION: sometimes x and y get inverted)",
                 new List<Type> { typeof(Player), typeof(float), typeof(float) },
                 false));
+            commands.Add("setinv", new Command(Wrappers.SetInv_Wrapper,
+                "args: \r\n1. playerinv - either bombs, coins, or keys\r\n2. amount - amount to set it to",
+                new List<Type> { typeof(Player), typeof(PlayerInv), typeof(int) },
+                false));
         }
 
         public void Handle()

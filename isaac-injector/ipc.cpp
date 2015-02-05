@@ -132,7 +132,6 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						WriteFile(hCallPipe, &response, sizeof(API_GetBombsResult), &br, NULL);
 					}
 					break;
-
 				case APICALL_SETBOMBS:
 					if (bl + sizeof(int) == sizeof(API_SetBombsCall))
 					{
@@ -143,6 +142,30 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 
 						API_SetBombsResult response;
 						WriteFile(hCallPipe, &response, sizeof(API_SetBombsResult), &br, NULL);
+					}
+					break;
+				case APICALL_GETCOINS:
+					if (bl + sizeof(int) == sizeof(API_GetCoinsCall))
+					{
+						API_GetCoinsCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_GetCoinsCall), &br, NULL);
+
+						API_GetCoinsResult response;
+						response.amount = request.player->_numCoins;
+
+						WriteFile(hCallPipe, &response, sizeof(API_GetCoinsResult), &br, NULL);
+					}
+					break;
+				case APICALL_SETCOINS:
+					if (bl + sizeof(int) == sizeof(API_SetCoinsCall))
+					{
+						API_SetCoinsCall request;
+						ReadFile(hCallPipe, &request, sizeof(API_SetCoinsCall), &br, NULL);
+
+						request.player->_numCoins = request.amount;
+
+						API_SetCoinsResult response;
+						WriteFile(hCallPipe, &response, sizeof(API_SetCoinsResult), &br, NULL);
 					}
 					break;
 				case APICALL_GETSTAT:
