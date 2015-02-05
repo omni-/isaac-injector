@@ -144,12 +144,15 @@ void* SpawnEntityEvent_Original;
 
 void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int entityID, int variant, Entity* parent, int subtype, unsigned int seed)
 {
-	SpawnEntityEvent_Notification notification(*velocity, *position, entityID, variant, subtype, parent);
-	SpawnEntityEvent_Response response;
-	
-	IPC_BeginEvent(&notification, sizeof(SpawnEntityEvent_Notification));		
-	IPC_ProcessEvent();
-	IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+	if (entityID <= 1000) //everything 1000+ is just effects. they cause needless lag.
+	{
+		SpawnEntityEvent_Notification notification(*velocity, *position, entityID, variant, subtype, parent);
+		SpawnEntityEvent_Response response;
+
+		IPC_BeginEvent(&notification, sizeof(SpawnEntityEvent_Notification));
+		IPC_ProcessEvent();
+		IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+	}
 }
 
 __declspec(naked) char SpawnEntityEvent_Hook()

@@ -184,10 +184,11 @@ namespace OML
                                 case OML.GAME_EVENT_SPAWNENTITY:
                                     if (bytesLeft + 1 == SpawnEntityEvent_Notification.size())
                                     {
+                                        SpawnEntityEvent_Notification notification = RawDeserialize<SpawnEntityEvent_Notification>(ServerIn.ReadBytes(SpawnEntityEvent_Notification.size()), 0);
+
                                         // Receive event
                                         if (Program.verbose) Console.WriteLine("\r\n[INFO] GAME_EVENT_SPAWNENTITY received.");
 
-                                        SpawnEntityEvent_Notification notification = RawDeserialize<SpawnEntityEvent_Notification>(ServerIn.ReadBytes(SpawnEntityEvent_Notification.size()), 0);
 
                                         Entity parent = new Entity(notification.parentHandle);
                                         foreach (OMLPlugin p in plugins)
