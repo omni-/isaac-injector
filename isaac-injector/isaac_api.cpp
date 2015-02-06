@@ -47,6 +47,56 @@ void API_AddSoulHearts(Player* player, int amount)
 	}
 }
 
+void API_AddBlackHearts(Player* player, int amount)
+{
+	_asm
+	{
+		mov ebx, player
+		push amount
+		call AddBlackHeartsEvent_Original
+	}
+}
+
+void API_FreezeEntity(Entity* entity, int duration)
+{
+	_asm
+	{
+		mov ecx, entity
+		mov edx, duration
+		call Game_FreezeEntityFunc
+	}
+}
+
+void API_FearEntity(Entity* entity, int duration)
+{
+	_asm
+	{
+		mov ecx, entity
+		mov edx, duration
+		call Game_FearEntityFunc
+	}
+}
+
+void API_CharmEntity(Entity* entity, int duration)
+{
+	_asm
+	{
+		mov ecx, entity
+		push duration
+		call Game_CharmEntityFunc
+	}
+}
+
+void API_ConfuseEntity(Entity* entity, int duration)
+{
+	_asm
+	{
+		mov ecx, entity
+		mov edx, duration
+		call Game_ConfuseEntityFunc
+	}
+}
+
 Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y, Entity* parent)
 {
 	// zero

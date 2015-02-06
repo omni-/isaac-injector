@@ -17,18 +17,22 @@ struct PointF
 
 // Entity + 0xB9C	charName
 #pragma pack(1)
-struct Entity
+struct Entity 
 {
 char _unk0000[0xC];
 	int _id;
 	unsigned int _variant;
 	int _subtype;
-char _unk0018[0x5C];
+	int _parentID;
+	unsigned int _parentVariant;
+char _unk0018[0x54];
 	int _tearType;
 char _unk0020[0x23C];
 	float _scaleX;
 	float _scaleY;
-char _unk000D[0x158];
+char _unk000C[0x138];
+	int _statusEffectDuration;
+char _unk000D[0x1C];
 	PointF position;
 char _unk0[0x350];
 };
@@ -42,7 +46,7 @@ struct Player : Entity
 	int _eternalHearts;
 	int _soulHearts;
 	int _blackHeartMask;
-	int _jarHearts;
+	int _jarHearts; // 0xB98
 	int _keys;
 	int _hasGoldenKey;
 	int _numBombs;
@@ -74,6 +78,66 @@ struct Player : Entity
 	int _pillCardID2;
 	BOOL _isCard2;
 	char _unkE00[0xBC];
+};
+
+#pragma pack(1)
+struct Item
+{
+	int something;
+	int _id;
+	char* _name;
+
+	int unknown1;
+	int unknown2;
+	int unknown3;
+	int unknown4;
+	int unknown5;
+	int unknown6;
+	int _desc;
+	int unknown8;
+	int unknown9;
+	int unknown10;
+	int unknown11;
+	int unknown12;
+	int unknown13;
+
+	char* _imageResourcePath;
+
+	int unknown14;
+	int unknown15;
+	int unknown16;
+	int unknown17;
+	int unknown18;
+	int unknown19;
+	int unknown20;
+	int unknown21;
+	int unknown22;
+	int unknown23;
+	int unknown24;
+	int unknown25;
+	int unknown26;
+	int unknown27;
+	int unknown28;
+	int unknown29;
+	int unknown30;
+	int unknown31;
+	int unknown32;
+	int unknown33;
+
+	char* _animationResourcePath;
+
+	int unknown34;
+	int unknown35;
+	int unknown36;
+	int unknown37;
+	int unknown38;
+	int unknown39;
+	int unknown40;
+	int unknown41;
+	int unknown42;
+	int unknown43;
+	int unknown44;
+	int unknown45;
 };
 
 #pragma pack(1)
@@ -221,7 +285,6 @@ struct Room
 #pragma pack(1)
 struct PlayerManager
 {
-	// f8 = curses (uint)  bitmap
 	int _floorNo;
 	bool _alternateFloor;
 	char unknown1[0x03];
@@ -229,11 +292,12 @@ struct PlayerManager
 	char unknown2[0x01];
 	bool _seeForever;
 	char unknown3[0x0A];
-	Room rooms[50]; // unknown size.. 50 for now
-	char unknown4[0x3BB8];
-	int RoomCount; 
-	char unknown5[0x23D1];
-	bool unknown6;
+	Room _rooms[41]; // unknown size.. 41
+	char unknown31[0x2D]; 
+	char unknown4[0x4197];
+	int _roomCount; 
+	char unknown5[0x1074];
+	Item* _items[346];
 	// f23936 = floor Seed
 	// f23920 = current seed
 };

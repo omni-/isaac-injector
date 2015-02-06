@@ -54,6 +54,7 @@ PlayerManager* API_GetPlayerManager();
 // player stats
 void API_HPUp(Player* player, int amount);
 void API_AddSoulHearts(Player* player, int amount);
+void API_AddBlackHearts(Player* player, int amount);
 
 
 // game
@@ -69,6 +70,12 @@ TearInfo* API_InitTear(int value, TearInfo* tear);
 void API_ShootTears(PointF* pos, PointF* velocity, int pattern, TearInfo* tear, Entity* source);
 
 Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y, Entity* parent);
+
+// Status effects
+void API_FreezeEntity(Entity* entity, int duration);
+void API_FearEntity(Entity* entity, int duration);
+void API_ConfuseEntity(Entity* entity, int duration);
+void API_CharmEntity(Entity* entity, int duration);
 
 // effects
 void API_Effect_GoodPill(Player* player);

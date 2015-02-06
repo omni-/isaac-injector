@@ -114,7 +114,8 @@ namespace OML
 
                 Interlocked.Exchange(ref IsWorking, 1);
 
-                while ((!proc.HasExited) && (Abort == 0))
+               // while ((!proc.HasExited) && (Abort == 0))
+                while ((Abort == 0))
                 {
                     try
                     {

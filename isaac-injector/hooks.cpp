@@ -241,14 +241,19 @@ void* AddSoulHeartsEvent_Original;
 
 int __fastcall AddSoulHeartsEvent_Payload(Player* player, int amount)
 {
-	AddSoulHeartsEvent_Notification notification(player, amount);
-	AddSoulHeartsEvent_Response response(amount);
+	if (amount != 0)
+	{
+		AddSoulHeartsEvent_Notification notification(player, amount);
+		AddSoulHeartsEvent_Response response(amount);
 	
-	IPC_BeginEvent(&notification, sizeof(AddSoulHeartsEvent_Notification));	
-	IPC_ProcessEvent();
-	IPC_EndEvent(&response, sizeof(AddSoulHeartsEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+		IPC_BeginEvent(&notification, sizeof(AddSoulHeartsEvent_Notification));	
+		IPC_ProcessEvent();
+		IPC_EndEvent(&response, sizeof(AddSoulHeartsEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 
-	return response.amount;
+		return response.amount;
+	}
+	else
+		return amount;
 }
 
 __declspec(naked) void AddSoulHeartsEvent_Hook()
@@ -429,6 +434,82 @@ __declspec(naked) void PlayerUpdateEvent_Hook()
 	}
 }
 
+
+/******************************************
+*********** PlayerHitsEnemyEvent **********
+*******************************************/
+
+void* PlayerHitsEnemyEvent_Original;
+
+void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
+{
+
+	FILE* f;
+	fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
+		fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
+	fclose(f);
+
+	/*PlayerUpdateEvent_Notification notification(player);
+	PlayerUpdateEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(PlayerUpdateEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(PlayerUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);*/
+}
+
+__declspec(naked) void PlayerHitsEnemyEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		mov ebp, esp
+			push ecx
+				push dword ptr[ebp+0x0C]
+				push dword ptr[ebp+0x08]
+				push ecx
+					call PlayerHitsEnemyEvent_Payload
+				add esp, 12
+			pop ecx
+		pop ebp
+		jmp PlayerHitsEnemyEvent_Original
+	}
+}
+
+/******************************************
+************ AddBlackHeartsEvent **********
+*******************************************/
+
+void* AddBlackHeartsEvent_Original;
+
+void __cdecl AddBlackHeartsEvent_Payload(Player* player, int amount)
+{
+	// TODO
+
+	/*PlayerUpdateEvent_Notification notification(player);
+	PlayerUpdateEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(PlayerUpdateEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(PlayerUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);*/
+}
+
+__declspec(naked) void AddBlackHeartsEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		mov ebp, esp
+			push ebx
+				push dword ptr[ebp+0x08]
+				push ebx
+					call AddBlackHeartsEvent_Payload
+				add esp, 8
+			pop ebx
+		pop ebp
+		jmp AddBlackHeartsEvent_Original
+	}
+}
+
 /******************************************
 ************* GotoFloorEvent ***********
 *******************************************/
@@ -478,6 +559,11 @@ GoodPillEffectFuncType* GoodPillEffectFunc;
 IsaacRandomFuncType* IsaacRandomFunc;
 InitTearFuncType* InitTearFunc;
 Player_TeleportFuncType* Player_TeleportFunc;
+void* Game_FreezeEntityFunc;
+void* Game_FearEntityFunc;
+void* Game_ConfuseEntityFunc;
+void* Game_CharmEntityFunc;
+
 
 /******************************************
 ************** Initialization *************
@@ -530,8 +616,16 @@ void Hooks_HookEvents()
 	PlayerUpdateEvent_Original = DetourFunction(PBYTE(PlayerUpdateEvent_SigPtr), PBYTE(PlayerUpdateEvent_Hook));
 
 	// GotoFloorEvent
-	void* GotoFloorEvent_SigPtr = SigScan_FindSignature(&Signature_GotoFloor);
+	void* GotoFloorEvent_SigPtr = SigScan_FindSignature(&Signature_GotoFloorEvent);
 	GotoFloorEvent_Original = DetourFunction(PBYTE(GotoFloorEvent_SigPtr), PBYTE(GotoFloorEvent_Hook));
+
+	// AddBlackHeartsEvent
+	void* AddBlackHeartsEvent_SigPtr = SigScan_FindSignature(&Signature_AddBlackHeartsEvent);
+	AddBlackHeartsEvent_Original = DetourFunction(PBYTE(AddBlackHeartsEvent_SigPtr), PBYTE(AddBlackHeartsEvent_Hook));
+
+	// PlayerHitsEnemyEvent
+	void* PlayerHitsEnemyEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerHitsEnemyEvent);
+	PlayerHitsEnemyEvent_Original = DetourFunction(PBYTE(PlayerHitsEnemyEvent_SigPtr), PBYTE(PlayerHitsEnemyEvent_Hook));
 }
 
 void Hooks_GetFunctions()
@@ -545,6 +639,12 @@ void Hooks_GetFunctions()
 
 	// player functions
 	Player_TeleportFunc = (Player_TeleportFuncType*)SigScan_FindSignature(&Signature_PlayerTeleportEvent);  // could/should be hooked, too
+
+	// Status effects
+	Game_FreezeEntityFunc = SigScan_FindSignature(&Signature_FreezeEntity); 
+	Game_FearEntityFunc = SigScan_FindSignature(&Signature_FearEntity); 
+	Game_ConfuseEntityFunc = SigScan_FindSignature(&Signature_ConfuseEntity);
+	Game_CharmEntityFunc = SigScan_FindSignature(&Signature_CharmEntity);
 }
 
 DWORD** PlayerManagerPtr;

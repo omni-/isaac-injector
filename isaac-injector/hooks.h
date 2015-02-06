@@ -26,6 +26,7 @@ extern void* SpawnEntityEvent_Original;
 extern void* GameUpdateEvent_Original;
 extern void* HpUpEvent_Original;
 extern void* AddSoulHeartsEvent_Original;
+extern void* AddBlackHeartsEvent_Original;
 extern void* ShootTearsEvent_Original;
 extern void* GotoFloorEvent_Original;
 
@@ -41,3 +42,9 @@ extern InitTearFuncType* InitTearFunc;
 
 using Player_TeleportFuncType = void (void);
 extern Player_TeleportFuncType* Player_TeleportFunc;
+
+
+extern void* Game_FreezeEntityFunc;
+extern void* Game_FearEntityFunc;
+extern void* Game_ConfuseEntityFunc;
+extern void* Game_CharmEntityFunc;

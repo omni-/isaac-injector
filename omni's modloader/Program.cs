@@ -25,12 +25,15 @@ namespace OML
             Console.Write(result ? " success" : "\r\n[ERROR] failed. exiting.");
             if (!result) return;
 
-            Injector i = new Injector();
-            hResult hresult;
-            Process proc = i.Inject("isaac-ng", out hresult);
+            Process proc = Process.Start("steam://rungameid/250900");
 
-            Console.WriteLine("\r\n\r\n[INFO] injection result: " + hresult);
-            if (hresult != hResult.Error && proc != null)
+           // Injector i = new Injector();
+           // hResult hresult = 0;
+           // Process proc = i.Inject("isaac-ng", out hresult);
+
+            Console.WriteLine("\r\n\r\n[INFO] injection result: " + 0); // hresult
+           // if (hresult != hResult.Error && proc != null)
+            if (true)
             {
                 Handler h = new Handler();
                 h.proc = proc;
