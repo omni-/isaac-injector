@@ -74,9 +74,13 @@ HANDLE InitCallPipe()
 bool IPC_Init()
 {
 	hEventPipe = InitEventPipe();
-	hCallPipe = InitCallPipe();
-
-	return (hEventPipe != INVALID_HANDLE_VALUE) && (hCallPipe != INVALID_HANDLE_VALUE);
+	if (hEventPipe != INVALID_HANDLE_VALUE)
+	{
+		hCallPipe = InitCallPipe();
+		return (hCallPipe != INVALID_HANDLE_VALUE);
+	}
+	else
+		return false;
 }
 
 unsigned int IPC_HandleAPICall(DWORD timeout)
