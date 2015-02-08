@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -26,6 +27,22 @@ namespace OML
     public partial class MainWindow : Window
     {
         public const string version = "v1.0";
+
+        private string Path;
+
+        public string path
+        {
+            get { return Path; }
+            set
+            {
+                Path = value;
+                using (StreamWriter s = new StreamWriter(".usersettings"))
+                {
+                    s.WriteLine("false");
+                    s.WriteLine(path);
+                }
+            }
+        }
 
         public Handler h;
 
@@ -85,7 +102,15 @@ namespace OML
         private void launchButton_Click(object sender, RoutedEventArgs e)
         {
             WriteLine("Initializing...");
-            bool result = Loader.init();
+            string tpath = "";
+            bool result = Loader.init(ref tpath);
+            path = tpath;
+            if (Loader.FirstTimeFlag)
+            {
+                PopupWindow p = new PopupWindow(this);
+                p.ShowDialog();
+            }
+            File.Copy("res\\dll\\dsound.dll", path + "\\dsound.dll", true);
             launchBlock.Inlines.Remove(init);
             if (!result)
             {
@@ -97,6 +122,7 @@ namespace OML
             Process proc = Process.Start("steam://rungameid/250900");
             WriteLine("Awaiting connection...");
             Thread t = new Thread(new ThreadStart(h.Handle));
+            t.IsBackground = true;
             t.Start();
             controlGrid.IsEnabled = true;
         }
