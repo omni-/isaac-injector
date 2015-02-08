@@ -13,3 +13,5 @@ C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.dl
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.pdb
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.exe
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.baml
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.g.cs
