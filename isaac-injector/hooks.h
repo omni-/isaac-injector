@@ -17,6 +17,9 @@
 
 // initialization + playermanager
 bool Hooks_Init();
+extern ItemStorageArray* itemStorageArray;
+extern std::map<int, Item*> custom_items;
+
 PlayerManager* Hooks_GetPlayerManager();
 
 // Hooks

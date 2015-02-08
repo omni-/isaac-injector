@@ -110,10 +110,19 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 	// manager
 	PlayerManager* playerMan = Hooks_GetPlayerManager();
 
+	// custom items handling
+	int original_subtype = subtype;
+	if ((entityID == 5) && (variant == 100) && (subtype < 0))
+	{
+		itemStorageArray->items[235] = custom_items[subtype];
+		subtype = 235;
+	}
+
 	unsigned int seed = IsaacRandomFunc();
 
 	if (playerMan)
 	{
+		Entity* resultEntity = NULL;
 		_asm
 		{
 			push seed
@@ -125,7 +134,10 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 			mov ebx, pos
 			mov eax, velocity
 			call SpawnEntityEvent_Original
+			mov resultEntity, eax
 		}
+		resultEntity->_realItemID = original_subtype; // store real itemID at entity._realItemID (I don't know what field this actually is)
+		return resultEntity;
 	}
 	else
 		return NULL;

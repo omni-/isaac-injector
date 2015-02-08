@@ -62,7 +62,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(OutDir)$(TargetName)$(TargetExt)" "$(ProgramFiles)\Steam\steamapps\common\The Binding of Isaac Rebirth\dsound.dll" /y</Command>
+      <Command>xcopy "$(OutDir)$(TargetName)$(TargetExt)" "D:\Steam\steamapps\common\The Binding of Isaac Rebirth\dsound.dll" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

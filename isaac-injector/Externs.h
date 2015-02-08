@@ -27,7 +27,8 @@ char _unk0000[0xC];
 	unsigned int _parentVariant;
 char _unk0018[0x54];
 	int _tearType;
-char _unk0020[0x23C];
+	int _realItemID; // used as item ID for custom items
+char _unk0020[0x238];
 	float _scaleX;
 	float _scaleY;
 char _unk000C[0x138];
@@ -83,7 +84,7 @@ struct Player : Entity
 #pragma pack(1)
 struct Item
 {
-	int something;
+	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = ??
 	int _id;
 	char* _name;
 
@@ -108,20 +109,20 @@ struct Item
 	int unknown16;
 	int unknown17;
 	int unknown18;
-	int unknown19;
-	int unknown20;
-	int unknown21;
-	int unknown22;
-	int unknown23;
-	int unknown24;
-	int unknown25;
-	int unknown26;
-	int unknown27;
-	int unknown28;
-	int unknown29;
-	int unknown30;
-	int unknown31;
-	int unknown32;
+	int _gfx;
+	int _achievement;
+	int _cache;
+	int _maxhearts;
+	int _hearts;
+	int _soulhearts;
+	int _blackhearts;
+	int _bombs;
+	int _keys;
+	int _coins;
+	int _maxcharges;
+	int _cooldown;
+	int _special;
+	int _devilprice;
 	int unknown33;
 
 	char* _animationResourcePath;
@@ -138,6 +139,11 @@ struct Item
 	int unknown43;
 	int unknown44;
 	int unknown45;
+};
+
+struct ItemStorageArray
+{
+	Item* items[347];
 };
 
 #pragma pack(1)

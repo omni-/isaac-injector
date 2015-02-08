@@ -11,6 +11,9 @@
 
 using namespace std;
 
+ItemStorageArray* itemStorageArray;
+std::map<int, Item*> custom_items;
+
 /******************************************
 ************** UseCardEvent ***************
 *******************************************/
@@ -65,6 +68,9 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
+	API_SpawnEntity(5,100,-1,3,1,NULL);
+	API_SpawnEntity(5,100,-2,4,1,NULL);
+
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
 
@@ -107,9 +113,14 @@ __declspec(naked) void TakePillEvent_Hook()
 
 void* AddCollectibleEvent_Original;
 
-void __cdecl AddCollectibleEvent_Payload(Player* player, int a2, int itemid, int a4)
+void __cdecl AddCollectibleEvent_Payload(Player* player, int itemid, int charges, int a4)
 {
-	AddCollectibleEvent_Notification notification(player, a2, itemid, a4);
+	if (itemid == -1)
+		API_AddSoulHearts(player, 4);
+	if (itemid == -2)
+		player->_damage = 30;
+
+	AddCollectibleEvent_Notification notification(player, itemid, charges, a4);
 	AddCollectibleEvent_Response response;
 	
 	IPC_BeginEvent(&notification, sizeof(AddCollectibleEvent_Notification));
@@ -142,7 +153,8 @@ __declspec(naked) void AddCollectibleEvent_Hook()
 
 void* SpawnEntityEvent_Original;
 
-void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int entityID, int variant, Entity* parent, int subtype, unsigned int seed)
+// returns subtype (for item spawning)
+int __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerManager* playerManager, int entityID, int variant, Entity* parent, int subtype, unsigned int seed)
 {
 	if (entityID <= 1000) //everything 1000+ is just effects. they cause needless lag.
 	{
@@ -152,6 +164,31 @@ void __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, Player
 		IPC_BeginEvent(&notification, sizeof(SpawnEntityEvent_Notification));
 		IPC_ProcessEvent();
 		IPC_EndEvent(&response, sizeof(SpawnEntityEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+
+		// custom item handling
+		if ((entityID == 5) && (variant == 100) && (subtype < 0))
+		{
+			itemStorageArray->items[235] = custom_items[subtype];
+			return 235;
+		}
+		else
+		{
+			return subtype;
+		}
+	}
+}
+
+// not pretty.. should be changed somehow in the future
+void* _retAddr = NULL;
+int _tmpEntityID;
+int _tmpVariant;
+int _tmpSubType;
+
+void __cdecl AfterSpawnEntityEvent_Payload(Entity* entitySpawned)
+{
+	if ((_tmpEntityID == 5) && (_tmpVariant == 100) && (_tmpSubType < 0))
+	{
+		entitySpawned->_realItemID = _tmpSubType;
 	}
 }
 
@@ -163,20 +200,41 @@ __declspec(naked) char SpawnEntityEvent_Hook()
 		mov ebp, esp
 			push eax
 			push ebx
-				push dword ptr[ebp + 0x1C]
-				push dword ptr[ebp + 0x18]
-				push dword ptr[ebp + 0x14]
-				push dword ptr[ebp + 0x10]
-				push dword ptr[ebp + 0x0C]
-				push dword ptr[ebp + 0x08]
-				push ebx
+				// save tmp values
 				push eax
+					mov eax, dword ptr[ebp + 0x0C]
+					mov _tmpEntityID, eax
+					mov eax, dword ptr[ebp + 0x10]
+					mov _tmpVariant, eax
+					mov eax, dword ptr[ebp + 0x18]
+					mov _tmpSubType, eax
+				pop eax
+				//
+				push dword ptr[ebp + 0x1C]	// seed
+				push dword ptr[ebp + 0x18]	// subtype
+				push dword ptr[ebp + 0x14]	// parent
+				push dword ptr[ebp + 0x10]	// variant
+				push dword ptr[ebp + 0x0C]	// entityID
+				push dword ptr[ebp + 0x08]	// playerManager
+				push ebx					// position
+				push eax					// velocity
 					call SpawnEntityEvent_Payload
 				add esp, 32
+				mov dword ptr[ebp + 0x18], eax
 			pop ebx
 			pop eax
 		pop ebp
-		jmp SpawnEntityEvent_Original
+		pop _retAddr
+		call SpawnEntityEvent_Original
+
+		// After SpawnEntity event
+		push eax
+			push eax
+				call AfterSpawnEntityEvent_Payload
+			add esp, 4
+		pop eax
+		push _retAddr
+		ret
 	}
 }
 
@@ -271,6 +329,43 @@ __declspec(naked) void AddSoulHeartsEvent_Hook()
 }
 
 /******************************************
+************* PickupItemEvent *************
+*******************************************/
+
+void* CollideWithEntityEvent_Original;
+
+void __cdecl CollideWithEntityEvent_Payload(Entity* collisionEntity, Player* player, int something)
+{
+	//if (pedestralToID.find(collisionEntity) != pedestralToID.end())
+	if (collisionEntity->_realItemID < 0)
+	{
+		if (collisionEntity->_subtype == 235)
+		{
+			Item* tmpItem = custom_items[collisionEntity->_realItemID];
+			itemStorageArray->items[235] = tmpItem;
+		}
+	}
+}
+
+__declspec(naked) void CollideWithEntityEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		mov ebp, esp
+			push ecx
+				push dword ptr[ebp+0x0C]
+				push dword ptr[ebp+0x08]
+				push ecx
+					call CollideWithEntityEvent_Payload
+				add esp, 12
+			pop ecx
+		pop ebp
+		jmp CollideWithEntityEvent_Original
+	}
+}
+
+/******************************************
 **************** VFSLoadFile **************
 *******************************************/
 
@@ -280,21 +375,34 @@ char* __cdecl VFSLoadFile_Payload(char* filename)
 {
 	char* result = filename;
 
-	// Testcode:
-
-/*	FILE* f;
+	FILE* f;
 	fopen_s(&f, "C:\\VFSLoadFile_Payload.txt", "a+");
-	fprintf_s(f, "Loading: %s, sizeof(Player)= %d\n", filename, sizeof(Player));
+//	fprintf_s(f, "Loading: %s, sizeof(Player)= %d\n", filename, sizeof(Player));
 	
 
 	string* s = new string(filename);
-	if (s->find("itempools.xml") != string::npos)
+//	if (s->find("itempools.xml") != string::npos)
+	if (s->find("items.xml") != string::npos)
 	{
-		result = "resources/mods/rewritten/itempools.xml"; 
-		fprintf_s(f, "redirected %s to %s\n", filename, result);
+		PlayerManager* pman = API_GetPlayerManager();
+		if (pman->_items[234] == NULL)
+		{
+			fprintf_s(f, "RealID=234");
+			pman->_items[234] = new Item();
+		}
+		else
+		if (pman->_items[235] == NULL)
+		{
+			fprintf_s(f, "RealID=235\n");
+			pman->_items[235] = new Item();
+		}
+		//Item* newitem = 
+		
+	//	result = "resources/mods/rewritten/itempools.xml"; 
+	//	fprintf_s(f, "redirected %s to %s\n", filename, result);
 	}
 
-	fclose(f);*/
+	fclose(f);
 
 	return result;
 }
@@ -444,10 +552,10 @@ void* PlayerHitsEnemyEvent_Original;
 void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
 {
 
-	//FILE* f;
-	//fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
-	//	fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
-	//fclose(f);
+	FILE* f;
+	fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
+		fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
+	fclose(f);
 
 	/*PlayerUpdateEvent_Notification notification(player);
 	PlayerUpdateEvent_Response response;
@@ -509,6 +617,61 @@ __declspec(naked) void AddBlackHeartsEvent_Hook()
 		jmp AddBlackHeartsEvent_Original
 	}
 }
+
+/******************************************
+************ StoreItemStructEvent *********
+*******************************************/
+
+void* StoreItemStructEvent_Original;
+
+int __cdecl StoreItemStructEvent_Payload(ItemStorageArray* _itemStorageArray,  int itemID, Item* newitem)
+{
+	if (itemStorageArray == NULL)
+		itemStorageArray = _itemStorageArray;
+
+	// custom items
+	if (itemID < 0)
+	{
+		custom_items[itemID] = newitem;
+		return 235;
+	}
+	else
+	{
+		return itemID;
+	}
+}
+
+int _redirectItemID;
+
+__declspec(naked) void StoreItemStructEvent_Hook()
+{
+	_asm
+	{
+		push ebp
+		push eax
+		push ebx
+		push ecx
+		push edx
+		push esi
+		push edi
+			push edi
+			push eax
+			push ecx
+				call StoreItemStructEvent_Payload
+			add esp, 12
+			mov [_redirectItemID], eax
+		pop edi
+		pop esi
+		pop edx
+		pop ecx
+		pop ebx
+		pop eax
+		pop ebp
+		mov eax, [_redirectItemID]
+		jmp StoreItemStructEvent_Original
+	}
+}
+
 
 /******************************************
 ************* GotoFloorEvent ***********
@@ -626,6 +789,14 @@ void Hooks_HookEvents()
 	// PlayerHitsEnemyEvent
 	void* PlayerHitsEnemyEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerHitsEnemyEvent);
 	PlayerHitsEnemyEvent_Original = DetourFunction(PBYTE(PlayerHitsEnemyEvent_SigPtr), PBYTE(PlayerHitsEnemyEvent_Hook));
+
+	// StoreItemStructEvent
+	void* StoreItemStructEvent_SigPtr = SigScan_FindSignature(&Signature_StoreItemStructEvent);
+	StoreItemStructEvent_Original = DetourFunction(PBYTE(StoreItemStructEvent_SigPtr), PBYTE(StoreItemStructEvent_Hook));
+
+	// PickupItemEvent
+	void* CollideWithEntityEvent_SigPtr = SigScan_FindSignature(&Signature_CollideWithEntityEvent);
+	CollideWithEntityEvent_Original = DetourFunction(PBYTE(CollideWithEntityEvent_SigPtr), PBYTE(CollideWithEntityEvent_Hook));
 }
 
 void Hooks_GetFunctions()
