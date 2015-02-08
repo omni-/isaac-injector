@@ -47,11 +47,10 @@
     <Compile Include="Pill.cs" />
     <Compile Include="PillDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wrappers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)OML\bin\Debug\OML.dll" "$(SolutionDir)omni's modloader\bin\Debug\Plugins" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)OML\bin\Debug\OML.dll" "$(SolutionDir)omnis modloader\bin\Debug\Plugins" /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

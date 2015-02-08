@@ -80,7 +80,7 @@ namespace OML
         public void Call()
         {
             EndCall_Request request = new EndCall_Request();
-            request.id = OML.APICALL_END;
+            request.id = _OML.APICALL_END;
 
             connection.outStream.Write(RawSerialize(request));
             EndCall_Response response = RawDeserialize<EndCall_Response>(connection.inStream.ReadBytes(SizeOf(typeof(EndCall_Response))));
@@ -109,7 +109,7 @@ namespace OML
 
         public API_HpUpCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
         {
-            request.id = OML.APICALL_HPUP;
+            request.id = _OML.APICALL_HPUP;
             request.playerHandle = _player;
             request.amount = _amount;
         }
@@ -143,7 +143,7 @@ namespace OML
 
         public API_GetKeysCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
         {
-            request.id = OML.APICALL_GETKEYS;
+            request.id = _OML.APICALL_GETKEYS;
             request.playerHandle = _player;
         }
 
@@ -178,7 +178,7 @@ namespace OML
 
         public API_SetKeysCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
         {
-            request.id = OML.APICALL_SETKEYS;
+            request.id = _OML.APICALL_SETKEYS;
             request.playerHandle = _player;
             request.amount = _amount;
         }
@@ -212,7 +212,7 @@ namespace OML
 
         public API_GetBombsCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
         {
-            request.id = OML.APICALL_GETBOMBS;
+            request.id = _OML.APICALL_GETBOMBS;
             request.playerHandle = _player;
         }
 
@@ -247,7 +247,7 @@ namespace OML
 
         public API_SetBombsCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
         {
-            request.id = OML.APICALL_SETBOMBS;
+            request.id = _OML.APICALL_SETBOMBS;
             request.playerHandle = _player;
             request.amount = _amount;
         }
@@ -281,7 +281,7 @@ namespace OML
 
         public API_GetCoinsCall(API_ConnectionInfo _connection, IntPtr _player) : base(_connection)
         {
-            request.id = OML.APICALL_GETCOINS;
+            request.id = _OML.APICALL_GETCOINS;
             request.playerHandle = _player;
         }
 
@@ -316,7 +316,7 @@ namespace OML
 
         public API_SetCoinsCall(API_ConnectionInfo _connection, IntPtr _player, int _amount) : base(_connection)
         {
-            request.id = OML.APICALL_SETCOINS;
+            request.id = _OML.APICALL_SETCOINS;
             request.playerHandle = _player;
             request.amount = _amount;
         }
@@ -352,7 +352,7 @@ namespace OML
         public API_GetStatCall(API_ConnectionInfo _connection, IntPtr _player, PlayerStat _stat)
             : base(_connection)
         {
-            request.id = OML.APICALL_GETSTAT;
+            request.id = _OML.APICALL_GETSTAT;
             request.playerHandle = _player;
             request.stat = (int)_stat;
         }
@@ -389,7 +389,7 @@ namespace OML
         public API_SetStatCall(API_ConnectionInfo _connection, IntPtr _player, int _amount, PlayerStat _stat)
             : base(_connection)
         {
-            request.id = OML.APICALL_SETSTAT;
+            request.id = _OML.APICALL_SETSTAT;
             request.playerHandle = _player;
             request.amount = _amount;
             request.stat = (int)_stat;
@@ -426,7 +426,7 @@ namespace OML
         public API_SpawnEntityCall(API_ConnectionInfo _connection, int _entityID, int _variant, int _subtype, float _x, float _y, IntPtr _parentHandle)
             : base(_connection)
         {
-            request.id = OML.APICALL_SPAWNENTITY;
+            request.id = _OML.APICALL_SPAWNENTITY;
             request.entityID = _entityID;
             request.variant = _variant;
             request.subtype = _subtype;
@@ -465,7 +465,7 @@ namespace OML
 
         public API_GotoFloorCall(API_ConnectionInfo _connection, uint _floorNo) : base(_connection)
         {
-            request.id = OML.APICALL_GOTOFLOOR;
+            request.id = _OML.APICALL_GOTOFLOOR;
             request.floorNo = _floorNo;
         }
         
@@ -497,7 +497,7 @@ namespace OML
 
         public API_TeleportCall(API_ConnectionInfo _connection, int _roomid) : base(_connection)
         {
-            request.id = OML.APICALL_TELEPORT;
+            request.id = _OML.APICALL_TELEPORT;
             request.roomid = _roomid;
         }
 
@@ -530,7 +530,7 @@ namespace OML
         public API_GetPositionCall(API_ConnectionInfo _connection, IntPtr _player)
             : base(_connection)
         {
-            request.id = OML.APICALL_GETPOSITION;
+            request.id = _OML.APICALL_GETPOSITION;
             request.playerHandle = _player;
         }
 
@@ -566,7 +566,7 @@ namespace OML
         public API_SetPositionCall(API_ConnectionInfo _connection, IntPtr _player, PointF _position)
             : base(_connection)
         {
-            request.id = OML.APICALL_SETPOSITION;
+            request.id = _OML.APICALL_SETPOSITION;
             request.playerHandle = _player;
             request.position = _position;
         }
@@ -601,7 +601,7 @@ namespace OML
         public API_HasItemCall(API_ConnectionInfo _connection, IntPtr _player, int _itemid)
             : base(_connection)
         {
-            request.id = OML.APICALL_HASITEM;
+            request.id = _OML.APICALL_HASITEM;
             request.playerHandle = _player;
             request.itemid = _itemid;
         }
@@ -635,7 +635,7 @@ namespace OML
         public API_AddCollectibleCall(API_ConnectionInfo _connection, IntPtr _player, int _itemid)
             : base(_connection)
         {
-            request.id = OML.APICALL_ADDCOLLECTIBLE;
+            request.id = _OML.APICALL_ADDCOLLECTIBLE;
             request.playerHandle = _player;
             request.itemid = _itemid;
         }

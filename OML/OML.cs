@@ -14,7 +14,6 @@ namespace OML
         public string PluginName;
         public string PluginVersion;
         public string PluginAuthor;
-        public Dictionary<string, Command> Commands = new Dictionary<string,Command>();
 
         public virtual void PluginInit()
         {
@@ -67,7 +66,7 @@ namespace OML
         }
     }
 
-    public static class OML
+    public static class _OML
     {
         public static API_ConnectionInfo Connection = null;
 
@@ -118,15 +117,20 @@ namespace OML
         {
             if (!IsValidItemID(itemID))
                 return "";
+            if (itemID == 235 || itemID == 263 || itemID == 59)
+                return "";
             return items[itemID];
         }
         public static bool IsValidItemID(int itemID)
         {
-            return itemID <= items.Count + 1 && itemID < 0;
+            return itemID <= items.Count + 1 && itemID > 0;
         }
         public static int GetItemID(string itemname)
         {
-            return items.DefaultIfEmpty(new KeyValuePair<int, string>(-1, "")).First(x => x.Value.ToLower() == itemname.ToLower()).Key;
+            if (items.ContainsValue(itemname))
+                return items.First(x => x.Value.ToLower() == itemname.ToLower()).Key;
+            else
+                return 0;
         }
         public static void Init()
         {

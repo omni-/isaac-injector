@@ -39,28 +39,4 @@ namespace OML
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x11)]
         public float[] unknown64;
     }
-    public class Command
-    {
-        public Action<object[]> callback;
-        public string cmdusage;
-        private List<Type> _typeinfo;
-
-        public List<Type> typeinfo
-        {
-            get
-            {
-                return _typeinfo;
-            }
-            private set { }
-        }
-        public bool optionalargs;
-
-        public Command(Action<object[]> callback, string cmdusage, List<Type> typeinfo, bool optionalargs)
-        {
-            this.callback = callback;
-            this.cmdusage = cmdusage;
-            _typeinfo = typeinfo;
-            this.optionalargs = optionalargs;
-        }
-    }
 }

@@ -50,7 +50,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)PluginTemplate\bin\Debug\PluginTemplate.dll" "$(SolutionDir)omni's modloader\bin\Debug\Plugins" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)PluginTemplate\bin\Debug\PluginTemplate.dll" "$(SolutionDir)omnis modloader\bin\Debug\Plugins" /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
