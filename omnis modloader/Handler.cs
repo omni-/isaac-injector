@@ -38,19 +38,20 @@ namespace OML
 
                 //load plugins
                 var plugins = Loader.GetPlugins();
+                mw.WriteLine("Loading plugins...");
                 foreach (OMLPlugin p in plugins)
                 {
-                    mw.Write("Loading {0}-v{1} by {2} ... load successful.", p.PluginName, p.PluginVersion, p.PluginAuthor);
+                    mw.WriteLine("    Loading {0}-v{1} by {2} ...", p.PluginName, p.PluginVersion, p.PluginAuthor);
                     p.PluginInit();
                 }
                 mw.WriteLine("Plugin load completed.");
 
                 //wait for connection on event pipe
-                mw.Write("Waiting for connection to event pipe...");
+                mw.WriteLine("Waiting for connection to event pipe...");
                 server.WaitForConnection();
 
                 // connect to API pipe
-                mw.Write("Connecting to call pipe server...");
+                mw.WriteLine("Connecting to call pipe server...");
                 NamedPipeClientStream client = new NamedPipeClientStream(".", "omlCallPipe", PipeDirection.InOut, PipeOptions.None);
                 client.Connect();
                 client.ReadMode = PipeTransmissionMode.Message;
@@ -59,6 +60,8 @@ namespace OML
                 var ClientOut = new BinaryWriter(client);
 
                 _OML.Connection = new API_ConnectionInfo(client, ClientIn, ClientOut);
+
+                mw.WriteLine("Connected.");
 
                 // Peek named pipe arguments
                 byte[] eventID = new byte[1];
@@ -310,7 +313,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("\r\n[WARNING] GAME_EVENT_UPDATE: expected " + GameUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine("GAME_EVENT_UPDATE: expected " + GameUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_UPDATE:
@@ -324,8 +327,18 @@ namespace OML
                                             p.OnPlayerUpdate(player);
 
                                         // "Surprise" calls
-                                        foreach (Command c in commandQueue)
-                                            c.func(c._params);
+                                        for (int i = 0; i < commandQueue.Count; i++)
+                                        {
+                                            Command c = new Command(new Action<object[]>(Wrappers.Empty_Wrapper), new object[0]);
+                                            commandQueue.TryDequeue(out c);
+                                            if (c._params[0].GetType() != typeof(Player))
+                                                c.func(c._params);
+                                            else
+                                            {
+                                                c._params[0] = player;
+                                                c.func(c._params);
+                                            }
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -338,7 +351,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("\r\n[WARNING] PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine("PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_USECARD:
@@ -402,12 +415,12 @@ namespace OML
                     }
                     catch (IOException)
                     {
-                        mw.WriteLine("\r\n[ERROR] pipe error occured.");
+                        mw.WriteLine("pipe error occured.");
                         return;
                     }
                     catch (Exception ex)
                     {
-                        mw.WriteLine("\r\n[ERROR] fatal error.");
+                        mw.WriteLine("fatal error.");
                         mw.WriteLine(ex.Message);
                         mw.WriteLine(ex.Source);
                         mw.WriteLine(ex.StackTrace);

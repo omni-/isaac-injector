@@ -121,9 +121,9 @@ namespace OML
             IntPtr entityHandle = new API_SpawnEntityCall(_OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }
-        public static Entity SpawnEntity(int entityID, int variant, int subtype, float x, float y, IntPtr parentHandle)
+        public static Entity SpawnEntity(int entityID, int variant, int subtype, float x, float y)
         {
-            IntPtr entityHandle = new API_SpawnEntityCall(_OML.Connection, entityID, variant, subtype, x, y, parentHandle).Call();
+            IntPtr entityHandle = new API_SpawnEntityCall(_OML.Connection, entityID, variant, subtype, x, y, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }
         public static void GotoFloor(Floor floor)

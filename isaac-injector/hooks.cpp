@@ -444,10 +444,10 @@ void* PlayerHitsEnemyEvent_Original;
 void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
 {
 
-	FILE* f;
-	fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
-		fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
-	fclose(f);
+	//FILE* f;
+	//fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
+	//	fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
+	//fclose(f);
 
 	/*PlayerUpdateEvent_Notification notification(player);
 	PlayerUpdateEvent_Response response;
