@@ -378,6 +378,39 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 							}
 						}
 						break;
+					case APICALL_GETCUSTOMITEMS:
+						if (bl + sizeof(int) == sizeof(API_GetItemsCall))
+						{
+							API_GetItemsCall request;
+							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_GetItemsCall), IPC_EVENT_DEFAULT_TIMEOUT);
+							if (apiPipeAvailable)
+							{
+								API_GetItemsResult response;
+								int itr = 0;
+								for each (auto var in custom_items)
+								{
+									response.ids[itr] = var.first;
+									itr++;
+								}
+								WriteFile(hCallPipe, &response, sizeof(API_GetItemsResult), &br, NULL);
+							}
+						}
+						break;
+					case APICALL_ADDCUSTOMITEM:
+						if (bl + sizeof(int) == sizeof(API_AddItemCall))
+						{
+							API_AddItemCall request;
+							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_GetItemsCall), IPC_EVENT_DEFAULT_TIMEOUT);
+							if (apiPipeAvailable)
+							{
+								Item* i = new Item();
+								//i->_type = request.type;
+								//i->_name = request.name;
+								custom_items.insert(std::pair<int, Item*>(request.id, i));
+								has_custom_item.insert(std::pair<int, bool>(request.itemid, false));
+								API_AddItemResult response;
+							}
+						}
 					default:
 						MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
 						break;

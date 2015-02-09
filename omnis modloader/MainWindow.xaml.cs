@@ -50,6 +50,8 @@ namespace OML
 
         public MainWindow()
         {
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomainException);
             InitializeComponent();
             Init();
             var list = new ObservableCollection<DisplayItem>(ItemList.OrderBy(x => x.Number));
@@ -83,25 +85,51 @@ namespace OML
                 ItemList.Add(new DisplayItem(image, name, result));
             }
         }
-        public void Write(string text, params object[] args)
+        public void WriteLine(Level l, string text, params object[] args)
         {
             this.Dispatcher.Invoke((Action)(() =>
             {
-                launchBlock.Text += String.Format(text, args);
+                switch (l)
+                {
+                    case Level.Info:
+                        launchBlock.Foreground = Brushes.White;
+                        launchBlock.Text += "[i] ";
+                        launchBlock.Foreground = Brushes.Black;
+                        launchBlock.Text += String.Format(text, args) + "\r\n";
+                        break;
+                    case Level.Warning:
+                        launchBlock.Foreground = Brushes.Gold;
+                        launchBlock.Text += "[w] ";
+                        launchBlock.Foreground = Brushes.Black;
+                        launchBlock.Text += String.Format(text, args) + "\r\n";
+                        break;
+                    case Level.Error:
+                        launchBlock.Foreground = Brushes.Blue;
+                        launchBlock.Text += "[e] ";
+                        launchBlock.Foreground = Brushes.Black;
+                        launchBlock.Text += String.Format(text, args) + "\r\n";
+                        break;
+                }
             }));
         }
 
-        public void WriteLine(string text, params object[] args)
+        private void AppDomainException(object sender, UnhandledExceptionEventArgs e)
         {
-            this.Dispatcher.Invoke((Action)(() =>
+            File.OpenWrite("crashlog.txt").Close();
+            using (StreamWriter writer = new StreamWriter("crashlog.txt", true))
             {
-                launchBlock.Text += String.Format(text + "\r\n", args);
-            }));
+                Exception ex = (Exception)e.ExceptionObject;
+                writer.WriteLine("==========EXCEPTION==========");
+                writer.WriteLine("Message: " + ex.Message);
+                writer.WriteLine("Inner exception: " + ex.InnerException);
+                writer.WriteLine("Source: " + ex.Source);
+                writer.WriteLine("Target site: " + ex.TargetSite);
+                writer.WriteLine("Stack trace: " + ex.StackTrace);
+            }
         }
-
         private void launchButton_Click(object sender, RoutedEventArgs e)
         {
-            WriteLine("Initializing...");
+            WriteLine(Level.Info, "Initializing...");
             string tpath = "";
             bool result = Loader.init(ref tpath);
             path = tpath;
@@ -114,13 +142,17 @@ namespace OML
             launchBlock.Inlines.Remove(init);
             if (!result)
             {
-                WriteLine("Loader init failed.");
+                WriteLine(Level.Error, "Loader init failed.");
                 return;
             }
             h = new Handler(this);
-            WriteLine("Starting game...");
-            Process proc = Process.Start("steam://rungameid/250900");
-            WriteLine("Awaiting connection...");
+            WriteLine(Level.Info, "Starting game...");
+            Process proc;
+            if (path.Contains("steam") || path.Contains("Steam"))
+                proc = Process.Start("steam://rungameid/250900");
+            else
+                proc = Process.Start(path + "\\isaac-ng.exe");
+            WriteLine(Level.Info, "Awaiting connection...");
             Thread t = new Thread(new ThreadStart(h.Handle));
             t.IsBackground = true;
             t.Start();
@@ -254,6 +286,22 @@ namespace OML
                 }
             }
         }
+
+        private void itemBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            foreach(DisplayItem d in itemBox.Items)
+            {
+                if (d.Name.Contains(e.Text) || d.Number.ToString().Contains(e.Text))
+                    itemBox.SelectedItem = d;
+            }
+            //e.Handled = true;
+        }
+    }
+    public enum Level
+    {
+        Info,
+        Warning,
+        Error
     }
     public enum BoxPlayerStat
     {

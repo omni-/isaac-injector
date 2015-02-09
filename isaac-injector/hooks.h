@@ -19,6 +19,7 @@
 bool Hooks_Init();
 extern ItemStorageArray* itemStorageArray;
 extern std::map<int, Item*> custom_items;
+extern std::map<int, bool> has_custom_item;
 
 PlayerManager* Hooks_GetPlayerManager();
 

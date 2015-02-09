@@ -1,6 +1,11 @@
 #pragma once
 #include "stdafx.h"
 
+#define ITEMTYPE_PASSIVE	   0x01
+#define ITEMTYPE_TRINKET	   0x02
+#define ITEMTYPE_ACTIVE		   0x03
+#define ITEMTYPE_FAMILIAR	   0x04
+
 // struct for easily printing values behind an unknown pointer
 #pragma pack(1)
 struct DebugStruct
@@ -84,7 +89,7 @@ struct Player : Entity
 #pragma pack(1)
 struct Item
 {
-	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = ??
+	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = familiar
 	int _id;
 	char* _name;
 

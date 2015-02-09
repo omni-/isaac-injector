@@ -22,6 +22,8 @@
 #define APICALL_SETSTAT		   0x11
 #define APICALL_SPAWNENTITY	   0x12
 #define APICALL_GOTOFLOOR	   0x13
+#define APICALL_GETCUSTOMITEMS 0x14
+#define APICALL_ADDCUSTOMITEM  0x15
 
 #define APICALL_END            0xFFFFFFFF
 
@@ -263,4 +265,34 @@ struct API_HasItemResult
 {
 	unsigned int id = APICALL_HASITEM;
 	bool hasitem;
+};
+
+#pragma pack (1)
+struct API_GetItemsCall
+{
+	unsigned int id = APICALL_GETCUSTOMITEMS;
+};
+
+#pragma pack (1)
+struct API_GetItemsResult
+{
+	unsigned int id = APICALL_GETCUSTOMITEMS;
+	int ids[];
+};
+
+#pragma pack (1)
+struct API_AddItemCall
+{
+	unsigned int id = APICALL_ADDCUSTOMITEM;
+	int itemid;
+	char* name;
+	char* pickuptext;
+	char* resourcename;
+	int type;
+};
+
+#pragma pack (1)
+struct API_AddItemResult
+{
+	unsigned int id = APICALL_ADDCUSTOMITEM;
 };

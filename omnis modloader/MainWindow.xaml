@@ -4,18 +4,25 @@
         Title="" Height="468" Width="700" Loaded="Window_Loaded">
     <Grid>
         <Button Name = "launchButton" Content="Launch Rebirth" HorizontalAlignment="Left" Margin="98,398,0,0" VerticalAlignment="Top" Width="89" Click="launchButton_Click"/>
-        <TextBlock Name ="launchBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="374" Width="281">
-            <TextBlock.Inlines>
-                <Run Name ="init" FontStyle="Italic" Text="Click 'Launch' to get started."/>
-            </TextBlock.Inlines>
-        </TextBlock>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="374" Width="281">
+            <TextBlock Name ="launchBlock" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="374" Width="281">
+                <TextBlock.Inlines>
+                    <Run Name ="init" FontStyle="Italic" Text="Click 'Launch' to get started."/>
+                </TextBlock.Inlines>
+            </TextBlock>
+        </ScrollViewer>
         <Grid x:Name="controlGrid" IsEnabled="False">
             <Label Content="Change player stat:" HorizontalAlignment="Left" Margin="296,10,0,0" VerticalAlignment="Top" Width="146" Height="33"/>
             <Button x:Name="statButton" Content="Go!" HorizontalAlignment="Left" Margin="603,15,0,0" VerticalAlignment="Top" Width="63" Height="27" Click="statButton_Click"/>
             <TextBox Name="statText" HorizontalAlignment="Left" Height="29" Margin="551,15,0,0" TextWrapping="Wrap" Text="Value" VerticalAlignment="Top" Width="47" RenderTransformOrigin="0.565,0.826" GotFocus="TextBox_GotFocus" KeyUp="statText_KeyUp" LostFocus="statText_LostFocus"/>
             <ComboBox Name="statBox" ItemsSource="{Binding Path=BoxPlayerStat}" Text="Select a stat" HorizontalAlignment="Left" Margin="448,15,0,0" VerticalAlignment="Top" Width="98" Height="28"/>
             <Label Content="Spawn item: " HorizontalAlignment="Left" Margin="296,49,0,0" VerticalAlignment="Top" Width="146" Height="32"/>
-            <ComboBox Name="itemBox" HorizontalAlignment="Left" Margin="448,54,0,0" VerticalAlignment="Top" Width="148" Height="27">
+            <ComboBox Name="itemBox" ItemsSource="{Binding}" HorizontalAlignment="Left" Margin="448,54,0,0" VerticalAlignment="Top" Width="148" Height="27" PreviewTextInput="itemBox_PreviewTextInput">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>

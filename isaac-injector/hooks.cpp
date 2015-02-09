@@ -13,6 +13,7 @@ using namespace std;
 
 ItemStorageArray* itemStorageArray;
 std::map<int, Item*> custom_items;
+std::map<int, bool> has_custom_item;
 
 /******************************************
 ************** UseCardEvent ***************
@@ -68,8 +69,8 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	API_SpawnEntity(5,100,-1,3,1,NULL);
-	API_SpawnEntity(5,100,-2,4,1,NULL);
+	//API_SpawnEntity(5,100,-1,3,1,NULL);
+	//API_SpawnEntity(5,100,-2,4,1,NULL);
 
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
@@ -375,35 +376,28 @@ char* __cdecl VFSLoadFile_Payload(char* filename)
 {
 	char* result = filename;
 
-	FILE* f;
-	fopen_s(&f, "C:\\VFSLoadFile_Payload.txt", "a+");
-//	fprintf_s(f, "Loading: %s, sizeof(Player)= %d\n", filename, sizeof(Player));
-	
-
+	//STOP USING PRINTF FOR THE LOVE OF GOD
+	std::ofstream stream = std::ofstream("log.log");
 	string* s = new string(filename);
-//	if (s->find("itempools.xml") != string::npos)
+	//if (s->find("itempools.xml") != string::npos)
 	if (s->find("items.xml") != string::npos)
 	{
 		PlayerManager* pman = API_GetPlayerManager();
 		if (pman->_items[234] == NULL)
 		{
-			fprintf_s(f, "RealID=234");
+			stream << "RealID=234" << std::endl;
 			pman->_items[234] = new Item();
 		}
 		else
 		if (pman->_items[235] == NULL)
 		{
-			fprintf_s(f, "RealID=235\n");
+			stream << "RealID=235" << endl;
 			pman->_items[235] = new Item();
 		}
 		//Item* newitem = 
 		
 	//	result = "resources/mods/rewritten/itempools.xml"; 
-	//	fprintf_s(f, "redirected %s to %s\n", filename, result);
 	}
-
-	fclose(f);
-
 	return result;
 }
 
@@ -552,10 +546,8 @@ void* PlayerHitsEnemyEvent_Original;
 void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
 {
 
-	FILE* f;
-	fopen_s(&f, "C:\\PlayerHitsEnemyEvent_Payload.txt", "a+");
-		fprintf_s(f, "playerName: %s, enemyID=%d\n", player->_charname, enemy->_id);
-	fclose(f);
+	ofstream stream = ofstream("log.log");
+	stream << sprintf("playerName: %s, enemyID=%d\n", player->_charname, enemy->_id) << endl;
 
 	/*PlayerUpdateEvent_Notification notification(player);
 	PlayerUpdateEvent_Response response;

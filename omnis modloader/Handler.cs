@@ -38,20 +38,20 @@ namespace OML
 
                 //load plugins
                 var plugins = Loader.GetPlugins();
-                mw.WriteLine("Loading plugins...");
+                mw.WriteLine(Level.Info, "Loading plugins...");
                 foreach (OMLPlugin p in plugins)
                 {
-                    mw.WriteLine("    Loading {0}-v{1} by {2} ...", p.PluginName, p.PluginVersion, p.PluginAuthor);
+                    mw.WriteLine(Level.Info, "    Loading {0}-v{1} by {2} ...", p.PluginName, p.PluginVersion, p.PluginAuthor);
                     p.PluginInit();
                 }
-                mw.WriteLine("Plugin load completed.");
+                mw.WriteLine(Level.Info, "Plugin load completed.");
 
                 //wait for connection on event pipe
-                mw.WriteLine("Waiting for connection to event pipe...");
+                mw.WriteLine(Level.Info, "Waiting for connection to event pipe...");
                 server.WaitForConnection();
 
                 // connect to API pipe
-                mw.WriteLine("Connecting to call pipe server...");
+                mw.WriteLine(Level.Info, "Connecting to call pipe server...");
                 NamedPipeClientStream client = new NamedPipeClientStream(".", "omlCallPipe", PipeDirection.InOut, PipeOptions.None);
                 client.Connect();
                 client.ReadMode = PipeTransmissionMode.Message;
@@ -61,7 +61,7 @@ namespace OML
 
                 _OML.Connection = new API_ConnectionInfo(client, ClientIn, ClientOut);
 
-                mw.WriteLine("Connected.");
+                mw.WriteLine(Level.Info, "Connected.");
 
                 // Peek named pipe arguments
                 byte[] eventID = new byte[1];
@@ -105,7 +105,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_TAKEPILL: expected " + TakePillEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_TAKEPILL: expected " + TakePillEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_ADDCOLLECTIBLE:
@@ -131,7 +131,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_ADDCOLLECTIBLE: expected " + AddCollectibleEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_ADDCOLLECTIBLE: expected " + AddCollectibleEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.GAME_EVENT_SPAWNENTITY:
@@ -157,7 +157,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("GAME_EVENT_SPAWNENTITY: expected " + SpawnEntityEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "GAME_EVENT_SPAWNENTITY: expected " + SpawnEntityEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_HPUP:
@@ -184,7 +184,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_HPUP: expected " + HpUpEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_HPUP: expected " + HpUpEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_HPDOWN:
@@ -211,7 +211,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_HPDOWN: expected " + HpDownEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_HPDOWN: expected " + HpDownEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_ADDSOULHEARTS:
@@ -239,7 +239,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_ADDSOULHEARTS: expected " + AddSoulHeartsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_ADDSOULHEARTS: expected " + AddSoulHeartsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.ENEMY_EVENT_SHOOTTEARS:
@@ -265,7 +265,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("\r\n[WARNING] ENEMY_EVENT_SHOOTTEARS: expected " + ShootTearsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "ENEMY_EVENT_SHOOTTEARS: expected " + ShootTearsEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_CHANGEROOM:
@@ -290,7 +290,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_CHANGEROOM: expected " + ChangeRoomEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.GAME_EVENT_UPDATE:
@@ -313,7 +313,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("GAME_EVENT_UPDATE: expected " + GameUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "GAME_EVENT_UPDATE: expected " + GameUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_UPDATE:
@@ -351,7 +351,7 @@ namespace OML
                                         ServerOut.Write(RawSerialize(response));
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_UPDATE: expected " + PlayerUpdateEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.PLAYER_EVENT_USECARD:
@@ -380,7 +380,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("PLAYER_EVENT_USECARD: expected " + UseCardEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "PLAYER_EVENT_USECARD: expected " + UseCardEvent_Notification.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
 
                                 case _OML.GAME_EVENT_GOTOFLOOR:
@@ -405,7 +405,7 @@ namespace OML
 
                                     }
                                     else
-                                        mw.WriteLine("GAME_EVENT_GOTOFLOOR: expected " + GotoFloorEvent_Response.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
+                                        mw.WriteLine(Level.Warning, "GAME_EVENT_GOTOFLOOR: expected " + GotoFloorEvent_Response.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
                             }
 
@@ -415,15 +415,15 @@ namespace OML
                     }
                     catch (IOException)
                     {
-                        mw.WriteLine("pipe error occured.");
+                        mw.WriteLine(Level.Error, "pipe error occured.");
                         return;
                     }
                     catch (Exception ex)
                     {
-                        mw.WriteLine("fatal error.");
-                        mw.WriteLine(ex.Message);
-                        mw.WriteLine(ex.Source);
-                        mw.WriteLine(ex.StackTrace);
+                        mw.WriteLine(Level.Error, "fatal error.");
+                        mw.WriteLine(Level.Error, ex.Message);
+                        mw.WriteLine(Level.Error, ex.Source);
+                        mw.WriteLine(Level.Error, ex.StackTrace);
                         throw;
                     }
                 }

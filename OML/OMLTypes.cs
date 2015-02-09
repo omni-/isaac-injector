@@ -20,7 +20,67 @@ namespace OML
             this.handle = handle;
         }
     }
+    public class Item
+    {
+        public virtual void OnTearHit(Entity target)
+        {
+        }
+        public virtual void OnEnemyDeath()
+        {
+        }
+        public virtual void OnShootTear()
+        {
+        }
+        public virtual void OnPlayerMove()
+        {
+        }
+        public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
+        {
+        }
+        public virtual void OnEntitySpawn(PointF velocity, PointF position, int entityID, int variant, int subtype, Entity parent)
+        {
+        }
+        public virtual void OnPlayerCardUse(Player player, int cardID, ref bool handled)
+        {
+        }
+        public virtual void OnPlayerPillUse(Player player, int pillID, ref bool handled)
+        {
+            Pill p = PillDictionary.GetPill(pillID);
 
+            if (p != null)
+            {
+                p.OnUse(player);
+                handled = true;
+            }
+
+            else
+                handled = false;
+        }
+        public virtual void OnPlayerHealthDown(Player player, ref int amount)
+        {
+        }
+        public virtual void OnPlayerHealthUp(Player player, ref int amount)
+        {
+        }
+        public virtual void OnSoulHeartsAdded(Player player, ref int amount)
+        {
+        }
+        public virtual void OnRoomChange(int newRoomIndex)
+        {
+        }
+        public virtual void OnEnemyTearShot(PointF velocity, PointF position, Entity sourceEntity, int pattern, TearInfo tearInfo)
+        {
+        }
+        public virtual void OnGameUpdate()
+        {
+        }
+        public virtual void OnGotoFloor(Floor nextFloor)
+        {
+        }
+        public virtual void OnPlayerUpdate(Player player)
+        {
+        }
+    }
     public class Player : Entity
     {
         public Player(IntPtr handle)
