@@ -11,6 +11,8 @@ HANDLE hCallPipe;
 bool eventPipeAvailable = true;
 bool apiPipeAvailable = true;
 
+typedef std::pair<int, Item*> IntItemPtr;
+
 bool SafeReadFile(HANDLE pipe, void* buffer, DWORD bytesToRead, DWORD timeout)
 {
 	DWORD start = GetTickCount();
@@ -284,6 +286,11 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_SpawnEntityCall), IPC_EVENT_DEFAULT_TIMEOUT);
 							if (apiPipeAvailable)
 							{
+								if (request.subtype < 0)
+								{
+									std::ofstream stream = std::ofstream("log.txt", std::ios_base::app);
+									stream << "in apicall event " << request.entityID << ", " << request.variant << ", " << request.subtype << ", " << request.x << ", " << request.y << std::endl;
+								}
 								Entity* entity = API_SpawnEntity(request.entityID, request.variant, request.subtype, request.x, request.y, request.parent);
 
 								API_SpawnEntityResult response;
@@ -400,19 +407,34 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 						if (bl + sizeof(int) == sizeof(API_AddItemCall))
 						{
 							API_AddItemCall request;
-							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_GetItemsCall), IPC_EVENT_DEFAULT_TIMEOUT);
+							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_AddItemCall), IPC_EVENT_DEFAULT_TIMEOUT);
 							if (apiPipeAvailable)
 							{
-								Item* i = new Item();
-								//i->_type = request.type;
-								//i->_name = request.name;
-								custom_items.insert(std::pair<int, Item*>(request.id, i));
-								has_custom_item.insert(std::pair<int, bool>(request.itemid, false));
+								//std::ofstream stream = std::ofstream("log.txt", std::ios_base::app);
+								//stream << "request: " << request.id << ", " << request.name << ", " << request.type << ", " << request.itemid << ", " << request.resourcename << std::endl;
+								//Item* i = new Item();
+								//char t1[16];
+								//char t2[32];
+								//i->_name = t1;
+								//i->_imageResourcePath = t2;
+								//strncpy(i->_name, request.name, 16);
+								//strncpy(i->_imageResourcePath, request.resourcename, 32);
+								//i->_type = 0;
+								//i->_id = request.itemid;
+								//stream << "item ptr: " << i << " name: " << i->_name << std::endl;
+								//custom_items[request.itemid] = i;
+								//stream << "custom_items[-1]: " << custom_items[request.itemid] << std::endl;
+								//Item* t = itemStorageArray->items[12];
+								//if (t == NULL || t == nullptr)
+								//	stream << "null" << std::endl;
+								//stream << "id: " << t->_id << "/ " << i->_id << " , name: " << t->_name << "/" << i->_name << ", gfx: " << t->_gfx << "/" << i->_gfx << ", respath: " << t->_imageResourcePath << "/" << i->_imageResourcePath << std::endl;
+								has_custom_item.insert(std::make_pair(request.itemid, false));
 								API_AddItemResult response;
+								WriteFile(hCallPipe, &response, sizeof(API_AddItemResult), &br, NULL);
 							}
 						}
 					default:
-						MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
+						//MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
 						break;
 				}
 			}

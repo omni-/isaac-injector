@@ -47,3 +47,5 @@ PluginTemplate/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10B
 omni's modloader/obj/Debug/omnis modloader.csproj.FileListAbsolute.txt
 *.manifest
 omni's modloader/obj/Debug/omnis modloader.csproj.FileListAbsolute.txt
+omnis modloader/bin/Debug/.usersettings
+omnis modloader/bin/Debug/crashlog.txt

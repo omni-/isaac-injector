@@ -9,11 +9,12 @@ using System.Runtime.InteropServices;
 
 namespace OML
 {
-    public class OMLPlugin
+    public abstract class OMLPlugin
     {
         public string PluginName;
         public string PluginVersion;
         public string PluginAuthor;
+        public List<Item> CustomItemList = new List<Item>();
 
         public virtual void PluginInit()
         {
@@ -106,6 +107,8 @@ namespace OML
         public const uint APICALL_SETSTAT            = 0x11;
         public const uint APICALL_SPAWNENTITY        = 0x12;
         public const uint APICALL_GOTOFLOOR          = 0x13;
+        public const uint APICALL_GETCUSTOMITEMS     = 0x14;
+        public const uint APICALL_ADDCUSTOMITEM      = 0x15;
 
         public const uint APICALL_END                = 0xFFFFFFFF;
 
@@ -123,7 +126,7 @@ namespace OML
         }
         public static bool IsValidItemID(int itemID)
         {
-            return itemID <= items.Count + 1 && itemID > 0;
+            return itemID <= items.Count + 1;
         }
         public static int GetItemID(string itemname)
         {

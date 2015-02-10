@@ -26,7 +26,7 @@ namespace OML
     /// </summary>
     public partial class MainWindow : Window
     {
-        public const string version = "v1.0";
+        public const string version = "v1.1";
 
         private string Path;
 
@@ -138,7 +138,11 @@ namespace OML
                 PopupWindow p = new PopupWindow(this);
                 p.ShowDialog();
             }
-            File.Copy("res\\dll\\dsound.dll", path + "\\dsound.dll", true);
+            try
+            {
+                File.Copy("res\\dll\\dsound.dll", path + "\\dsound.dll", true);
+            }
+            catch (IOException) { }
             launchBlock.Inlines.Remove(init);
             if (!result)
             {
@@ -174,6 +178,9 @@ namespace OML
         {
             if (itemBox.SelectedItem != null)
                 h.commandQueue.Enqueue(new Command(Wrappers.SpawnItem_Wrapper, new object[] { new Player(IntPtr.Zero), ((DisplayItem)itemBox.SelectedItem).Number }));
+            int result = 0;
+            if (int.TryParse(itemIDBox.Text, out result))
+                h.commandQueue.Enqueue(new Command(Wrappers.SpawnItem_Wrapper, new object[] { new Player(IntPtr.Zero), result }));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -194,6 +201,8 @@ namespace OML
 
         private void statText_LostFocus(object sender, RoutedEventArgs e)
         {
+            if (statText.Text == "")
+                statText.Text = "Value";
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -287,14 +296,65 @@ namespace OML
             }
         }
 
-        private void itemBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void itemBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            foreach(DisplayItem d in itemBox.Items)
-            {
-                if (d.Name.Contains(e.Text) || d.Number.ToString().Contains(e.Text))
-                    itemBox.SelectedItem = d;
-            }
-            //e.Handled = true;
+            
+        }
+
+        private void itemIDBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int result = 0;
+            if (int.TryParse(itemBox.Text, out result))
+                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Number.ToString().StartsWith(itemIDBox.Text));
+            else
+                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.StartsWith(itemIDBox.Text));
+        }
+
+        private void itemIDBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            itemIDBox.Text = "";
+        }
+
+        private void itemIDBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (itemIDBox.Text == "")
+                itemIDBox.Text = "Search ID";
+        }
+
+        private void roomBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (roomBox.Text == "")
+                roomBox.Text = "Room number";
+        }
+
+        private void idBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (idBox.Text == "")
+                idBox.Text = "ID";
+        }
+
+        private void variantBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (variantBox.Text == "")
+                variantBox.Text = "Variant";
+        }
+
+        private void subtypeBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (subtypeBox.Text == "")
+                subtypeBox.Text = "Subtype";
+        }
+
+        private void xBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (xBox.Text == "")
+                xBox.Text = "X Coordinate";
+        }
+
+        private void yBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (yBox.Text == "")
+                yBox.Text = "Y Coordinate";
         }
     }
     public enum Level

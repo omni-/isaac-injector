@@ -38,12 +38,16 @@ namespace OML
 
         protected T RawDeserialize<T>(byte[] rawData)
         {
-            int rawsize = Marshal.SizeOf(typeof(T));
-            IntPtr buffer = Marshal.AllocHGlobal(rawsize);
-            Marshal.Copy(rawData, 0, buffer, rawsize);
-            T retobj = (T)Marshal.PtrToStructure(buffer, typeof(T));
-            Marshal.FreeHGlobal(buffer);
-            return retobj;
+            try
+            {
+                int rawsize = Marshal.SizeOf(typeof(T));
+                IntPtr buffer = Marshal.AllocHGlobal(rawsize);
+                Marshal.Copy(rawData, 0, buffer, rawsize);
+                T retobj = (T)Marshal.PtrToStructure(buffer, typeof(T));
+                Marshal.FreeHGlobal(buffer);
+                return retobj;
+            }
+            catch (ArgumentException) { return default(T); }
         }
 
         protected int SizeOf(Type anything)
@@ -644,6 +648,85 @@ namespace OML
         {
             connection.outStream.Write(RawSerialize(request));
             AddCollectible_Response response = RawDeserialize<AddCollectible_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCollectible_Response))));
+        }
+    }
+    internal class API_GetCustomItemsCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetCustomItems_Request
+        {
+            public uint id;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct GetCustomItems_Response
+        {
+            public uint id;
+            public int[] ids;
+        };
+
+        private GetCustomItems_Request request;
+
+        public API_GetCustomItemsCall(API_ConnectionInfo _connection)
+            : base(_connection)
+        {
+            request.id = _OML.APICALL_GETCUSTOMITEMS;
+        }
+
+        public int[] Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            return RawDeserialize<GetCustomItems_Response>(connection.inStream.ReadBytes(SizeOf(typeof(GetCustomItems_Response)))).ids;
+        }
+    }
+    internal class API_AddCustomItemCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCustomItem_Request
+        {
+            public uint id;
+            public int itemid;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            public byte[] name;
+            public int type;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+            public byte[] resourcename;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCustomItem_Response
+        {
+            public uint id;
+        };
+
+        private AddCustomItem_Request request;
+
+        public API_AddCustomItemCall(API_ConnectionInfo _connection, int _itemid, string _name, int _type, string _resourcename)
+            : base(_connection)
+        {
+            request.id = _OML.APICALL_ADDCUSTOMITEM;
+            request.itemid = _itemid;
+            request.type = _type;
+
+            request.name = Encoding.ASCII.GetBytes(_name);
+            Array.Resize<byte>(ref request.name, 16);
+            for (int i = request.name.Length; i < 16; i++)
+                request.name[i] = new byte();
+
+            request.resourcename = Encoding.ASCII.GetBytes(_resourcename);
+            Array.Resize<byte>(ref request.resourcename, 32);
+            for (int i = request.resourcename.Length; i < 32; i++)
+                request.resourcename[i] = new byte();
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            AddCustomItem_Response response = RawDeserialize<AddCustomItem_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCustomItem_Response))));
         }
     }
 }

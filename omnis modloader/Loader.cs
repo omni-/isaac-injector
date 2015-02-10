@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace OML
 {
@@ -20,6 +22,8 @@ namespace OML
                 Directory.CreateDirectory("res");
             if (!Directory.Exists("res\\dll"))
                 Directory.CreateDirectory("dll");
+            if (!Directory.Exists("res\\xml"))
+                Directory.CreateDirectory("res\\xml");
             if (!File.Exists(".usersettings"))
                 File.Create(".usersettings").Close();
             string s;
@@ -60,5 +64,59 @@ namespace OML
                             plugins.Add((OMLPlugin)Activator.CreateInstance(t));
             return plugins;
         }
+        public static List<Item> LoadItems(List<OMLPlugin> plugins, string path)
+        {
+            string respath = path + "\\resources\\config";
+            if (!Directory.Exists(respath))
+                Directory.CreateDirectory(respath);
+            File.Copy("res\\xml\\items.xml", respath + "\\items.xml", true);
+            File.Copy("res\\xml\\itempools.xml", respath + "\\itempools.xml", true);
+            List<Item> ret = new List<Item>();
+            int id = -1;
+            foreach (OMLPlugin plugin in plugins)
+            {
+                foreach (Item i in plugin.CustomItemList)
+                {
+                    i.id = id;
+                    ret.Add(i);
+
+                    XElement node;
+                    if (!String.IsNullOrEmpty(i.cache))
+                    {
+                        node = new XElement(i.Type.ToString(),
+                           new XAttribute("cache", i.cache),
+                           new XAttribute("description", i.PickupText),
+                           new XAttribute("gfx", i.gfxResourceName),
+                           new XAttribute("id", i.id),
+                           new XAttribute("name", i.Name));
+                    }
+                    else
+                    {
+                        node = new XElement(i.Type.ToString(),
+                               new XAttribute("description", i.PickupText),
+                               new XAttribute("gfx", i.gfxResourceName),
+                               new XAttribute("id", i.id),
+                               new XAttribute("name", i.Name));
+                    }
+
+                    XDocument xdoc = XDocument.Load(respath + "\\items.xml");
+                    xdoc.Element("items").Nodes().Last().AddAfterSelf(node);
+                    xdoc.Save(respath + "\\items.xml");
+
+                    XElement pnode;
+                    pnode = new XElement("Item",
+                        new XAttribute("Id", i.id),
+                        new XAttribute("Weight", i.Weight),
+                        new XAttribute("DecreaseBy", i.DecreaseBy),
+                        new XAttribute("RemoveOn", i.RemoveOn));
+                    xdoc = XDocument.Load(respath + "\\itempools.xml");
+                    xdoc.Element("ItemPools").Element("Pool").Nodes().Last().AddAfterSelf(pnode);
+                    xdoc.Save(respath + "\\itempools.xml");
+                    id--;
+                }
+            }
+            return ret;
+        }
     }
+    public class MyItem : Item { }
 }

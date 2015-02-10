@@ -285,10 +285,10 @@ struct API_AddItemCall
 {
 	unsigned int id = APICALL_ADDCUSTOMITEM;
 	int itemid;
-	char* name;
-	char* pickuptext;
-	char* resourcename;
+	char name[16];
 	int type;
+	char resourcename[32];
+
 };
 
 #pragma pack (1)

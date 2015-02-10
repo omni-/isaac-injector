@@ -22,6 +22,8 @@ namespace OML
         private MainWindow mw;
         public ConcurrentQueue<Command> commandQueue = new ConcurrentQueue<Command>();
 
+        public Dictionary<int, bool> hasCustomItem = new Dictionary<int, bool>();
+
         public Handler(MainWindow mw)
         {
             this.mw = mw;
@@ -36,9 +38,12 @@ namespace OML
                 var ServerOut = new BinaryWriter(server);
                 var formatter = new BinaryFormatter();
 
+                mw.WriteLine(Level.Info, "Loading plugins...");
                 //load plugins
                 var plugins = Loader.GetPlugins();
-                mw.WriteLine(Level.Info, "Loading plugins...");
+                List<Item> items = Loader.LoadItems(plugins, mw.path);
+                foreach (Item i in items)
+                    hasCustomItem.Add(i.id, false);
                 foreach (OMLPlugin p in plugins)
                 {
                     mw.WriteLine(Level.Info, "    Loading {0}-v{1} by {2} ...", p.PluginName, p.PluginVersion, p.PluginAuthor);
@@ -62,6 +67,10 @@ namespace OML
                 _OML.Connection = new API_ConnectionInfo(client, ClientIn, ClientOut);
 
                 mw.WriteLine(Level.Info, "Connected.");
+
+                //create items
+                foreach (Item i in items)
+                    API.AddCustomItem(i.id, i.Name, (int)i.Type, i.gfxResourceName);
 
                 // Peek named pipe arguments
                 byte[] eventID = new byte[1];
@@ -91,7 +100,12 @@ namespace OML
                                         bool handled = false;
 
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnPlayerPillUse(player, notification.pillID, ref handled);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnPlayerPillUse(player, notification.pillID, ref handled);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -116,8 +130,17 @@ namespace OML
                                         AddCollectibleEvent_Notification notification = RawDeserialize<AddCollectibleEvent_Notification>(ServerIn.ReadBytes(AddCollectibleEvent_Notification.size()), 0);
 
                                         Player player = new Player(notification.playerHandle);
+
+                                        if (notification.itemID < 0) //it's ours
+                                            hasCustomItem[notification.itemID] = true;
+
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
+                                            foreach(Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id])
+                                                    i.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -144,7 +167,12 @@ namespace OML
 
                                         Entity parent = new Entity(notification.parentHandle);
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnEntitySpawn(notification.velocity, notification.position, notification.entityID, notification.variant, notification.subtype, parent);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnEntitySpawn(notification.velocity, notification.position, notification.entityID, notification.variant, notification.subtype, parent);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -251,7 +279,12 @@ namespace OML
 
                                         Entity sourceEntity = new Entity(notification.sourceEntityHandle);
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnEnemyTearShot(notification.velocity, notification.position, sourceEntity, notification.pattern, notification.tearInfo);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnEnemyTearShot(notification.velocity, notification.position, sourceEntity, notification.pattern, notification.tearInfo);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -276,7 +309,12 @@ namespace OML
                                         ChangeRoomEvent_Notification notification = RawDeserialize<ChangeRoomEvent_Notification>(ServerIn.ReadBytes(ChangeRoomEvent_Notification.size()), 0);
 
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnRoomChange(notification.newRoomIndex);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnRoomChange(notification.newRoomIndex);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -300,7 +338,12 @@ namespace OML
                                         GameUpdateEvent_Notification notification = RawDeserialize<GameUpdateEvent_Notification>(ServerIn.ReadBytes(GameUpdateEvent_Notification.size()), 0);
 
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnGameUpdate();
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnGameUpdate();
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -324,7 +367,12 @@ namespace OML
 
                                         Player player = new Player(notification.playerHandle);
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnPlayerUpdate(player);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnPlayerUpdate(player);
+                                        }
 
                                         // "Surprise" calls
                                         for (int i = 0; i < commandQueue.Count; i++)
@@ -365,7 +413,12 @@ namespace OML
                                         bool handled = false;
 
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnPlayerCardUse(player, notification.cardID, ref handled);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnPlayerCardUse(player, notification.cardID, ref handled);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -391,7 +444,12 @@ namespace OML
                                         GotoFloorEvent_Notification notification = RawDeserialize<GotoFloorEvent_Notification>(ServerIn.ReadBytes(GotoFloorEvent_Notification.size()), 0);
 
                                         foreach (OMLPlugin p in plugins)
+                                        {
                                             p.OnGotoFloor((Floor)notification.nextFloorNo);
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id]) 
+                                                    i.OnGotoFloor((Floor)notification.nextFloorNo);
+                                        }
 
                                         new API_EndCall(_OML.Connection).Call();
 
@@ -418,14 +476,14 @@ namespace OML
                         mw.WriteLine(Level.Error, "pipe error occured.");
                         return;
                     }
-                    catch (Exception ex)
-                    {
-                        mw.WriteLine(Level.Error, "fatal error.");
-                        mw.WriteLine(Level.Error, ex.Message);
-                        mw.WriteLine(Level.Error, ex.Source);
-                        mw.WriteLine(Level.Error, ex.StackTrace);
-                        throw;
-                    }
+                    //catch (Exception ex)
+                    //{
+                    //    mw.WriteLine(Level.Error, "Fatal error.");
+                    //    mw.WriteLine(Level.Error, ex.Message);
+                    //    mw.WriteLine(Level.Error, ex.Source);
+                    //    mw.WriteLine(Level.Error, ex.StackTrace);
+                    //    throw;
+                    //}
                 }
             }
         }

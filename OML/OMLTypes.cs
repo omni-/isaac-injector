@@ -20,18 +20,65 @@ namespace OML
             this.handle = handle;
         }
     }
-    public class Item
+    public enum ItemType
     {
+        passive = 1,
+        trinket,
+        active, 
+        familiar
+    }
+    public enum ItemPool
+    {
+        treasure,
+        shop,
+        boss,
+        devil, 
+        angel,
+        secret,
+        library,
+        goldenChest,
+        redChest,
+        beggar,
+        demonBeggar,
+        curse,
+        keyMaster,
+        bossrush,
+        dungeon
+    }
+    public abstract class Item
+    {
+        public string Name;
+        public string PickupText;
+        public ItemType Type;
+        public ItemPool Pool;
+        public int Weight;
+        public float DecreaseBy;
+        public float RemoveOn;
+        public int id;
+        /// <summary>
+        /// 1 for special 0 for not
+        /// </summary>
+        public int Special;
+        public int Recharge;
+        public int dmgbuff;
+        public int speedbuff;
+        public int rangebuff;
+        public float tearbuff;
+        public int luckbuff;
+        public int shotspeedbuff;
+        public string cache;
+        public string gfxResourceName;
+
         public virtual void OnTearHit(Entity target)
         {
         }
-        public virtual void OnEnemyDeath()
+        public virtual void OnEnemyDeath(Entity enemy)
         {
         }
-        public virtual void OnShootTear()
+        public virtual void OnShootTear(Entity tear)
         {
         }
-        public virtual void OnPlayerMove()
+        public virtual void OnPlayerMove(Player p)
         {
         }
         public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
@@ -163,21 +210,15 @@ namespace OML
         public static Entity SpawnItem(Player player, int itemID)
         {
             if (!_OML.IsValidItemID(itemID))
-            {
-                Console.WriteLine("\r\n[ERROR] invalid item id");
                 return null;
-            }
             IntPtr entityHandle = new API_SpawnEntityCall(_OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }
         public static Entity SpawnItem(Player player, string itemname)
         {
             int itemID = _OML.GetItemID(itemname);
-            if (itemID == -1)
-            {
-                Console.WriteLine("\r\n[ERROR] invalid item name");
+            if (itemID == 0)
                 return null;
-            }
             IntPtr entityHandle = new API_SpawnEntityCall(_OML.Connection, 5, 100, itemID, NormalizePointF(player.Position).x, NormalizePointF(player.Position).y - 1, IntPtr.Zero).Call();
             return new Entity(entityHandle);
         }
@@ -200,6 +241,10 @@ namespace OML
             result.x = (pf.x - 120) / 40;
             result.y = (pf.y - 160) / 40;
             return result;
+        }
+        public static void AddCustomItem(int id, string name, int type, string resourcename)
+        {
+            new API_AddCustomItemCall(_OML.Connection, id, name, type, resourcename).Call();
         }
     }
 }

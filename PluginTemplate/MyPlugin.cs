@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using OML;
 
 namespace PluginTemplate
@@ -14,6 +15,16 @@ namespace PluginTemplate
             PluginName = "TestPlugin";
             PluginVersion = "1.1";
             PluginAuthor = "omni";
+            Item item = new TheSun();
+            item.Name = "The Sun";
+            item.gfxResourceName = "sun.png";
+            item.Type = ItemType.passive;
+            item.Pool = ItemPool.treasure;
+            item.DecreaseBy = .5f;
+            item.PickupText = "Brighten your day!";
+            item.Weight = 1;
+            item.RemoveOn = .1f;
+            CustomItemList.Add(item);
         }
         public override void PluginInit()
         {
@@ -28,6 +39,14 @@ namespace PluginTemplate
         public void MyCallback(object[] args)
         {
             Console.WriteLine(args[0]);
+        }
+    }
+    public class TheSun : Item
+    {
+        public override void OnPlayerPillUse(Player player, int pillID, ref bool handled)
+        {
+            MessageBox.Show("sun, sun, sun here it comes");
+            base.OnPlayerPillUse(player, pillID, ref handled);
         }
     }
 }

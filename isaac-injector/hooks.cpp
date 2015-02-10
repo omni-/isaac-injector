@@ -69,7 +69,7 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	//API_SpawnEntity(5,100,-1,3,1,NULL);
+	API_SpawnEntity(5,100,-1,3,1,NULL);
 	//API_SpawnEntity(5,100,-2,4,1,NULL);
 
 	TakePillEvent_Response response(false);
@@ -169,6 +169,11 @@ int __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerM
 		// custom item handling
 		if ((entityID == 5) && (variant == 100) && (subtype < 0))
 		{
+			ofstream stream = ofstream("log.txt", ios_base::app);
+			for each (auto item in custom_items)
+			{
+				stream << item.second->_name << ", " << subtype << endl;
+			}
 			itemStorageArray->items[235] = custom_items[subtype];
 			return 235;
 		}
@@ -374,31 +379,19 @@ void* VFSLoadFile_Original;
 
 char* __cdecl VFSLoadFile_Payload(char* filename)
 {
-	char* result = filename;
+	//char* result = filename;
 
 	//STOP USING PRINTF FOR THE LOVE OF GOD
-	std::ofstream stream = std::ofstream("log.log");
-	string* s = new string(filename);
-	//if (s->find("itempools.xml") != string::npos)
-	if (s->find("items.xml") != string::npos)
-	{
-		PlayerManager* pman = API_GetPlayerManager();
-		if (pman->_items[234] == NULL)
-		{
-			stream << "RealID=234" << std::endl;
-			pman->_items[234] = new Item();
-		}
-		else
-		if (pman->_items[235] == NULL)
-		{
-			stream << "RealID=235" << endl;
-			pman->_items[235] = new Item();
-		}
-		//Item* newitem = 
-		
-	//	result = "resources/mods/rewritten/itempools.xml"; 
-	}
-	return result;
+	//if (filename == "resources/config/itempools.xml")
+	//{
+	//	filename = "resources/mods/config/itempools.xml";
+	//}
+
+	//if (filename == "resources/config/items.xml")
+	//{
+	//	result = "resources/mods/config/items.xml"; 
+	//}
+	return filename;
 }
 
 __declspec(naked) void VFSLoadFile_Hook()
@@ -546,7 +539,7 @@ void* PlayerHitsEnemyEvent_Original;
 void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
 {
 
-	ofstream stream = ofstream("log.log");
+	ofstream stream = ofstream("log.log", ios_base::app);
 	stream << sprintf("playerName: %s, enemyID=%d\n", player->_charname, enemy->_id) << endl;
 
 	/*PlayerUpdateEvent_Notification notification(player);
