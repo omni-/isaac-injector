@@ -70,7 +70,7 @@ namespace OML
 
                 //create items
                 foreach (Item i in items)
-                    API.AddCustomItem(i.id, i.Name, (int)i.Type, i.gfxResourceName);
+                    API.AddCustomItem(i.id);
 
                 // Peek named pipe arguments
                 byte[] eventID = new byte[1];

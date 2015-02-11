@@ -689,11 +689,11 @@ namespace OML
         {
             public uint id;
             public int itemid;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-            public byte[] name;
-            public int type;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-            public byte[] resourcename;
+            //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            //public byte[] name;
+            //public int type;
+            //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+            //public byte[] resourcename;
         };
 
         [Serializable()]
@@ -705,22 +705,22 @@ namespace OML
 
         private AddCustomItem_Request request;
 
-        public API_AddCustomItemCall(API_ConnectionInfo _connection, int _itemid, string _name, int _type, string _resourcename)
+        public API_AddCustomItemCall(API_ConnectionInfo _connection, int _itemid)//, string _name, int _type, string _resourcename)
             : base(_connection)
         {
             request.id = _OML.APICALL_ADDCUSTOMITEM;
             request.itemid = _itemid;
-            request.type = _type;
+            //request.type = _type;
 
-            request.name = Encoding.ASCII.GetBytes(_name);
-            Array.Resize<byte>(ref request.name, 16);
-            for (int i = request.name.Length; i < 16; i++)
-                request.name[i] = new byte();
+            //request.name = Encoding.ASCII.GetBytes(_name);
+            //Array.Resize<byte>(ref request.name, 16);
+            //for (int i = request.name.Length; i < 16; i++)
+            //    request.name[i] = new byte();
 
-            request.resourcename = Encoding.ASCII.GetBytes(_resourcename);
-            Array.Resize<byte>(ref request.resourcename, 32);
-            for (int i = request.resourcename.Length; i < 32; i++)
-                request.resourcename[i] = new byte();
+            //request.resourcename = Encoding.ASCII.GetBytes(_resourcename);
+            //Array.Resize<byte>(ref request.resourcename, 32);
+            //for (int i = request.resourcename.Length; i < 32; i++)
+            //    request.resourcename[i] = new byte();
         }
 
         public void Call()

@@ -242,9 +242,9 @@ namespace OML
             result.y = (pf.y - 160) / 40;
             return result;
         }
-        public static void AddCustomItem(int id, string name, int type, string resourcename)
+        public static void AddCustomItem(int id)
         {
-            new API_AddCustomItemCall(_OML.Connection, id, name, type, resourcename).Call();
+            //new API_AddCustomItemCall(_OML.Connection, id).Call();
         }
     }
 }
