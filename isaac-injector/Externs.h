@@ -89,7 +89,7 @@ struct Player : Entity
 #pragma pack(1)
 struct Item
 {
-	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = familiar
+	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = ??
 	int _id;
 	char* _name;
 
@@ -184,19 +184,24 @@ struct RoomManager
 struct RoomEntityInfo
 {
 	int entityID;
-	int unknown1;
-	void* unknown2;
-	int unknown3;
-	void* unknown4;
-	int unknown5;
-	//int _test[30];
+	short variant;
+	short subtype;
+	int x1;
+	int x2;
+	int x3;
+	int x4;
+};
+
+struct RoomEntityInfoArray
+{
+	RoomEntityInfo entities[20];
 };
 
 struct RoomEntity
 {
 	int unknown1;
-	RoomEntityInfo* info;
-	float unknown2;
+	RoomEntityInfoArray* info;
+	int unknown2;
 	int unknown3;
 };
 
@@ -217,13 +222,13 @@ struct RoomInfo
 	int unknown4;
 	int difficulty;
 	// pointer
-	int unknown5;
-	int unknown6;
+	DebugStruct* unknown5;
+	DebugStruct* unknown6;
 	//
 	int unknown7;
 	// pointer
 	RoomEntities* Entities;
-	int unknown9;
+	DebugStruct* unknown9;
 	// 
 	int unknown10;
 	int unknown11;
