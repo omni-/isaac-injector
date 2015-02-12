@@ -43,6 +43,7 @@
     <Compile Include="OMLAPI.cs" />
     <Compile Include="OMLAPITypes.cs" />
     <Compile Include="OMLAPIEvents.cs" />
+    <Compile Include="OMLEventArgs.cs" />
     <Compile Include="OMLTypes.cs" />
     <Compile Include="Pill.cs" />
     <Compile Include="PillDictionary.cs" />

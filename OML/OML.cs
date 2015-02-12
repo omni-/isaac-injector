@@ -16,18 +16,53 @@ namespace OML
         public string PluginAuthor;
         public List<Item> CustomItemList = new List<Item>();
 
+        #region Events for Binding
+        public event EventHandler<OnPlayerAddCollectibleEventArgs> eOnPlayerAddCollectible;
+        public event EventHandler<OnEntitySpawnEventArgs> eOnEntitySpawn;
+        public event EventHandler<OnPlayerCardUseEventArgs> eOnPlayerCardUse;
+        public event EventHandler<OnPlayerPillUseEventArgs> eOnPlayerPillUse;
+        public event EventHandler<OnPlayerHealthModifiedEventArgs> eOnPlayerHealthModified;
+        public event EventHandler<OnSoulHeartsAddedEventArgs> eOnSoulHeartsAdded;
+        public event EventHandler<OnRoomChangeEventArgs> eOnRoomChange;
+        public event EventHandler<OnEnemyTearShotEventArgs> eOnEnemyTearShot;
+        public event EventHandler<OnGameUpdateEventArgs> eOnGameUpdate;
+        public event EventHandler<OnGotoFloorEventArgs> eOnGotoFloor;
+        public event EventHandler<OnPlayerUpdateEventArgs> eOnPlayerUpdate;
+        #endregion
+
         public virtual void PluginInit()
         {
         }
+
         public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
         {
+            if(eOnPlayerAddCollectible != null)
+            {
+                OnPlayerAddCollectibleEventArgs e = new OnPlayerAddCollectibleEventArgs(player, a2, id, a4);
+                eOnPlayerAddCollectible(this, e);
+            }
         }
+
         public virtual void OnEntitySpawn(PointF velocity, PointF position, int entityID, int variant, int subtype, Entity parent)
         {
+            if(eOnEntitySpawn != null)
+            {
+                OnEntitySpawnEventArgs e = new OnEntitySpawnEventArgs(velocity, position, entityID, var, subtype, parent);
+                eOnEntitySpawn(this, e);
+            }
         }
+
         public virtual void OnPlayerCardUse(Player player, int cardID, ref bool handled)
         {
+            // TODO: Implement a Card Dictionary similar to PillDictionary
+
+            if(eOnPlayerCardUse != null)
+            {
+                OnPlayerCardUseEventArgs e = new OnPlayerCardUseEventArgs(player, cardID);
+                eOnPlayerCardUse(this, e);
+            }
         }
+
         public virtual void OnPlayerPillUse(Player player, int pillID, ref bool handled)
         {
             Pill p = PillDictionary.GetPill(pillID);
@@ -40,30 +75,84 @@ namespace OML
 
             else
                 handled = false;
+
+            if(eOnPlayerPillUse != null)
+            {
+                OnPlayerPillUseEventArgs e = new OnPlayerPillUseEventArgs(player, pillID);
+                eOnPlayerPillUse(this, e);
+            }
         }
+
         public virtual void OnPlayerHealthDown(Player player, ref int amount)
         {
+            if(eOnPlayerHealthModified != null)
+            {
+                OnPlayerHealthModifiedEventArgs e = new OnPlayerHealthModifiedEventArgs(player, amount * -1);
+                eOnPlayerHealthModified(this, e);
+            }
         }
+
         public virtual void OnPlayerHealthUp(Player player, ref int amount)
         {
+            if (eOnPlayerHealthModified != null)
+            {
+                OnPlayerHealthModifiedEventArgs e = new OnPlayerHealthModifiedEventArgs(player, amount);
+                eOnPlayerHealthModified(this, e);
+            }
         }
+
         public virtual void OnSoulHeartsAdded(Player player, ref int amount)
         {
+            if(eOnSoulHeartsAdded != null)
+            {
+                OnSoulHeartsAddedEventArgs e = new OnSoulHeartsAddedEventArgs(player, amount);
+                eOnSoulHeartsAdded(this, e);
+            }
         }
+
         public virtual void OnRoomChange(int newRoomIndex)
         {
+            if(eOnRoomChange != null)
+            {
+                OnRoomChangeEventArgs e = new OnRoomChangeEventArgs(newRoomIndex);
+                eOnRoomChange(this, e);
+            }
         }
+
         public virtual void OnEnemyTearShot(PointF velocity, PointF position, Entity sourceEntity, int pattern, TearInfo tearInfo)
         {
+            if(eOnEnemyTearShot != null)
+            {
+                OnEnemyTearShotEventArgs e = new OnEnemyTearShotEventArgs(velocity, position, sourceEntity, pattern, tearInfo);
+                eOnEnemyTearShot(this, e);
+            }
         }
+
         public virtual void OnGameUpdate()
         {
+            if(eOnGameUpdate != null)
+            {
+                OnGameUpdateEventArgs e = new OnGameUpdateEventArgs();
+                eOnGameUpdate(this, e);
+            }
         }
+
         public virtual void OnGotoFloor(Floor nextFloor)
         {
+            if(eOnGotoFloor != null)
+            {
+                OnGotoFloorEventArgs e = new OnGotoFloorEventArgs(nextFloor);
+                eOnGotoFloor(this, e);
+            }
         }
+
         public virtual void OnPlayerUpdate(Player player)
         {
+            if(eOnPlayerUpdate != null)
+            {
+                OnPlayerUpdateEventArgs e = new OnPlayerUpdateEventArgs(player);
+                eOnPlayerUpdate(this, e);
+            }
         }
     }
 
