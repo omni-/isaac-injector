@@ -7,10 +7,14 @@ isaac-injector is a project dedicated to modding The Binding of Isaac: Rebirth t
 
 
 ###Troubleshooting###
-If the executable crashes on startup with NotSupportedException, please right-click on ALL THE DLLS (including the ones in the Plugins folder). 
+If the executable crashes on startup with NotSupportedException, please right-click on ALL THE DLLS (including the ones in the Plugins folder) and select "Unblock". 
 
 For any other problems, please try the following steps
 
 * Download vcredist (http://www.microsoft.com/en-us/download/details.aspx?id=40784)
 * Close the game, OML, and Steam and try again.
 * If that doesn't fix it, please submit a support ticket on the GitHub page (https://github.com/omni-/isaac-injector/issues).
+
+##Plugin Creation
+
+1. Please visit the GitHub Wiki. (https://github.com/omni-/isaac-injector/wiki/Using-the-API)
