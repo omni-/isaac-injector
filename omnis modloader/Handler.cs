@@ -465,6 +465,30 @@ namespace OML
                                     else
                                         mw.WriteLine(Level.Warning, "GAME_EVENT_GOTOFLOOR: expected " + GotoFloorEvent_Response.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
+                                case _OML.PLAYER_EVENT_HITBYENEMY:
+                                    if (bytesLeft + 1 == GotoFloorEvent_Notification.size())
+                                    {
+                                        PlayerHitsEnemy_Notification notification = RawDeserialize<PlayerHitsEnemy_Notification>(ServerIn.ReadBytes(PlayerHitsEnemy_Notification.size()), 0);
+
+                                        Player pl = new Player(notification.player);
+                                        Entity e = new Entity(notification.entity);
+
+
+                                        foreach(OMLPlugin p in plugins)
+                                            foreach (Item i in p.CustomItemList)
+                                                if (hasCustomItem[i.id])
+                                                    i.OnEnemyContact(pl, e);
+
+                                        new API_EndCall(_OML.Connection).Call();
+
+                                        server.Flush();
+
+                                        PlayerHitsEnemy_Response response;
+                                        response.eventID = _OML.PLAYER_EVENT_HITBYENEMY;
+
+                                        ServerOut.Write(RawSerialize(response));
+                                    }
+                                    break;
                             }
 
                             if (server.IsConnected)

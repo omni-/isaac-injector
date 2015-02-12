@@ -286,3 +286,23 @@ struct GotoFloorEvent_Response
 {
 	int eventID = GAME_EVENT_GOTOFLOOR;
 };
+
+#pragma pack (1)
+struct PlayerHitsEnemy_Notification
+{
+	int eventID = PLAYER_EVENT_HITBYENEMY;
+	void* player;
+	void* enemy;
+
+	PlayerHitsEnemy_Notification(void* _player, void* _enemy)
+	{
+		player = _player;
+		enemy = _enemy;
+	}
+};
+
+#pragma pack (1)
+struct PlayerHitsEnemy_Response
+{
+	int eventID = PLAYER_EVENT_HITBYENEMY;
+};

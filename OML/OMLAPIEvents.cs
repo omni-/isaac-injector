@@ -340,3 +340,24 @@ public struct GotoFloorEvent_Response
         return Marshal.SizeOf(typeof(GotoFloorEvent_Response));
     }
 }
+
+[Serializable()]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct PlayerHitsEnemy_Notification
+{
+    public int eventID;
+    public IntPtr player;
+    public IntPtr entity;
+
+    public static int size()
+    {
+        return Marshal.SizeOf(typeof(PlayerHitsEnemy_Notification));
+    }
+}
+
+[Serializable()]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct PlayerHitsEnemy_Response
+{
+    public int eventID;
+}

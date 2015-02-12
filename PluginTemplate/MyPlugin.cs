@@ -25,6 +25,16 @@ namespace PluginTemplate
             item.Weight = 1;
             item.RemoveOn = .1f;
             CustomItemList.Add(item);
+            item = new TheMoon();
+            item.Name = "The Moon";
+            item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\moon.png", "moon.png");
+            item.Type = ItemType.passive;
+            item.Pool = ItemPool.treasure;
+            item.DecreaseBy = 1;
+            item.PickupText = "Brighten your night!";
+            item.Weight = 1;
+            item.RemoveOn = .1f;
+            CustomItemList.Add(item);
         }
         public override void PluginInit()
         {
@@ -43,10 +53,18 @@ namespace PluginTemplate
     }
     public class TheSun : Item
     {
-        public override void OnPlayerPillUse(Player player, int pillID, ref bool handled)
+        public override void OnEnemyContact(Player p, Entity enemy)
         {
-            API.GotoFloor(Floor.Cathedral);
-            base.OnPlayerPillUse(player, pillID, ref handled);
+            p.Keys++;
+            base.OnEnemyContact(p, enemy);
+        }
+    }
+    public class TheMoon : Item
+    {
+        public override void OnEnemyContact(Player p, Entity enemy)
+        {
+            p.Bombs++;
+            base.OnEnemyContact(p, enemy);
         }
     }
 }

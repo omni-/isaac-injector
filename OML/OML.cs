@@ -104,6 +104,7 @@ namespace OML
         public const int PLAYER_EVENT_UPDATE         = 0x09;
         public const int PLAYER_EVENT_USECARD        = 0x0A;
         public const int GAME_EVENT_GOTOFLOOR        = 0x0B;
+        public const int PLAYER_EVENT_HITBYENEMY     = 0x0C;
 
         public const uint APICALL_NULL               = 0x00;
 

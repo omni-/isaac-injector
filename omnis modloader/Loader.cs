@@ -72,9 +72,9 @@ namespace OML
             File.Copy("res\\xml\\items.xml", respath + "\\items.xml", true);
             File.Copy("res\\xml\\itempools.xml", respath + "\\itempools.xml", true);
             List<Item> ret = new List<Item>();
-            int id = -1;
             foreach (OMLPlugin plugin in plugins)
             {
+                int id = -1;
                 foreach (Item i in plugin.CustomItemList)
                 {
                     i.id = id;
@@ -82,6 +82,8 @@ namespace OML
                     switch(i.resource.resourceType)
                     {
                         case ResourceType.Item:
+                            if (!Directory.Exists(respath + "\\gfx\\items\\collectibles\\"))
+                                Directory.CreateDirectory(respath + "\\gfx\\items\\collectibles\\");
                             File.Copy("Plugins\\PluginResources\\" + i.resource.Path, respath + "\\gfx\\items\\collectibles\\" + i.resource.resourceName, true);
                             break;
                     }

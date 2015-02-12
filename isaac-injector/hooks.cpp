@@ -571,15 +571,15 @@ void* PlayerHitsEnemyEvent_Original;
 void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
 {
 
-	ofstream stream = ofstream("log.log", ios_base::app);
+	ofstream stream = ofstream("log.txt", ios_base::app);
 	stream << sprintf("playerName: %s, enemyID=%d\n", player->_charname, enemy->_id) << endl;
 
-	/*PlayerUpdateEvent_Notification notification(player);
-	PlayerUpdateEvent_Response response;
+	PlayerHitsEnemy_Notification notification(player, enemy);
+	PlayerHitsEnemy_Response response;
 
-	IPC_BeginEvent(&notification, sizeof(PlayerUpdateEvent_Notification));
+	IPC_BeginEvent(&notification, sizeof(PlayerHitsEnemy_Notification));
 	IPC_ProcessEvent();
-	IPC_EndEvent(&response, sizeof(PlayerUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);*/
+	IPC_EndEvent(&response, sizeof(PlayerHitsEnemy_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void PlayerHitsEnemyEvent_Hook()

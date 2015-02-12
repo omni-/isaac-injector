@@ -14,6 +14,7 @@
 #define PLAYER_EVENT_UPDATE         0x09
 #define PLAYER_EVENT_USECARD        0x0A
 #define GAME_EVENT_GOTOFLOOR        0x0B
+#define PLAYER_EVENT_HITBYENEMY		0x0C
 
 // initialization + playermanager
 bool Hooks_Init();
