@@ -277,7 +277,7 @@ struct API_GetItemsCall
 struct API_GetItemsResult
 {
 	unsigned int id = APICALL_GETCUSTOMITEMS;
-	int ids[];
+	int* ids;
 };
 
 #pragma pack (1)

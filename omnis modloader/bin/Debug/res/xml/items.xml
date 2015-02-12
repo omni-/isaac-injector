@@ -138,7 +138,7 @@
 	<active bombs="5" cooldown="2" description="Remote bomb detonation" gfx="Collectibles_137_RemoteDetonator.png" id="137" maxcharges="0" name="Remote Detonator" />
 	<passive cache="damage" description="DMG + HP up" gfx="Collectibles_138_Stigmata.png" hearts="2" id="138" maxhearts="2" name="Stigmata" />
 	<passive description="More trinket room" gfx="Collectibles_139_MomsPurse.png" id="139" name="Mom's Purse" />
-	<passive bombs="5" description=" +5 poison bombs" gfx="Collectibles_140_BobsCurse.png" id="140" name="Bobs Curse" />
+	<passive bombs="5" description=" +5 poison bombs" gfx="Collectibles_140_BobsCurse.png" id="140" name="Bob's Curse" />
 	<passive description="Ultimate grand supreme" gfx="Collectibles_141_PageantBoy.png" id="141" name="Pageant Boy" />
 	<passive description="You have been blessed" gfx="Collectibles_142_Scapular.png" id="142" name="Scapular" />
 	<passive cache="speed shotspeed" description="Speed + shot speed up" gfx="Collectibles_143_Speedball.png" id="143" name="Speed Ball" />
@@ -229,7 +229,7 @@
 	<passive coins="3" description="My life savings" gfx="collectibles_227_piggybank.png" id="227" name="Piggy Bank" />
 	<passive cache="firedelay tearcolor" description="Fear shot" gfx="collectibles_228_momsperfume.png" id="228" name="Mom's Perfume" />
 	<passive cache="all" description="Charged attack" gfx="collectibles_229_monstroslung.png" id="229" name="Monstro's Lung" />
-	<passive achievement="128" blackhearts="12" cache="damage speed" description="Evil + DMG up + fear shot" devilprice="2" gfx="collectibles_230_abaddon.png" id="230" name="Abaddon" />
+	<passive achievement="128" cache="damage speed" description="Evil + DMG up + fear shot" devilprice="2" gfx="collectibles_230_abaddon.png" id="230" name="Abaddon" />
 	<passive cache="tearcolor" description="Sticky feet..." gfx="collectibles_231_balloftar.png" id="231" name="Ball of Tar" />
 	<passive achievement="138" cache="speed" description="Let's slow this down a bit..." gfx="collectibles_232_stopwatch.png" id="232" name="Stop Watch" special="true" />
 	<passive cache="all" description="Orbiting tears + range up" gfx="collectibles_233_tinyplanet.png" id="233" name="Tiny Planet" />

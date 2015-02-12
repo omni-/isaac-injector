@@ -66,7 +66,7 @@ namespace OML
         }
         public static List<Item> LoadItems(List<OMLPlugin> plugins, string path)
         {
-            string respath = path + "\\resources\\config";
+            string respath = path + "\\resources";
             if (!Directory.Exists(respath))
                 Directory.CreateDirectory(respath);
             File.Copy("res\\xml\\items.xml", respath + "\\items.xml", true);
@@ -79,14 +79,24 @@ namespace OML
                 {
                     i.id = id;
                     ret.Add(i);
+                    switch(i.resource.resourceType)
+                    {
+                        case ResourceType.Item:
+                            File.Copy("Plugins\\PluginResources\\" + i.resource.Path, respath + "\\gfx\\items\\collectibles\\" + i.resource.resourceName, true);
+                            break;
+                    }
+                    XmlWriterSettings xws = new XmlWriterSettings();
+                    xws.OmitXmlDeclaration = true;
 
                     XElement node;
+
+
                     if (!String.IsNullOrEmpty(i.cache))
                     {
                         node = new XElement(i.Type.ToString(),
                            new XAttribute("cache", i.cache),
                            new XAttribute("description", i.PickupText),
-                           new XAttribute("gfx", i.gfxResourceName),
+                           new XAttribute("gfx", i.resource.resourceName),
                            new XAttribute("id", i.id),
                            new XAttribute("name", i.Name));
                     }
@@ -94,7 +104,7 @@ namespace OML
                     {
                         node = new XElement(i.Type.ToString(),
                                new XAttribute("description", i.PickupText),
-                               new XAttribute("gfx", i.gfxResourceName),
+                               new XAttribute("gfx", i.resource.resourceName),
                                new XAttribute("id", i.id),
                                new XAttribute("name", i.Name));
                     }
@@ -102,6 +112,7 @@ namespace OML
                     XDocument xdoc = XDocument.Load(respath + "\\items.xml");
                     xdoc.Element("items").Nodes().Last().AddAfterSelf(node);
                     xdoc.Save(respath + "\\items.xml");
+
 
                     XElement pnode;
                     pnode = new XElement("Item",
@@ -111,7 +122,7 @@ namespace OML
                         new XAttribute("RemoveOn", i.RemoveOn));
                     xdoc = XDocument.Load(respath + "\\itempools.xml");
                     xdoc.Element("ItemPools").Element("Pool").Nodes().Last().AddAfterSelf(pnode);
-                    xdoc.Save(respath + "\\itempools.xml");
+                    //xdoc.Save(respath + "\\itempools.xml");
                     id--;
                 }
             }

@@ -230,7 +230,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 									response.amount = request.player->_range;
 									break;
 								case PLAYERSTAT_FIRERATE:
-									response.amount = request.player->_firerate;
+									response.amount = request.player->_tearrate;
 									break;
 								case PLAYERSTAT_SHOTSPEED:
 									response.amount = request.player->_shotspeed;
@@ -262,7 +262,7 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 									request.player->_range = request.amount;
 									break;
 								case PLAYERSTAT_FIRERATE:
-									request.amount = request.player->_firerate;
+									request.amount = request.player->_tearrate;
 									break;
 								case PLAYERSTAT_SHOTSPEED:
 									request.player->_shotspeed = request.amount; 

@@ -304,7 +304,7 @@ namespace OML
         private void itemIDBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             int result = 0;
-            if (int.TryParse(itemBox.Text, out result))
+            if (int.TryParse(itemIDBox.Text, out result))
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Number.ToString().StartsWith(itemIDBox.Text));
             else
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.StartsWith(itemIDBox.Text));

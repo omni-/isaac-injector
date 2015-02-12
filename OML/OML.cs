@@ -67,6 +67,25 @@ namespace OML
         }
     }
 
+    public enum ResourceType
+    {
+        Item
+    }
+
+    public class OMLResource
+    {
+        public ResourceType resourceType;
+        public string Path;
+        public string resourceName;
+
+        public OMLResource(ResourceType type, string path, string name)
+        {
+            resourceType = type;
+            Path = path;
+            resourceName = name;
+        }
+    }
+
     public static class _OML
     {
         public static API_ConnectionInfo Connection = null;

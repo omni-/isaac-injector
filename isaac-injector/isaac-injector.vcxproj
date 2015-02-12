@@ -62,7 +62,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "D:\Steam\steamapps\common\The Binding of Isaac Rebirth\dsound.dll"
+      <Command>xcopy "$(OutDir)$(TargetName)$(TargetExt)" "$(ProgramFiles)\Steam\steamapps\common\The Binding of Isaac Rebirth\dsound.dll" /y /e
+xcopy "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)omnis modloader\bin\Debug\res\dll" /y /e
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

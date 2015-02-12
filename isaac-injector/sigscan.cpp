@@ -38,7 +38,7 @@ BOOL SigScan_GetImageInfo()
 
 void* SigScan_FindSignature(FuncSignature* sig)
 {
-	FILE* debugFile;
+	//FILE* debugFile;
 
 	char* scanPtr = (char*)SigScan_BasePtr;
 

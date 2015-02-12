@@ -67,7 +67,7 @@ namespace OML
         public int luckbuff;
         public int shotspeedbuff;
         public string cache;
-        public string gfxResourceName;
+        public OMLResource resource;
 
         public virtual void OnTearHit(Entity target)
         {

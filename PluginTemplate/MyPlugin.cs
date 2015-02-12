@@ -17,10 +17,10 @@ namespace PluginTemplate
             PluginAuthor = "omni";
             Item item = new TheSun();
             item.Name = "The Sun";
-            item.gfxResourceName = "sun.png";
+            item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\sun.png", "sun.png");
             item.Type = ItemType.passive;
             item.Pool = ItemPool.treasure;
-            item.DecreaseBy = .5f;
+            item.DecreaseBy = 1;
             item.PickupText = "Brighten your day!";
             item.Weight = 1;
             item.RemoveOn = .1f;
@@ -45,7 +45,7 @@ namespace PluginTemplate
     {
         public override void OnPlayerPillUse(Player player, int pillID, ref bool handled)
         {
-            MessageBox.Show("sun, sun, sun here it comes");
+            API.GotoFloor(Floor.Cathedral);
             base.OnPlayerPillUse(player, pillID, ref handled);
         }
     }

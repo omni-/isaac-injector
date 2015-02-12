@@ -69,8 +69,8 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	API_SpawnEntity(5,100,-1,3,1,NULL);
-	API_AddBlackHearts(player, 3);
+	//API_SpawnEntity(5,100,-1,3,1,NULL);
+	//API_AddBlackHearts(player, 3);
 	//API_SpawnEntity(5,100,-2,4,1,NULL);
 
 	TakePillEvent_Response response(false);
@@ -117,10 +117,10 @@ void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int itemid, int charges, int a4)
 {
-	if (itemid == -1)
-		API_AddSoulHearts(player, 4);
-	if (itemid == -2)
-		player->_damage = 30;
+	//if (itemid == -1)
+	//	API_AddSoulHearts(player, 4);
+	//if (itemid == -2)
+	//	player->_damage = 30;
 
 	AddCollectibleEvent_Notification notification(player, itemid, charges, a4);
 	AddCollectibleEvent_Response response;
@@ -352,6 +352,13 @@ void __cdecl CollideWithEntityEvent_Payload(Entity* collisionEntity, Player* pla
 		{
 			Item* tmpItem = custom_items[collisionEntity->_realItemID];
 			itemStorageArray->items[235] = tmpItem;
+			//MessageBoxA(NULL, std::to_string(collisionEntity->_realItemID).c_str(), NULL, NULL);
+			AddCollectibleEvent_Notification notification(player, collisionEntity->_realItemID, collisionEntity->_realItemID, collisionEntity->_realItemID);
+			AddCollectibleEvent_Response response;
+
+			IPC_BeginEvent(&notification, sizeof(AddCollectibleEvent_Notification));
+			IPC_ProcessEvent();
+			IPC_EndEvent(&response, sizeof(AddCollectibleEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 		}
 	}
 }
@@ -455,27 +462,27 @@ void* ChangeRoomEvent_Original;
 
 void __cdecl ChangeRoomEvent_Payload(RoomManager* roomMan, int newRoomIdx)
 {
-	FILE* f;
-	fopen_s(&f, "C:\\ChangeRoomEvent_Payload.txt", "a+");
-	PlayerManager* pman = API_GetPlayerManager();
-	for (int i=0; i < pman->_roomCount; i++)
-	{ 
-		fprintf(f, "RoomID: %d, type: %d, variant: %d\n", pman->_rooms[i].LeftRoomID+1, pman->_rooms[i].info->type, pman->_rooms[i].info->variant);
-		
-	//	fprintf(f, "2=%d, 3=%d, 4=%d\n", pman->_rooms[i].info->unknown2, pman->_rooms[i].info->unknown3, pman->_rooms[i].info->unknown4);
-		fprintf(f, "Roo: %d\n", ((int*)(&pman->_rooms[i].info->Entities->entity[0].info->entities))[-1]);
-		for (int j=0; j < 20; j++)
-		{
-			//if (pman->_rooms[i].info->unknown6)
-			fprintf(f, "%d, %d, %d, %d\n", pman->_rooms[i].info->Entities->entity[0].unknown1, pman->_rooms[i].info->Entities->entity[0].unknown2, pman->_rooms[i].info->Entities->entity[0].unknown3);
-			fprintf(f, "entity[%d].ID/var/sub: %d/%d/%d, pos= %d, %d, %d, %d\n", j, pman->_rooms[i].info->Entities->entity[0].info->entities[j].entityID, pman->_rooms[i].info->Entities->entity[0].info->entities[j].variant, 
-				pman->_rooms[i].info->Entities->entity[0].info->entities[j].subtype, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x1, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x2,
-				pman->_rooms[i].info->Entities->entity[0].info->entities[j].x3, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x4);
-		//	fprintf(f, "bla[%d]= %p\n", j, ((int*)(&pman->_rooms[i].info->flags))[j]);
-		}
-	}
+	//FILE* f;
+	//fopen_s(&f, "C:\\ChangeRoomEvent_Payload.txt", "a+");
+	//PlayerManager* pman = API_GetPlayerManager();
+	//for (int i=0; i < pman->_roomCount; i++)
+	//{ 
+	//	fprintf(f, "RoomID: %d, type: %d, variant: %d\n", pman->_rooms[i].LeftRoomID+1, pman->_rooms[i].info->type, pman->_rooms[i].info->variant);
+	//	
+	////	fprintf(f, "2=%d, 3=%d, 4=%d\n", pman->_rooms[i].info->unknown2, pman->_rooms[i].info->unknown3, pman->_rooms[i].info->unknown4);
+	//	fprintf(f, "Roo: %d\n", ((int*)(&pman->_rooms[i].info->Entities->entity[0].info->entities))[-1]);
+	//	for (int j=0; j < 20; j++)
+	//	{
+	//		if (pman->_rooms[i].info->unknown6)
+	//		fprintf(f, "%d, %d, %d, %d\n", pman->_rooms[i].info->Entities->entity[0].unknown1, pman->_rooms[i].info->Entities->entity[0].unknown2, pman->_rooms[i].info->Entities->entity[0].unknown3);
+	//		fprintf(f, "entity[%d].ID/var/sub: %d/%d/%d, pos= %d, %d, %d, %d\n", j, pman->_rooms[i].info->Entities->entity[0].info->entities[j].entityID, pman->_rooms[i].info->Entities->entity[0].info->entities[j].variant, 
+	//			pman->_rooms[i].info->Entities->entity[0].info->entities[j].subtype, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x1, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x2,
+	//			pman->_rooms[i].info->Entities->entity[0].info->entities[j].x3, pman->_rooms[i].info->Entities->entity[0].info->entities[j].x4);
+	//	//	fprintf(f, "bla[%d]= %p\n", j, ((int*)(&pman->_rooms[i].info->flags))[j]);
+	//	}
+	//}
 
-	fclose(f);
+	//fclose(f);
 
 	ChangeRoomEvent_Notification notification(newRoomIdx);
 	ChangeRoomEvent_Response response;
@@ -808,26 +815,42 @@ void Hooks_HookEvents()
 	void* CollideWithEntityEvent_SigPtr = SigScan_FindSignature(&Signature_CollideWithEntityEvent);
 	CollideWithEntityEvent_Original = DetourFunction(PBYTE(CollideWithEntityEvent_SigPtr), PBYTE(CollideWithEntityEvent_Hook));
 
-
-	FILE* f;
-	fopen_s(&f, "C:\\Hooks_HookEvents.txt", "a+");
-		fprintf(f, "UseCardEvent_SigPtr: %p\n", UseCardEvent_SigPtr);
-		fprintf(f, "TakePillEvent_SigPtr: %p\n", TakePillEvent_SigPtr);
-		fprintf(f, "AddCollectibleEvent_SigPtr: %p\n", AddCollectibleEvent_SigPtr);
-		fprintf(f, "SpawnEntityEvent_SigPtr: %p\n", SpawnEntityEvent_SigPtr);
-		fprintf(f, "HpUpEvent_SigPtr: %p\n", HpUpEvent_SigPtr);
-		fprintf(f, "AddSoulHeartsEvent_SigPtr: %p\n", AddSoulHeartsEvent_SigPtr);
-		fprintf(f, "ShootTearsEvent_SigPtr: %p\n", ShootTearsEvent_SigPtr);
-		fprintf(f, "ChangeRoomEvent_SigPtr: %p\n", ChangeRoomEvent_SigPtr);
-		fprintf(f, "VFSLoadFile_SigPtr: %p\n", VFSLoadFile_SigPtr);
-		fprintf(f, "GameUpdateEvent_SigPtr: %p\n", GameUpdateEvent_SigPtr);
-		fprintf(f, "PlayerUpdateEvent_SigPtr: %p\n", PlayerUpdateEvent_SigPtr);
-		fprintf(f, "GotoFloorEvent_SigPtr: %p\n", GotoFloorEvent_SigPtr);
-		fprintf(f, "AddBlackHeartsEvent_SigPtr: %p\n", AddBlackHeartsEvent_SigPtr);
-		fprintf(f, "PlayerHitsEnemyEvent_SigPtr: %p\n", PlayerHitsEnemyEvent_SigPtr);
-		fprintf(f, "StoreItemStructEvent_SigPtr: %p\n", StoreItemStructEvent_SigPtr);
-		fprintf(f, "CollideWithEntityEvent_SigPtr: %p\n", CollideWithEntityEvent_SigPtr);
-	fclose(f);
+	//ofstream stream = ofstream("log.txt", ios_base::app);
+	//stream << "card: " << UseCardEvent_SigPtr << endl;
+	//stream << "pill: " << TakePillEvent_SigPtr << endl;
+	//stream << "collectible: " << AddCollectibleEvent_SigPtr << endl;
+	//stream << "entity: " << SpawnEntityEvent_SigPtr << endl;
+	//stream << "hp: " << HpUpEvent_SigPtr << endl;
+	//stream << "sh: " << AddSoulHeartsEvent_SigPtr << endl;
+	//stream << "st: " << ShootTearsEvent_SigPtr << endl;
+	//stream << "cr: " << ChangeRoomEvent_SigPtr << endl;
+	//stream << "vfs: " << VFSLoadFile_SigPtr << endl;
+	//stream << "gu: " << GameUpdateEvent_SigPtr << endl;
+	//stream << "pu: " << PlayerHitsEnemyEvent_SigPtr << endl;
+	//stream << "gf: " << GotoFloorEvent_SigPtr << endl;
+	//stream << "bh: " << AddBlackHeartsEvent_SigPtr << endl;
+	//stream << "phe: " << PlayerHitsEnemyEvent_SigPtr << endl;
+	//stream << "si: " << StoreItemStructEvent_SigPtr << endl;
+	//stream << "ce: " << CollideWithEntityEvent_SigPtr << endl;
+	//FILE* f;
+	//fopen_s(&f, "C:\\Hooks_HookEvents.txt", "a+");
+	//	fprintf(f, "UseCardEvent_SigPtr: %p\n", UseCardEvent_SigPtr);
+	//	fprintf(f, "TakePillEvent_SigPtr: %p\n", TakePillEvent_SigPtr);
+	//	fprintf(f, "AddCollectibleEvent_SigPtr: %p\n", AddCollectibleEvent_SigPtr);
+	//	fprintf(f, "SpawnEntityEvent_SigPtr: %p\n", SpawnEntityEvent_SigPtr);
+	//	fprintf(f, "HpUpEvent_SigPtr: %p\n", HpUpEvent_SigPtr);
+	//	fprintf(f, "AddSoulHeartsEvent_SigPtr: %p\n", AddSoulHeartsEvent_SigPtr);
+	//	fprintf(f, "ShootTearsEvent_SigPtr: %p\n", ShootTearsEvent_SigPtr);
+	//	fprintf(f, "ChangeRoomEvent_SigPtr: %p\n", ChangeRoomEvent_SigPtr);
+	//	fprintf(f, "VFSLoadFile_SigPtr: %p\n", VFSLoadFile_SigPtr);
+	//	fprintf(f, "GameUpdateEvent_SigPtr: %p\n", GameUpdateEvent_SigPtr);
+	//	fprintf(f, "PlayerUpdateEvent_SigPtr: %p\n", PlayerUpdateEvent_SigPtr);
+	//	fprintf(f, "GotoFloorEvent_SigPtr: %p\n", GotoFloorEvent_SigPtr);
+	//	fprintf(f, "AddBlackHeartsEvent_SigPtr: %p\n", AddBlackHeartsEvent_SigPtr);
+	//	fprintf(f, "PlayerHitsEnemyEvent_SigPtr: %p\n", PlayerHitsEnemyEvent_SigPtr);
+	//	fprintf(f, "StoreItemStructEvent_SigPtr: %p\n", StoreItemStructEvent_SigPtr);
+	//	fprintf(f, "CollideWithEntityEvent_SigPtr: %p\n", CollideWithEntityEvent_SigPtr);
+	//fclose(f);
 }
 
 void Hooks_GetFunctions()
