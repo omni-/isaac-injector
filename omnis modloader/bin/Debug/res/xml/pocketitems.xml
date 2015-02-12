@@ -1,0 +1,72 @@
+<pocketitems>
+	<card id="0" name="NULL" />
+	<card description="Where journey begins" hud="00_TheFool" id="1" name="0 - The Fool" />
+	<card description="May you never miss your goal" hud="01_TheMagician" id="2" name="I - The Magician" />
+	<card description="Mother is watching you" hud="02_TheHighPriestess" id="3" name="II - The High Priestess" />
+	<card description="May your rage bring power" hud="03_TheEmpress" id="4" name="III - The Empress" />
+	<card description="Challenge me!" hud="04_TheEmperor" id="5" name="IV - The Emperor" />
+	<card description="Two prayers for the lost" hud="05_TheHierophant" id="6" name="V - The Hierophant" />
+	<card description="May you prosper and be in good health" hud="06_TheLovers" id="7" name="VI - The Lovers" />
+	<card description="May nothing stand before you " hud="07_TheChariot" id="8" name="VII - The Chariot" />
+	<card description="May your future become balanced" hud="08_TheJustice" id="9" name="VIII - Justice" />
+	<card description="May you see what life has to offer" hud="09_TheHermit" id="10" name="IX - The Hermit" />
+	<card description="Spin the wheel of destiny" hud="10_WheelOfFortune" id="11" name="X - Wheel of Fortune" />
+	<card description="May your power bring rage" hud="11_Strength" id="12" name="XI - Strength" />
+	<card description="May you find enlightenment " hud="12_TheHangedMan" id="13" name="XII - The Hanged Man" />
+	<card description="Lay waste to all that oppose you " hud="13_Death" id="14" name="XIII - Death" />
+	<card description="May you be pure in heart" hud="14_Temperance" id="15" name="XIV - Temperance" />
+	<card description="Revel in the power of darkness" hud="15_TheDevil" id="16" name="XV - The Devil" />
+	<card description="Destruction brings creation" hud="16_TheTower" id="17" name="XVI - The Tower" />
+	<card description="May you find what you desire " hud="17_TheStars" id="18" name="XVII - The Stars" />
+	<card description="May you find all you have lost" hud="18_TheMoon" id="19" name="XVIII - The Moon" />
+	<card description="May the light heal and enlighten you" hud="19_TheSun" id="20" name="XIX - The Sun" />
+	<card description="Judge lest ye be judged" hud="20_Judgement" id="21" name="XX - Judgement" />
+	<card description="Open your eyes and see" hud="21_TheWorld" id="22" name="XXI - The World" />
+	<card description="Item multiplier" hud="25_TwoOfClubs" id="23" name="2 of Clubs" />
+	<card description="Item multiplier" hud="26_TwoOfDiamonds" id="24" name="2 of Diamonds" />
+	<card description="Item multiplier" hud="24_TwoOfSpades" id="25" name="2 of Spades" />
+	<card description="Item multiplier" hud="23_TwoOfHearts" id="26" name="2 of Hearts" />
+	<card description="???" hud="22_TheJoker" id="27" name="Joker" />
+	<rune achievement="89" description="Destruction" id="28" name="Hagalaz" />
+	<rune achievement="90" description="Abundance" id="29" name="Jera" />
+	<rune achievement="91" description="Passage" id="30" name="Ehwaz" />
+	<rune achievement="92" description="Purity" id="31" name="Dagaz" />
+	<rune achievement="93" description="Vision" id="32" name="Ansuz" />
+	<rune achievement="94" description="Change" id="33" name="Perthro" />
+	<rune achievement="95" description="Companionship" id="34" name="Berkano" />
+	<rune achievement="96" description="Resistance" id="35" name="Algiz" />
+	<card achievement="97" description="???" hud="28_ChaosCard" id="36" name="Chaos Card" />
+	<card achievement="98" description="Charge it!" hud="29_CreditCard" id="37" name="Credit Card" />
+	<card achievement="99" description="???" hud="30_RulesCard" id="38" name="Rules Card" />
+	<card achievement="100" description="Something stinks..." hud="31_CardAgainstHumanity" id="39" name="A Card Against Humanity" />
+	<card achievement="120" description="A true ending?" hud="27_SuicideKing" id="40" name="Suicide King" />
+
+	<pilleffect id="0" name="Bad Gas" />
+	<pilleffect id="1" name="Bad Trip" />
+	<pilleffect id="2" name="Balls of Steel" />
+	<pilleffect id="3" name="Bombs are Key" />
+	<pilleffect id="4" name="Explosive Diarrhea" />
+	<pilleffect id="5" name="Full Health" />
+	<pilleffect id="6" name="Health Down" />
+	<pilleffect id="7" name="Health Up" />
+	<pilleffect id="8" name="I Found Pills" />
+	<pilleffect id="9" name="Puberty" />
+	<pilleffect id="10" name="Pretty Fly" />
+	<pilleffect id="11" name="Range Down" />
+	<pilleffect id="12" name="Range Up" />
+	<pilleffect id="13" name="Speed Down" />
+	<pilleffect id="14" name="Speed Up" />
+	<pilleffect id="15" name="Tears Down" />
+	<pilleffect id="16" name="Tears Up" />
+	<pilleffect id="17" name="Luck Down" />
+	<pilleffect id="18" name="Luck Up" />
+	<pilleffect id="19" name="Telepills" />
+	<pilleffect id="20" name="48 Hour Energy!" />
+	<pilleffect id="21" name="Hematemesis" />
+	<pilleffect id="22" name="Paralysis" />
+	<pilleffect id="23" name="I can see forever!" />
+	<pilleffect id="24" name="Pheromones" />
+	<pilleffect id="25" name="Amnesia" />
+	<pilleffect id="26" name="Lemon Party" />
+	<pilleffect id="27" name="R U A Wizard?" />
+</pocketitems>

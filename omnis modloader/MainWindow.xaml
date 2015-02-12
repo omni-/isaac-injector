@@ -50,15 +50,35 @@
             <Button Content="Go!" HorizontalAlignment="Left" Margin="603,93,0,0" VerticalAlignment="Top" Width="63" Height="28" Click="Button_Click_1"/>
             <Label Content="Jump to floor:" HorizontalAlignment="Left" Margin="296,126,0,0" VerticalAlignment="Top" Width="146" Height="33"/>
             <ComboBox x:Name="jumpBox" HorizontalAlignment="Left" Margin="448,131,0,0" VerticalAlignment="Top" Width="148" Height="28"/>
-            <Button Content="Go!" HorizontalAlignment="Left" Margin="603,134,0,0" VerticalAlignment="Top" Width="63" Click="Button_Click_2" Height="25"/>
-            <Label Content="Spawn entity:" HorizontalAlignment="Left" Margin="422,202,0,0" VerticalAlignment="Top" Width="145" Height="33"/>
-            <TextBox x:Name="idBox" HorizontalAlignment="Left" Height="28" Margin="296,240,0,0" TextWrapping="Wrap" Text="ID" VerticalAlignment="Top" Width= "118" GotFocus="idBox_GotFocus" LostFocus="idBox_LostFocus"/>
-            <TextBox x:Name="variantBox" HorizontalAlignment="Left" Height="28" Margin="422,240,0,0" TextWrapping="Wrap" Text="Variant" VerticalAlignment="Top" Width="118" GotFocus="variantBox_GotFocus" LostFocus="variantBox_LostFocus"/>
-            <TextBox x:Name="subtypeBox" HorizontalAlignment="Left" Height="28" Margin="549,240,0,0" TextWrapping="Wrap" Text="Subtype" VerticalAlignment="Top" Width="117" GotFocus="subtypeBox_GotFocus" LostFocus="subtypeBox_LostFocus"/>
-            <Button Content="Go!" HorizontalAlignment="Left" Margin="428,309,0,0" VerticalAlignment="Top" Width="98" Click="Button_Click_3" Height="25"/>
-            <TextBox x:Name="xBox" HorizontalAlignment="Left" Height="29" Margin="356,274,0,0" TextWrapping="Wrap" Text="X Coordinate" VerticalAlignment="Top" Width="118" GotFocus="xBox_GotFocus" LostFocus="xBox_LostFocus"/>
-            <TextBox x:Name="yBox" HorizontalAlignment="Left" Height="29" Margin="480,274,0,0" TextWrapping="Wrap" Text="Y Coordinate" VerticalAlignment="Top" Width="118" GotFocus="yBox_GotFocus" LostFocus="yBox_LostFocus"/>
+            <Button Content="Go!" HorizontalAlignment="Left" Margin="603,131,0,0" VerticalAlignment="Top" Width="63" Click="Button_Click_2" Height="25"/>
+            <Label Content="Spawn entity:" HorizontalAlignment="Left" Margin="431,283,0,0" VerticalAlignment="Top" Width="145" Height="33"/>
+            <TextBox x:Name="idBox" HorizontalAlignment="Left" Height="28" Margin="305,321,0,0" TextWrapping="Wrap" Text="ID" VerticalAlignment="Top" Width= "118" GotFocus="idBox_GotFocus" LostFocus="idBox_LostFocus"/>
+            <TextBox x:Name="variantBox" HorizontalAlignment="Left" Height="28" Margin="431,321,0,0" TextWrapping="Wrap" Text="Variant" VerticalAlignment="Top" Width="118" GotFocus="variantBox_GotFocus" LostFocus="variantBox_LostFocus"/>
+            <TextBox x:Name="subtypeBox" HorizontalAlignment="Left" Height="28" Margin="558,321,0,0" TextWrapping="Wrap" Text="Subtype" VerticalAlignment="Top" Width="117" GotFocus="subtypeBox_GotFocus" LostFocus="subtypeBox_LostFocus"/>
+            <Button Content="Go!" HorizontalAlignment="Left" Margin="437,390,0,0" VerticalAlignment="Top" Width="98" Click="Button_Click_3" Height="25"/>
+            <TextBox x:Name="xBox" HorizontalAlignment="Left" Height="29" Margin="365,355,0,0" TextWrapping="Wrap" Text="X Coordinate" VerticalAlignment="Top" Width="118" GotFocus="xBox_GotFocus" LostFocus="xBox_LostFocus"/>
+            <TextBox x:Name="yBox" HorizontalAlignment="Left" Height="29" Margin="489,355,0,0" TextWrapping="Wrap" Text="Y Coordinate" VerticalAlignment="Top" Width="118" GotFocus="yBox_GotFocus" LostFocus="yBox_LostFocus"/>
             <TextBox x:Name="itemIDBox" HorizontalAlignment="Left" Height="27" Margin="373,54,0,0" TextWrapping="Wrap" Text="Search ID" VerticalAlignment="Top" Width="69" TextChanged="itemIDBox_TextChanged" GotFocus="itemIDBox_GotFocus" LostFocus="itemIDBox_LostFocus"/>
+            <Label Content="Spawn Pill/Card" HorizontalAlignment="Left" Margin="296,164,0,0" VerticalAlignment="Top" Width="93"/>
+            <ComboBox x:Name="pcBox" ItemsSource="{Binding}" HorizontalAlignment="Left" Margin="394,164,0,0" VerticalAlignment="Top" Width="48" Height="26" SelectionChanged="pcBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Image Source="{Binding Image}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding}" x:Name="pcSelectBox" HorizontalAlignment="Left" Margin="448,164,0,0" VerticalAlignment="Top" Width="148" Height="26">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button x:Name="pcButton" Content="Go!" HorizontalAlignment="Left" Margin="603,164,0,0" VerticalAlignment="Top" Width="63" Height="26" Click="pcButton_Click"/>
         </Grid>
     </Grid>
 </Window>

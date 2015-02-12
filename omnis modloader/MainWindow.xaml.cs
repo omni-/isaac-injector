@@ -18,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace OML
 {
@@ -48,6 +50,10 @@ namespace OML
 
         private ObservableCollection<DisplayItem> ItemList = new ObservableCollection<DisplayItem>();
 
+        public List<Card> cardlist = new List<Card>();
+
+        public List<Card> pilllist = new List<Card>();
+
         public MainWindow()
         {
             AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -56,6 +62,15 @@ namespace OML
             Init();
             var list = new ObservableCollection<DisplayItem>(ItemList.OrderBy(x => x.Number));
             itemBox.ItemsSource = list;
+
+            pcBox.Items.Clear();
+            List<DisplayItem> tlist = new List<DisplayItem> { new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\card.png"))), "card", 0), 
+                                                              new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\pill.png"))), "pill", 0) };
+            pcBox.ItemsSource = tlist;
+            pcBox.SelectedIndex = 0;
+            
+            pcSelectBox.ItemsSource = cardlist;
+            pcSelectBox.SelectedIndex = 0;
         }
 
         public void Init()
@@ -84,6 +99,11 @@ namespace OML
                 string name = new string(temp.Skip(itr).ToArray()).Replace(".png", "");
                 ItemList.Add(new DisplayItem(image, name, result));
             }
+            XDocument xdoc = XDocument.Load("res\\xml\\pocketitems.xml");
+            foreach (var element in xdoc.Elements("pocketitems").Elements("card").Skip(1))
+                cardlist.Add(new Card(element.Attribute("name").Value, int.Parse(element.Attribute("id").Value)));
+            foreach (var element in xdoc.Elements("pocketitems").Elements("pilleffect"))
+                pilllist.Add(new Card(element.Attribute("name").Value, int.Parse(element.Attribute("id").Value)));
         }
         public void WriteLine(Level l, string text, params object[] args)
         {
@@ -307,7 +327,7 @@ namespace OML
             if (int.TryParse(itemIDBox.Text, out result))
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Number.ToString().StartsWith(itemIDBox.Text));
             else
-                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.StartsWith(itemIDBox.Text));
+                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.ToLower().StartsWith(itemIDBox.Text.ToLower()));
         }
 
         private void itemIDBox_GotFocus(object sender, RoutedEventArgs e)
@@ -356,6 +376,19 @@ namespace OML
             if (yBox.Text == "")
                 yBox.Text = "Y Coordinate";
         }
+
+        private void pcBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (pcBox.SelectedIndex == 0)
+                pcSelectBox.ItemsSource = cardlist;
+            else if (pcBox.SelectedIndex == 1)
+                pcSelectBox.ItemsSource = pilllist;
+        }
+
+        private void pcButton_Click(object sender, RoutedEventArgs e)
+        {
+            API.SpawnEntity(5, 300, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
+        }
     }
     public enum Level
     {
@@ -374,6 +407,17 @@ namespace OML
         Shotspeed,
         Range,
         Luck
+    }
+    public class Card
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
+
+        public Card(string name, int id)
+        {
+            Name = name;
+            Id = id;
+        }
     }
     public class DisplayItem : IComparable
     {
