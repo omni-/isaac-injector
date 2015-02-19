@@ -67,10 +67,14 @@ namespace OML
             List<DisplayItem> tlist = new List<DisplayItem> { new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\card.png"))), "card", 0), 
                                                               new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\pill.png"))), "pill", 0) };
             pcBox.ItemsSource = tlist;
-            pcBox.SelectedIndex = 0;
+            //pcBox.SelectedIndex = 0;
             
             pcSelectBox.ItemsSource = cardlist;
-            pcSelectBox.SelectedIndex = 0;
+            //pcSelectBox.SelectedIndex = 0;
+
+            //statBox.SelectedIndex = 0;
+            //itemBox.SelectedIndex = 0;
+            //jumpBox.SelectedIndex = 0;
         }
 
         public void Init()
@@ -102,8 +106,10 @@ namespace OML
             XDocument xdoc = XDocument.Load("res\\xml\\pocketitems.xml");
             foreach (var element in xdoc.Elements("pocketitems").Elements("card").Skip(1))
                 cardlist.Add(new Card(element.Attribute("name").Value, int.Parse(element.Attribute("id").Value)));
-            foreach (var element in xdoc.Elements("pocketitems").Elements("pilleffect"))
-                pilllist.Add(new Card(element.Attribute("name").Value, int.Parse(element.Attribute("id").Value)));
+            xdoc = XDocument.Load("res\\xml\\entities2.xml");
+            var collection = xdoc.Elements("entities").Elements("entity");
+            foreach (var element in collection.Where(x => x.Attribute("name").Value.StartsWith("Pill ")))
+                pilllist.Add(new Card(element.Attribute("name").Value.Replace("Pill ", ""), int.Parse(element.Attribute("subtype").Value)));
         }
         public void WriteLine(Level l, string text, params object[] args)
         {
@@ -387,7 +393,10 @@ namespace OML
 
         private void pcButton_Click(object sender, RoutedEventArgs e)
         {
-            API.SpawnEntity(5, 300, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
+            if (((DisplayItem)pcBox.SelectedItem).Name == "card")
+                API.SpawnEntity(5, 300, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
+            else if (((DisplayItem)pcBox.SelectedItem).Name == "pill")
+                API.SpawnEntity(5, 70, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
         }
     }
     public enum Level
