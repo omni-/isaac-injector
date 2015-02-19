@@ -61,14 +61,14 @@ struct AddCollectibleEvent_Notification
 {
 	int eventID = PLAYER_EVENT_ADDCOLLECTIBLE;
 	void* playerHandle;
-	int a2;
 	int itemID;
+	int charges;
 	int a4;
 
-	AddCollectibleEvent_Notification(void* _player, int _a2, int _itemID, int _a4)
+	AddCollectibleEvent_Notification(void* _player, int _itemID, int _charges, int _a4)
 	{
 		playerHandle = _player;
-		a2 = _a2;
+		charges = _charges;
 		itemID = _itemID;
 		a4 = _a4;
 	}

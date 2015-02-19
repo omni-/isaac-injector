@@ -47,7 +47,7 @@ namespace OML
         {
             if(eOnEntitySpawn != null)
             {
-                OnEntitySpawnEventArgs e = new OnEntitySpawnEventArgs(velocity, position, entityID, var, subtype, parent);
+                OnEntitySpawnEventArgs e = new OnEntitySpawnEventArgs(velocity, position, entityID, variant, subtype, parent);
                 eOnEntitySpawn(this, e);
             }
         }

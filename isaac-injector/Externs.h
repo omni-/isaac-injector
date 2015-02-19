@@ -13,6 +13,11 @@ struct DebugStruct
 	int unknown[40];
 };
 
+struct DebugStructF
+{
+	float unknown[40];
+};
+
 #pragma pack(1)
 struct PointF
 {
@@ -66,8 +71,8 @@ struct Player : Entity
 	/*[0x0BE8]*/            char _unk0BE8[0x4];
 	/*[0x0BEC]*/            int _ntearsfired;
 	/*[0x0BF0]*/            float _damage;
-	/*[0x0BF4]*/            char _unk0BF4[0x4];
-	/*[0x0BF8]*/            float _range;
+	/*[0x0BF4]*/            float _range;
+	/*[0x0BF8]*/            float _tearheight;
 	/*[0x0BFC]*/            char _unk0BFC[0xB8];
 	/*[0x0CB4]*/            float _speed;
 	/*[0x0CB8]*/            float _luck;
@@ -213,7 +218,7 @@ struct RoomEntities
 };
 
 #pragma pack(1)
-struct RoomInfo
+struct STB_RoomInfo
 {
 	int flags; // 101 (5) = Map + Compass, 111 = map + compass + blue map ?
 	int type;
@@ -233,13 +238,13 @@ struct RoomInfo
 	DebugStruct* unknown9;
 	// 
 	int unknown10;
-	int unknown11;
+//	int unknown11;
 };
 
 #pragma pack(1)
 struct Room
 {
-	RoomInfo* info;
+	STB_RoomInfo* info;
 	// ?
 	int unknown1;
 	// rooms
@@ -301,6 +306,49 @@ struct Room
 // d0061D214 this is the current level structure
 
 #pragma pack(1)
+struct CurrRoomInfoEx
+{
+	int unknown1;
+	int unknown2;
+	STB_RoomInfo* stb_roomInfo;
+
+	int unknown[30];
+};
+
+#pragma pack(1)
+struct CurrRoomInfo
+{
+	int unknown;
+	CurrRoomInfoEx* currRoomInfo;
+	int roomType;
+	int roomWidth;
+	int roomHeight;
+	float unknown2;
+	float unknown3;
+	float unknown4;
+	float unknown5; 
+	int unknown6[941]; // 943
+	Entity** entityArray;
+	int kram;
+	int entityCount;
+};
+
+#pragma pack(1)
+struct CurrRoom
+{
+	CurrRoomInfo* info;
+	int roomID;
+	int nextRoomID; // always 84, teleports to the next room in walking direction or back one room if already at a dead end
+	int unknown1;
+	int fromDoor;
+	int toDoor;
+	float width;
+	float height;
+
+	int unknown[20];
+};
+
+#pragma pack(1)
 struct PlayerManager
 {
 	int _floorNo;
@@ -312,10 +360,11 @@ struct PlayerManager
 	char unknown3[0x0A];
 	Room _rooms[41]; // unknown size.. 41
 	char unknown31[0x2D]; 
-	char unknown4[0x4197];
-	int _roomCount; 
-	char unknown5[0x1074];
-	Item* _items[346];
+	char unknown4[0x3EF3];
+	void* _rooms2[169];
+	int _roomCount;
+	char unknown6[0x2C];
+	CurrRoom _currRoom;
 	// f23936 = floor Seed
 	// f23920 = current seed
 };

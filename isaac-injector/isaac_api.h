@@ -55,19 +55,24 @@ PlayerManager* API_GetPlayerManager();
 void API_HPUp(Player* player, int amount);
 void API_AddSoulHearts(Player* player, int amount);
 void API_AddBlackHearts(Player* player, int amount);
-
-
-// game
-void API_GotoFloor(unsigned int floorNo);
+void API_GiveEternalHeart(Player* player);
 
 // player
 void API_AddCollectible(Player* player, int itemID);
 int API_TeleportPlayer(int roomID);
 bool API_PlayerHasItem(Player* player, int itemID);
 
+// game
+void API_GotoFloor(unsigned int floorNo);
+void API_UpdateRoom();
+
+void API_ChangePickupEntity(Entity* entity, int newID, int newVariant, int newSubtype, BOOL stuff);
+
 // spawning
 TearInfo* API_InitTear(int value, TearInfo* tear);
 void API_ShootTears(PointF* pos, PointF* velocity, int pattern, TearInfo* tear, Entity* source);
+void API_PoisonCloud(Entity* source, PointF* position, float damage);
+void API_SpawnBlueFlies(Entity* owner, PointF* position, int amount);
 
 Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y, Entity* parent);
 
@@ -79,6 +84,8 @@ void API_CharmEntity(Entity* entity, int duration);
 
 // effects
 void API_Effect_GoodPill(Player* player);
+void API_Effect_BadPill(Player* player);
 
 // misc
 char* API_getItemName(int itemID);
+bool API_IsEnemy(Entity* entity);

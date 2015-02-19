@@ -39,8 +39,8 @@ extern void* GotoFloorEvent_Original;
 using IsaacRandomFuncType = unsigned int __cdecl(void);
 extern IsaacRandomFuncType* IsaacRandomFunc;
 
-using GoodPillEffectFuncType = int __stdcall(Player*);
-extern GoodPillEffectFuncType* GoodPillEffectFunc;
+extern void* GoodPillEffectFunc;
+extern void* BadPillEffectFunc;
 
 using InitTearFuncType = TearInfo* __cdecl (int, TearInfo*);
 extern InitTearFuncType* InitTearFunc;
@@ -48,8 +48,18 @@ extern InitTearFuncType* InitTearFunc;
 using Player_TeleportFuncType = void (void);
 extern Player_TeleportFuncType* Player_TeleportFunc;
 
+extern void* Player_GiveEternalHeartFunc;
 
 extern void* Game_FreezeEntityFunc;
 extern void* Game_FearEntityFunc;
 extern void* Game_ConfuseEntityFunc;
 extern void* Game_CharmEntityFunc;
+
+extern void* Game_ChangePickupEntityFunc;
+
+extern void* Game_UpdateRoomFunc;
+
+extern void* Game_PoisonCloudFunc;
+extern void* Game_IsEnemyFunc;
+
+extern void* Game_SpawnBlueFliesFunc;

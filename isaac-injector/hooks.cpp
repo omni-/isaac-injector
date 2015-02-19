@@ -69,10 +69,6 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-	//API_SpawnEntity(5,100,-1,3,1,NULL);
-	//API_AddBlackHearts(player, 3);
-	//API_SpawnEntity(5,100,-2,4,1,NULL);
-
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
 
@@ -117,11 +113,6 @@ void* AddCollectibleEvent_Original;
 
 void __cdecl AddCollectibleEvent_Payload(Player* player, int itemid, int charges, int a4)
 {
-	//if (itemid == -1)
-	//	API_AddSoulHearts(player, 4);
-	//if (itemid == -2)
-	//	player->_damage = 30;
-
 	AddCollectibleEvent_Notification notification(player, itemid, charges, a4);
 	AddCollectibleEvent_Response response;
 	
@@ -352,13 +343,8 @@ void __cdecl CollideWithEntityEvent_Payload(Entity* collisionEntity, Player* pla
 		{
 			Item* tmpItem = custom_items[collisionEntity->_realItemID];
 			itemStorageArray->items[235] = tmpItem;
-			//MessageBoxA(NULL, std::to_string(collisionEntity->_realItemID).c_str(), NULL, NULL);
-			AddCollectibleEvent_Notification notification(player, collisionEntity->_realItemID, collisionEntity->_realItemID, collisionEntity->_realItemID);
-			AddCollectibleEvent_Response response;
 
-			IPC_BeginEvent(&notification, sizeof(AddCollectibleEvent_Notification));
-			IPC_ProcessEvent();
-			IPC_EndEvent(&response, sizeof(AddCollectibleEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+		//	MessageBoxA(NULL, std::to_string(collisionEntity->_realItemID).c_str(), NULL, NULL);
 		}
 	}
 }
@@ -566,37 +552,36 @@ __declspec(naked) void PlayerUpdateEvent_Hook()
 *********** PlayerHitsEnemyEvent **********
 *******************************************/
 
-void* PlayerHitsEnemyEvent_Original;
+void* PlayerGetHitEvent_Original;
 
-void __cdecl PlayerHitsEnemyEvent_Payload(Player* player, Entity* enemy, int a3)
+void __cdecl PlayerGetHitEvent_Payload(int a1, int a2, float damage, int a4, Entity* sourceEntity, Player* player)
 {
-
-	ofstream stream = ofstream("log.txt", ios_base::app);
-	stream << sprintf("playerName: %s, enemyID=%d\n", player->_charname, enemy->_id) << endl;
-
-	PlayerHitsEnemy_Notification notification(player, enemy);
-	PlayerHitsEnemy_Response response;
-
-	IPC_BeginEvent(&notification, sizeof(PlayerHitsEnemy_Notification));
-	IPC_ProcessEvent();
-	IPC_EndEvent(&response, sizeof(PlayerHitsEnemy_Response), IPC_EVENT_DEFAULT_TIMEOUT);
+	//FILE* f;
+	//fopen_s(&f, "C:\\PlayerGetHitEvent_Payload.txt", "a+");
+	//	fprintf(f, "a1: %d, a2: %d, damage: %f, a4: %d, sourceEntity.ID: %p, a6: %s\n", a1, a2, damage, a4, sourceEntity->_id, player->_charname);
+	//	for (int i=0; i < 20; i++)
+	//		fprintf(f, "Bla[%d]=%d\n", i, ((DebugStruct*)sourceEntity)->unknown[i]);
+	//fclose(f);
 }
 
-__declspec(naked) void PlayerHitsEnemyEvent_Hook()
+__declspec(naked) void PlayerGetHitEvent_Hook()
 {
 	_asm
 	{
 		push ebp
 		mov ebp, esp
 			push ecx
+			push edx
+				push dword ptr[ebp+0x14]
+				push dword ptr[ebp+0x10]
 				push dword ptr[ebp+0x0C]
 				push dword ptr[ebp+0x08]
-				push ecx
-					call PlayerHitsEnemyEvent_Payload
-				add esp, 12
+					call PlayerGetHitEvent_Payload
+				add esp, 16
+			pop edx
 			pop ecx
 		pop ebp
-		jmp PlayerHitsEnemyEvent_Original
+		jmp PlayerGetHitEvent_Original
 	}
 }
 
@@ -735,15 +720,28 @@ __declspec(naked) void GotoFloorEvent_Hook()
 *************** Functions *****************
 *******************************************/
 
-GoodPillEffectFuncType* GoodPillEffectFunc;
+void* GoodPillEffectFunc;
+void* BadPillEffectFunc;
 IsaacRandomFuncType* IsaacRandomFunc;
 InitTearFuncType* InitTearFunc;
+
+
 Player_TeleportFuncType* Player_TeleportFunc;
+void* Player_GiveEternalHeartFunc;
+
 void* Game_FreezeEntityFunc;
 void* Game_FearEntityFunc;
 void* Game_ConfuseEntityFunc;
 void* Game_CharmEntityFunc;
 
+void* Game_UpdateRoomFunc;
+
+void* Game_ChangePickupEntityFunc;
+
+void* Game_PoisonCloudFunc;
+void* Game_SpawnBlueFliesFunc;
+
+void* Game_IsEnemyFunc;
 
 /******************************************
 ************** Initialization *************
@@ -803,10 +801,6 @@ void Hooks_HookEvents()
 	void* AddBlackHeartsEvent_SigPtr = SigScan_FindSignature(&Signature_AddBlackHeartsEvent);
 	AddBlackHeartsEvent_Original = DetourFunction(PBYTE(AddBlackHeartsEvent_SigPtr), PBYTE(AddBlackHeartsEvent_Hook));
 
-	// PlayerHitsEnemyEvent
-	void* PlayerHitsEnemyEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerHitsEnemyEvent);
-	PlayerHitsEnemyEvent_Original = DetourFunction(PBYTE(PlayerHitsEnemyEvent_SigPtr), PBYTE(PlayerHitsEnemyEvent_Hook));
-
 	// StoreItemStructEvent
 	void* StoreItemStructEvent_SigPtr = SigScan_FindSignature(&Signature_StoreItemStructEvent);
 	StoreItemStructEvent_Original = DetourFunction(PBYTE(StoreItemStructEvent_SigPtr), PBYTE(StoreItemStructEvent_Hook));
@@ -814,6 +808,10 @@ void Hooks_HookEvents()
 	// PickupItemEvent
 	void* CollideWithEntityEvent_SigPtr = SigScan_FindSignature(&Signature_CollideWithEntityEvent);
 	CollideWithEntityEvent_Original = DetourFunction(PBYTE(CollideWithEntityEvent_SigPtr), PBYTE(CollideWithEntityEvent_Hook));
+
+	// PlayerGetHitEvent
+	void* PlayerGetHitEvent_SigPtr = SigScan_FindSignature(&Signature_PlayerGetHitEvent);
+	PlayerGetHitEvent_Original = DetourFunction(PBYTE(PlayerGetHitEvent_SigPtr), PBYTE(PlayerGetHitEvent_Hook));
 
 	//ofstream stream = ofstream("log.txt", ios_base::app);
 	//stream << "card: " << UseCardEvent_SigPtr << endl;
@@ -860,16 +858,27 @@ void Hooks_GetFunctions()
 	InitTearFunc = (InitTearFuncType*)SigScan_FindSignature(&Signature_InitTearFunc);
 
 	// effects
-	GoodPillEffectFunc = (GoodPillEffectFuncType*)SigScan_FindSignature(&Signature_GoodPillEffectFunc);
+	GoodPillEffectFunc = SigScan_FindSignature(&Signature_GoodPillEffectFunc);
+	BadPillEffectFunc = SigScan_FindSignature(&Signature_BadPillEffectFunc);
 
 	// player functions
 	Player_TeleportFunc = (Player_TeleportFuncType*)SigScan_FindSignature(&Signature_PlayerTeleportEvent);  // could/should be hooked, too
+	Player_GiveEternalHeartFunc = SigScan_FindSignature(&Signature_GiveEternalHeartFunc);
 
 	// Status effects
 	Game_FreezeEntityFunc = SigScan_FindSignature(&Signature_FreezeEntity); 
 	Game_FearEntityFunc = SigScan_FindSignature(&Signature_FearEntity); 
 	Game_ConfuseEntityFunc = SigScan_FindSignature(&Signature_ConfuseEntity);
 	Game_CharmEntityFunc = SigScan_FindSignature(&Signature_CharmEntity);
+
+	Game_ChangePickupEntityFunc = SigScan_FindSignature(&Signature_ChangePickupEntityFunc);
+
+	Game_UpdateRoomFunc = SigScan_FindSignature(&Signature_UpdateRoomFunc);
+
+	Game_PoisonCloudFunc = SigScan_FindSignature(&Signature_PoisonCloudFunc);
+	Game_IsEnemyFunc = SigScan_FindSignature(&Signature_IsEnemyFunc);
+
+	Game_SpawnBlueFliesFunc = SigScan_FindSignature(&Signature_SpawnBlueFliesFunc);
 }
 
 DWORD** PlayerManagerPtr;

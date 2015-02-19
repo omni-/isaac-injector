@@ -70,8 +70,8 @@ namespace OML
     {
         public int eventID;
         public IntPtr playerHandle;
-        public int a2;
         public int itemID;
+        public int charges;
         public int a4;
 
         public static int size()

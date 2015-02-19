@@ -84,7 +84,7 @@ namespace OML
         public virtual void OnEnemyContact(Player p, Entity enemy)
         {
         }
-        public virtual void OnPlayerAddCollectible(Player player, int a2, int id, int a4)
+        public virtual void OnPlayerAddCollectible(Player player, int itemID, int charges, int a4)
         {
         }
         public virtual void OnEntitySpawn(PointF velocity, PointF position, int entityID, int variant, int subtype, Entity parent)
@@ -128,6 +128,9 @@ namespace OML
         {
         }
         public virtual void OnPlayerUpdate(Player player)
+        {
+        }
+        public virtual void OnPickup(Player player)
         {
         }
     }

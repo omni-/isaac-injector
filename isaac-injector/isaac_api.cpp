@@ -8,6 +8,70 @@ PlayerManager* API_GetPlayerManager()
 	return Hooks_GetPlayerManager();
 }
 
+void API_UpdateRoom()
+{
+	PlayerManager* pman = API_GetPlayerManager();
+	_asm
+	{
+		push pman
+		call Game_UpdateRoomFunc
+	}
+}
+
+void API_ChangePickupEntity(Entity* entity, int newID, int newVariant, int newSubtype, BOOL stuff)
+{
+	_asm
+	{
+		push stuff
+		push newSubtype
+		push newVariant
+		push newID
+		mov ebx, entity
+		call Game_ChangePickupEntityFunc
+	}
+}
+
+bool API_IsEnemy(Entity* entity)
+{
+	_asm
+	{
+		mov eax, entity
+		call Game_IsEnemyFunc
+	}
+}
+
+void API_SpawnBlueFlies(Entity* owner, PointF* position, int amount)
+{
+	_asm
+	{
+		mov eax, position
+		mov ecx, amount
+		mov edi, NULL     // some other entity, can be NULL
+		push owner
+		call Game_SpawnBlueFliesFunc
+	}
+}
+
+void API_PoisonCloud(Entity* source, PointF* position, float damage)
+{
+	_asm
+	{
+		push damage
+		push position
+		mov ecx, source
+		call Game_PoisonCloudFunc
+	}
+}
+
+void API_GiveEternalHeart(Player* player)
+{
+	_asm
+	{
+		mov esi, player
+		call Player_GiveEternalHeartFunc
+	}
+}
+
 void API_GotoFloor(unsigned int floorNo)
 {
 	PlayerManager* pman = API_GetPlayerManager();
@@ -24,7 +88,22 @@ void API_GotoFloor(unsigned int floorNo)
 
 void API_Effect_GoodPill(Player* player)
 {
-	GoodPillEffectFunc(player);
+	_asm
+	{
+		mov ebx, player
+		mov ecx, 1234 // some kind of seed ?
+		call GoodPillEffectFunc
+	}
+}
+
+void API_Effect_BadPill(Player* player)
+{
+	_asm
+	{
+		mov ebx, player
+		mov ecx, 1234 // some kind of seed ?
+		call BadPillEffectFunc
+	}
 }
 
 void API_HPUp(Player* player, int amount)
@@ -146,14 +225,14 @@ Entity* API_SpawnEntity(int entityID, int variant, int subtype, float x, float y
 int API_TeleportPlayer(int roomID)
 {
 	PlayerManager* playerMan = Hooks_GetPlayerManager();
-	void* roomManager = (void*)((int)playerMan+33088);  // I actually don't know this yet
-
+	void* roomManager = (void*)((int)playerMan+30420);  // I actually don't know this yet
+	
 	_asm
 	{
 		mov eax, 3
-		mov edx, roomID
+		mov edi, -1
+		mov ecx, roomID
 		mov esi, roomManager
-		push -1
 		call Player_TeleportFunc
 	}
 }

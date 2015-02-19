@@ -69,8 +69,8 @@ namespace OML
                 mw.WriteLine(Level.Info, "Connected.");
 
                 //create items
-                foreach (Item i in items)
-                    API.AddCustomItem(i.id);
+               // foreach (Item i in items)
+               //     API.AddCustomItem(i.id);
 
                 // Peek named pipe arguments
                 byte[] eventID = new byte[1];
@@ -93,7 +93,6 @@ namespace OML
                                     if (bytesLeft + 1 == TakePillEvent_Notification.size())
                                     {
                                         // Receive event
-
                                         TakePillEvent_Notification notification = RawDeserialize<TakePillEvent_Notification>(ServerIn.ReadBytes(TakePillEvent_Notification.size()), 0);
 
                                         Player player = new Player(notification.playerHandle);
@@ -136,10 +135,16 @@ namespace OML
 
                                         foreach (OMLPlugin p in plugins)
                                         {
-                                            p.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
-                                            foreach(Item i in p.CustomItemList)
-                                                if (hasCustomItem[i.id])
-                                                    i.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
+                                            p.OnPlayerAddCollectible(player, notification.itemID, notification.charges, notification.a4);
+                                            foreach (Item i in p.CustomItemList)
+                                            {
+                                                mw.WriteLine(Level.Info, "OnPlayerAddCollectible: i.id = " + i.id + " (" + notification.itemID + " )");
+                                                if (i.id == notification.itemID)
+                                                    i.OnPickup(player);
+                                                //else
+                                                //if (hasCustomItem[i.id])
+                                                //    i.OnPlayerAddCollectible(player, notification.a2, notification.itemID, notification.a4);
+                                            }
                                         }
 
                                         new API_EndCall(_OML.Connection).Call();
