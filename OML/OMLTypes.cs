@@ -81,7 +81,7 @@ namespace OML
         public virtual void OnPlayerMove(Player p)
         {
         }
-        public virtual void OnEnemyContact(Player p, Entity enemy)
+        public virtual void OnEnemyContact(/*int a1, int a2, float damage, int a4, Entity sourceEntity,*/ Player player)
         {
         }
         public virtual void OnPlayerAddCollectible(Player player, int itemID, int charges, int a4)

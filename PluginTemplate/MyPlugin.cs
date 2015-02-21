@@ -16,7 +16,7 @@ namespace PluginTemplate
             PluginVersion = "1.1";
             PluginAuthor = "omni";
             Item item = new TheSun();
-            item.Name = "The Sun (2)";
+            item.Name = "The Sun";
             item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\sun.png", "sun.png");
             item.Type = ItemType.passive;
             item.Pool = ItemPool.treasure;
@@ -54,25 +54,25 @@ namespace PluginTemplate
     
     public class TheSun : Item
     {
-        public override void OnEnemyContact(Player p, Entity enemy)
+        public override void OnEnemyContact(/*int a1, int a2, float damage, int a4, Entity enemy,*/ Player p)
         {
             p.Keys++;
-            base.OnEnemyContact(p, enemy);
+            base.OnEnemyContact(/*a1, a2, damage, a4, enemy,*/ p);
         }
 
         public override void OnPickup(Player player)
         {
-            player.Keys = player.Keys + 11;
+            player.Keys += 11;
             base.OnPickup(player);
         }
     }
 
     public class TheMoon : Item
     {
-        public override void OnEnemyContact(Player p, Entity enemy)
+        public override void OnEnemyContact(/*int a1, int a2, float damage, int a4, Entity enemy,*/ Player p)
         {
             p.Bombs++;
-            base.OnEnemyContact(p, enemy);
+            base.OnEnemyContact(/*a1, a2, damage, a4, enemy,*/ p);
         }
     }
 }

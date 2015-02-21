@@ -562,6 +562,13 @@ void __cdecl PlayerGetHitEvent_Payload(int a1, int a2, float damage, int a4, Ent
 	//	for (int i=0; i < 20; i++)
 	//		fprintf(f, "Bla[%d]=%d\n", i, ((DebugStruct*)sourceEntity)->unknown[i]);
 	//fclose(f);
+
+	PlayerGetsHit_Notification notification(a1, a2, damage, a4, sourceEntity, player);
+	PlayerUpdateEvent_Response response;
+
+	IPC_BeginEvent(&notification, sizeof(PlayerUpdateEvent_Notification));
+	IPC_ProcessEvent();
+	IPC_EndEvent(&response, sizeof(PlayerUpdateEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
 }
 
 __declspec(naked) void PlayerGetHitEvent_Hook()

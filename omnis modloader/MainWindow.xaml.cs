@@ -54,27 +54,26 @@ namespace OML
 
         public List<Card> pilllist = new List<Card>();
 
+        public List<DisplayItem> pickuplist = new List<DisplayItem>();
+
         public MainWindow()
         {
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(AppDomainException);
             InitializeComponent();
             Init();
-            var list = new ObservableCollection<DisplayItem>(ItemList.OrderBy(x => x.Number));
+            var list = new ObservableCollection<DisplayItem>(ItemList.OrderBy(x => x.ID));
             itemBox.ItemsSource = list;
 
             pcBox.Items.Clear();
             List<DisplayItem> tlist = new List<DisplayItem> { new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\card.png"))), "card", 0), 
                                                               new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath("res\\pillcard\\pill.png"))), "pill", 0) };
             pcBox.ItemsSource = tlist;
-            //pcBox.SelectedIndex = 0;
             
             pcSelectBox.ItemsSource = cardlist;
-            //pcSelectBox.SelectedIndex = 0;
 
-            //statBox.SelectedIndex = 0;
-            //itemBox.SelectedIndex = 0;
-            //jumpBox.SelectedIndex = 0;
+            spBox.ItemsSource = pickuplist;
+
         }
 
         public void Init()
@@ -110,6 +109,13 @@ namespace OML
             var collection = xdoc.Elements("entities").Elements("entity");
             foreach (var element in collection.Where(x => x.Attribute("name").Value.StartsWith("Pill ")))
                 pilllist.Add(new Card(element.Attribute("name").Value.Replace("Pill ", ""), int.Parse(element.Attribute("subtype").Value)));
+            foreach(string file in Directory.GetFiles("res\\pickups", "*.png"))
+            {
+                string[] namesplit = file.Split(new char[] { ' ' }, 3);
+                namesplit[0] = namesplit[0].Replace("res\\pickups\\", "");
+                int[] myInts = Array.ConvertAll(namesplit[0].Split('.'), int.Parse);
+                pickuplist.Add(new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath(file))), namesplit[2].Replace(".png", ""), myInts[0], myInts[1], myInts[2]));
+            }
         }
         public void WriteLine(Level l, string text, params object[] args)
         {
@@ -203,7 +209,7 @@ namespace OML
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (itemBox.SelectedItem != null)
-                h.commandQueue.Enqueue(new Command(Wrappers.SpawnItem_Wrapper, new object[] { new Player(IntPtr.Zero), ((DisplayItem)itemBox.SelectedItem).Number }));
+                h.commandQueue.Enqueue(new Command(Wrappers.SpawnItem_Wrapper, new object[] { new Player(IntPtr.Zero), ((DisplayItem)itemBox.SelectedItem).ID }));
             int result = 0;
             if (int.TryParse(itemIDBox.Text, out result))
                 h.commandQueue.Enqueue(new Command(Wrappers.SpawnItem_Wrapper, new object[] { new Player(IntPtr.Zero), result }));
@@ -331,7 +337,7 @@ namespace OML
         {
             int result = 0;
             if (int.TryParse(itemIDBox.Text, out result))
-                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Number.ToString().StartsWith(itemIDBox.Text));
+                itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.ID.ToString().StartsWith(itemIDBox.Text));
             else
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.ToLower().StartsWith(itemIDBox.Text.ToLower()));
         }
@@ -398,6 +404,15 @@ namespace OML
             else if (((DisplayItem)pcBox.SelectedItem).Name == "pill")
                 API.SpawnEntity(5, 70, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
         }
+
+        private void spButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (spBox.SelectedItem != null)
+            {
+                DisplayItem item = (DisplayItem)spBox.SelectedItem;
+                API.SpawnEntity(item.ID, item.Variant, item.Subtype, 1, 1);
+            }
+        }
     }
     public enum Level
     {
@@ -432,19 +447,29 @@ namespace OML
     {
         public BitmapImage Image { get; set; }
         public string Name { get; set; }
-        public int Number { get; set; }
+        public int ID { get; set; }
+        public int Variant { get; set; }
+        public int Subtype { get; set; }
         public DisplayItem(BitmapImage image, string name, int number)
         {
             Image = image;
             Name = name;
-            Number = number;
+            ID = number;
+        }
+        public DisplayItem(BitmapImage image, string name, int number, int variant, int subtype)
+        {
+            Image = image;
+            Name = name;
+            ID = number;
+            Variant = variant;
+            Subtype = subtype;
         }
         int IComparable.CompareTo(object obj)
         {
             DisplayItem d = (DisplayItem)obj;
-            if (Number > d.Number)
+            if (ID > d.ID)
                 return 1;
-            if (Number < d.Number)
+            if (ID < d.ID)
                 return -1;
             else
                 return 0;

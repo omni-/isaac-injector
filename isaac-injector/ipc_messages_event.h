@@ -288,21 +288,29 @@ struct GotoFloorEvent_Response
 };
 
 #pragma pack (1)
-struct PlayerHitsEnemy_Notification
+struct PlayerGetsHit_Notification
 {
 	int eventID = PLAYER_EVENT_HITBYENEMY;
 	void* player;
 	void* enemy;
+	//int a1;
+	//int a2;
+	//float damage;
+	//int a4;
 
-	PlayerHitsEnemy_Notification(void* _player, void* _enemy)
+	PlayerGetsHit_Notification(int _a1, int _a2, float _damage, int _a4, void* _sourceEntity, void* _player)
 	{
 		player = _player;
-		enemy = _enemy;
+		enemy = _sourceEntity;
+		//a1 = _a1;
+		//a2 = _a2;
+		//damage = _damage;
+		//a4 = _a4;
 	}
 };
 
 #pragma pack (1)
-struct PlayerHitsEnemy_Response
+struct PlayerGetsHit_Response
 {
 	int eventID = PLAYER_EVENT_HITBYENEMY;
 };

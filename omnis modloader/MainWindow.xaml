@@ -79,6 +79,35 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <Button x:Name="pcButton" Content="Go!" HorizontalAlignment="Left" Margin="603,164,0,0" VerticalAlignment="Top" Width="63" Height="26" Click="pcButton_Click"/>
+            <Label Content="Spawn pickup:" HorizontalAlignment="Left" Margin="296,195,0,0" VerticalAlignment="Top" Width="93"/>
+            <Button x:Name="spButton" Content="Go!" HorizontalAlignment="Left" Margin="603,197,0,0" VerticalAlignment="Top" Width="63" Height="26" Click="spButton_Click"/>
+            <ComboBox x:Name="spBox" HorizontalAlignment="Left" Margin="448,197,0,0" VerticalAlignment="Top" Width="148" Height="26">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}"/>
+                            <Image Source="{Binding Image}">
+
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ComboBoxItem}, Path=IsSelected}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+
+                            </Image>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
     </Grid>
 </Window>

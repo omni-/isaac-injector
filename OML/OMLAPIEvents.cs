@@ -343,21 +343,26 @@ public struct GotoFloorEvent_Response
 
 [Serializable()]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public struct PlayerHitsEnemy_Notification
+public struct PlayerGetsHit_Notification
 {
     public int eventID;
     public IntPtr player;
-    public IntPtr entity;
+    //public IntPtr enemy;
+    //public int a1;
+    //public int a2;
+    //public float damage;
+    //public int a4;
 
     public static int size()
     {
-        return Marshal.SizeOf(typeof(PlayerHitsEnemy_Notification));
+        int x = Marshal.SizeOf(typeof(PlayerGetsHit_Notification));
+        return x;
     }
 }
 
 [Serializable()]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public struct PlayerHitsEnemy_Response
+public struct PlayerGetsHit_Response
 {
     public int eventID;
 }

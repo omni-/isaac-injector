@@ -471,24 +471,24 @@ namespace OML
                                         mw.WriteLine(Level.Warning, "GAME_EVENT_GOTOFLOOR: expected " + GotoFloorEvent_Response.size().ToString() + " bytes, received: " + (bytesLeft + 1).ToString() + " bytes");
                                     break;
                                 case _OML.PLAYER_EVENT_HITBYENEMY:
-                                    if (bytesLeft + 1 == GotoFloorEvent_Notification.size())
+                                    if (bytesLeft + 1 == PlayerGetsHit_Notification.size())
                                     {
-                                        PlayerHitsEnemy_Notification notification = RawDeserialize<PlayerHitsEnemy_Notification>(ServerIn.ReadBytes(PlayerHitsEnemy_Notification.size()), 0);
+                                        PlayerGetsHit_Notification notification = RawDeserialize<PlayerGetsHit_Notification>(ServerIn.ReadBytes(PlayerGetsHit_Notification.size()), 0);
 
                                         Player pl = new Player(notification.player);
-                                        Entity e = new Entity(notification.entity);
-
+                                        //Entity e = new Entity(notification.enemy);
+                                        
 
                                         foreach(OMLPlugin p in plugins)
                                             foreach (Item i in p.CustomItemList)
                                                 if (hasCustomItem[i.id])
-                                                    i.OnEnemyContact(pl, e);
+                                                    i.OnEnemyContact(/*notification.a1, notification.a2, notification.damage, notification.a4, e,*/ pl);
 
                                         new API_EndCall(_OML.Connection).Call();
 
                                         server.Flush();
 
-                                        PlayerHitsEnemy_Response response;
+                                        PlayerGetsHit_Response response;
                                         response.eventID = _OML.PLAYER_EVENT_HITBYENEMY;
 
                                         ServerOut.Write(RawSerialize(response));
