@@ -1,17 +1,17 @@
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\omnis modloader.exe.config
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\omnis modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\omnis modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.dll
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.pdb
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.csprojResolveAssemblyReference.cache
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\MainWindow.baml
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.baml
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\MainWindow.g.cs
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.g.cs
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\App.g.cs
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader_MarkupCompile.cache
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.g.resources
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\OML.Properties.Resources.resources
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.csproj.GenerateResource.Cache
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\omnis modloader.exe
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\omnis modloader.pdb
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.dll
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Debug\OML.pdb
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.exe
 C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\omnis modloader.pdb
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.baml
-C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Debug\PopupWindow.g.cs

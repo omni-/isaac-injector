@@ -48,13 +48,17 @@ namespace OML
 
         public Handler h;
 
-        private ObservableCollection<DisplayItem> ItemList = new ObservableCollection<DisplayItem>();
+        public ObservableCollection<DisplayItem> ItemList = new ObservableCollection<DisplayItem>();
+
+        public ObservableCollection<DisplayItem> enemylist = new ObservableCollection<DisplayItem>();
+
+        public List<DisplayItem> pickuplist = new List<DisplayItem>();
+
+        public List<DisplayItem> otherlist = new List<DisplayItem>();
 
         public List<Card> cardlist = new List<Card>();
 
         public List<Card> pilllist = new List<Card>();
-
-        public List<DisplayItem> pickuplist = new List<DisplayItem>();
 
         public MainWindow()
         {
@@ -74,6 +78,9 @@ namespace OML
 
             spBox.ItemsSource = pickuplist;
 
+            enemyBox.ItemsSource = enemylist;
+
+            otherBox.ItemsSource = otherlist;
         }
 
         public void Init()
@@ -115,6 +122,20 @@ namespace OML
                 namesplit[0] = namesplit[0].Replace("res\\pickups\\", "");
                 int[] myInts = Array.ConvertAll(namesplit[0].Split('.'), int.Parse);
                 pickuplist.Add(new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath(file))), namesplit[2].Replace(".png", ""), myInts[0], myInts[1], myInts[2]));
+            }
+            foreach (string file in Directory.GetFiles("res\\other", "*.png"))
+            {
+                string[] namesplit = file.Split(new char[] { ' ' }, 3);
+                namesplit[0] = namesplit[0].Replace("res\\other\\", "");
+                int[] myInts = Array.ConvertAll(namesplit[0].Split('.'), int.Parse);
+                otherlist.Add(new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath(file))), namesplit[2].Replace(".png", ""), myInts[0], myInts[1], myInts[2]));
+            }
+            foreach (string file in Directory.GetFiles("res\\enemy", "*.png"))
+            {
+                string[] namesplit = file.Split(new char[] { ' ' }, 3);
+                namesplit[0] = namesplit[0].Replace("res\\enemy\\", "");
+                int[] myInts = Array.ConvertAll(namesplit[0].Split('.'), int.Parse);
+                enemylist.Add(new DisplayItem(new BitmapImage(new Uri(System.IO.Path.GetFullPath(file))), namesplit[2].Replace(".png", ""), myInts[0], myInts[1], myInts[2]));
             }
         }
         public void WriteLine(Level l, string text, params object[] args)
@@ -248,46 +269,38 @@ namespace OML
             roomBox.Text = "";
         }
 
-        private void idBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            idBox.Text = "";
-        }
+        #region old
+        //private void idBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    idBox.Text = "";
+        //}
 
-        private void variantBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            variantBox.Text = "";
-        }
+        //private void variantBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    variantBox.Text = "";
+        //}
 
-        private void subtypeBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            subtypeBox.Text = "";
-        }
+        //private void subtypeBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    subtypeBox.Text = "";
+        //}
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            int id = -1;
-            int.TryParse(idBox.Text, out id);
-            int variant = -1;
-            int.TryParse(variantBox.Text, out variant);
-            int subtype = -1;
-            int.TryParse(subtypeBox.Text, out subtype);
-            float x = -1.0f;
-            float.TryParse(xBox.Text, out x);
-            float y = -1.0f;
-            float.TryParse(yBox.Text, out y);
-            if (id != -1 && variant != -1 && subtype != -1 && x != -1.0f && y != -1.0f)
-                h.commandQueue.Enqueue(new Command(Wrappers.SpawnEntity_Wrapper, new object[] { id, variant, subtype, x, y }));
-        }
-
-        private void xBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            xBox.Text = "";
-        }
-
-        private void yBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            yBox.Text = "";
-        }
+        //private void Button_Click_3(object sender, RoutedEventArgs e)
+        //{
+        //    int id = -1;
+        //    int.TryParse(idBox.Text, out id);
+        //    int variant = -1;
+        //    int.TryParse(variantBox.Text, out variant);
+        //    int subtype = -1;
+        //    int.TryParse(subtypeBox.Text, out subtype);
+        //    float x = -1.0f;
+        //    float.TryParse(xBox.Text, out x);
+        //    float y = -1.0f;
+        //    float.TryParse(yBox.Text, out y);
+        //    if (id != -1 && variant != -1 && subtype != -1 && x != -1.0f && y != -1.0f)
+        //        h.commandQueue.Enqueue(new Command(Wrappers.SpawnEntity_Wrapper, new object[] { id, variant, subtype, x, y }));
+        //}
+        #endregion
 
         private void statButton_Click(object sender, RoutedEventArgs e)
         {
@@ -339,7 +352,11 @@ namespace OML
             if (int.TryParse(itemIDBox.Text, out result))
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.ID.ToString().StartsWith(itemIDBox.Text));
             else
+            {
                 itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.ToLower().StartsWith(itemIDBox.Text.ToLower()));
+                if (itemBox.SelectedItem == null)
+                    itemBox.SelectedItem = ItemList.FirstOrDefault(d => d.Name.ToLower().Contains(itemIDBox.Text.ToLower()));
+            }
         }
 
         private void itemIDBox_GotFocus(object sender, RoutedEventArgs e)
@@ -359,24 +376,25 @@ namespace OML
                 roomBox.Text = "Room number";
         }
 
-        private void idBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (idBox.Text == "")
-                idBox.Text = "ID";
-        }
+        #region old
+        //private void idBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    if (idBox.Text == "")
+        //        idBox.Text = "ID";
+        //}
 
-        private void variantBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (variantBox.Text == "")
-                variantBox.Text = "Variant";
-        }
+        //private void variantBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    if (variantBox.Text == "")
+        //        variantBox.Text = "Variant";
+        //}
 
-        private void subtypeBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (subtypeBox.Text == "")
-                subtypeBox.Text = "Subtype";
-        }
-
+        //private void subtypeBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    if (subtypeBox.Text == "")
+        //        subtypeBox.Text = "Subtype";
+        //}
+        #endregion
         private void xBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (xBox.Text == "")
@@ -400,9 +418,9 @@ namespace OML
         private void pcButton_Click(object sender, RoutedEventArgs e)
         {
             if (((DisplayItem)pcBox.SelectedItem).Name == "card")
-                API.SpawnEntity(5, 300, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
+                API.SpawnEntity(5, 300, ((Card)pcSelectBox.SelectedItem).Id, getx(), gety());
             else if (((DisplayItem)pcBox.SelectedItem).Name == "pill")
-                API.SpawnEntity(5, 70, ((Card)pcSelectBox.SelectedItem).Id, 1, 1);
+                API.SpawnEntity(5, 70, ((Card)pcSelectBox.SelectedItem).Id, getx(), gety());
         }
 
         private void spButton_Click(object sender, RoutedEventArgs e)
@@ -410,8 +428,83 @@ namespace OML
             if (spBox.SelectedItem != null)
             {
                 DisplayItem item = (DisplayItem)spBox.SelectedItem;
-                API.SpawnEntity(item.ID, item.Variant, item.Subtype, 1, 1);
+                if (item.Variant != 10 || item.Subtype != 0)
+                    API.SpawnEntity(item.ID, item.Variant, item.Subtype, getx(), gety());
+                else
+                {
+                    DisplayItem i = pickuplist[new Random().Next(0, pickuplist.Count - 1)];
+                    API.SpawnEntity(i.ID, i.Variant, i.Subtype, getx(), gety());
+                }
             }
+        }
+
+        private void enemyIDBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (enemyBox != null)
+            {
+                int result = 0;
+                if (int.TryParse(enemyIDBox.Text, out result))
+                    enemyBox.SelectedItem = enemylist.FirstOrDefault(d => d.ID.ToString().StartsWith(enemyIDBox.Text));
+                else
+                {
+                    enemyBox.SelectedItem = enemylist.FirstOrDefault(d => d.Name.ToLower().StartsWith(enemyIDBox.Text.ToLower()));
+                    if (enemyBox.SelectedItem == null)
+                        enemyBox.SelectedItem = enemylist.FirstOrDefault(d => d.Name.ToLower().Contains(enemyIDBox.Text.ToLower()));
+                }
+            }
+        }
+
+        private void enemyIDBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            enemyIDBox.Text = "";
+        }
+
+        private void enemyIDBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (enemyIDBox.Text == "")
+                enemyIDBox.Text = "Search";
+        }
+
+        private void enemyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (enemyBox != null && enemyBox.SelectedItem != null)
+            {
+                DisplayItem i = (DisplayItem)enemyBox.SelectedItem;
+                API.SpawnEntity(i.ID, i.Variant, i.Subtype, getx(), gety());
+            }
+        }
+
+        private void otherButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (otherBox != null && otherBox.SelectedItem != null)
+            {
+                DisplayItem i = (DisplayItem)otherBox.SelectedItem;
+                API.SpawnEntity(i.ID, i.Variant, i.Subtype, getx(), gety());
+            }
+        }
+        public int getx()
+        {
+            int ret = 3;
+            if (!int.TryParse(xBox.Text, out ret))
+                WriteLine(Level.Warning, "invalid position. spawning at default (3, 3)");
+            return ret;
+        }
+        public int gety()
+        {
+            int ret = 3;
+            if (!int.TryParse(yBox.Text, out ret))
+                WriteLine(Level.Warning, "invalid position. spawning at default (3, 3)");
+            return ret;
+        }
+
+        private void yBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            yBox.Text = "";
+        }
+
+        private void xBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            xBox.Text = "";
         }
     }
     public enum Level
