@@ -51,7 +51,9 @@ char _unk0[0x350];
 #pragma pack(1)
 struct Player : Entity
 {
-	char _unk76C[0x3E4]; // 0xB50
+	char _unk76C[0x04];
+	int _freezeframes;
+	char _unk774[0x3DC]; // 0xB50
 	int _maxHearts;
 	int _hearts;
 	int _eternalHearts;

@@ -1,0 +1,17 @@
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Release\omnis modloader.exe.config
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Release\omnis modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Release\omnis modloader.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Release\OML.dll
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\bin\Release\OML.pdb
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader.csprojResolveAssemblyReference.cache
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\MainWindow.baml
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\PopupWindow.baml
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\MainWindow.g.cs
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\PopupWindow.g.cs
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\App.g.cs
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader_MarkupCompile.cache
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader.g.resources
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\OML.Properties.Resources.resources
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader.csproj.GenerateResource.Cache
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader.exe
+C:\Users\Cooper\Documents\GitHub\isaac-injector\omnis modloader\obj\Release\omnis modloader.pdb

@@ -51,3 +51,8 @@ omnis modloader/bin/Debug/.usersettings
 omnis modloader/bin/Debug/crashlog.txt
 isaac-injector/isaac-injector.vcxproj
 *.force
+OML/obj/Release/OML.csproj.FileListAbsolute.txt
+OML/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+OML/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+omnis modloader/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+PluginTemplate/obj/Release/PluginTemplate.csproj.FileListAbsolute.txt
