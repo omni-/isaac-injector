@@ -63,3 +63,5 @@ extern void* Game_PoisonCloudFunc;
 extern void* Game_IsEnemyFunc;
 
 extern void* Game_SpawnBlueFliesFunc;
+
+extern void* Player_AddCostumeFunc;

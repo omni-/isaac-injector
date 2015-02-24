@@ -52,6 +52,21 @@ void API_SpawnBlueFlies(Entity* owner, PointF* position, int amount)
 	}
 }
 
+void API_AddCostume(Player* player, Item* item)
+{
+	_asm
+	{
+		mov ecx, player
+		mov edx, item
+		call Player_AddCostumeFunc
+	}
+}
+
+Item* API_GetItem(int itemID)
+{
+	return itemStorageArray->items[itemID];
+}
+
 void API_PoisonCloud(Entity* source, PointF* position, float damage)
 {
 	_asm

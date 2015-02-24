@@ -69,6 +69,16 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
+
+	//API_SpawnEntity(5,100,-1,3,1,NULL);
+	//API_AddBlackHearts(player, 3);
+	//API_SpawnEntity(5,100,-2,4,1,NULL);
+
+	//API_Effect_BadPill(player);
+	//API_Effect_GoodPill(player);
+	API_GiveEternalHeart(player);
+	API_AddCostume(player, API_GetItem(7)); 
+	 
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
 
@@ -750,6 +760,8 @@ void* Game_SpawnBlueFliesFunc;
 
 void* Game_IsEnemyFunc;
 
+void* Player_AddCostumeFunc;
+
 /******************************************
 ************** Initialization *************
 *******************************************/
@@ -886,6 +898,8 @@ void Hooks_GetFunctions()
 	Game_IsEnemyFunc = SigScan_FindSignature(&Signature_IsEnemyFunc);
 
 	Game_SpawnBlueFliesFunc = SigScan_FindSignature(&Signature_SpawnBlueFliesFunc);
+
+	Player_AddCostumeFunc = SigScan_FindSignature(&Signature_PlayerAddCostume);
 }
 
 DWORD** PlayerManagerPtr;

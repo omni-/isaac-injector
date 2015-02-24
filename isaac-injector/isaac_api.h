@@ -61,6 +61,7 @@ void API_GiveEternalHeart(Player* player);
 void API_AddCollectible(Player* player, int itemID);
 int API_TeleportPlayer(int roomID);
 bool API_PlayerHasItem(Player* player, int itemID);
+void API_AddCostume(Player* player, Item* item);
 
 // game
 void API_GotoFloor(unsigned int floorNo);
@@ -89,3 +90,4 @@ void API_Effect_BadPill(Player* player);
 // misc
 char* API_getItemName(int itemID);
 bool API_IsEnemy(Entity* entity);
+Item* API_GetItem(int itemID);
