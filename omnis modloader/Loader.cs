@@ -70,7 +70,8 @@ namespace OML
             if (!Directory.Exists(respath))
                 Directory.CreateDirectory(respath);
             File.Copy("res\\xml\\items.xml", respath + "\\items.xml", true);
-            File.Copy("res\\xml\\itempools.xml", respath + "\\itempools.xml", true);
+            //File.Copy("res\\xml\\itempools.xml", respath + "\\itempools.xml", true);
+            File.Copy("res\\xml\\costumes2.xml", respath + "\\costumes2.xml", true);
             List<Item> ret = new List<Item>();
             foreach (OMLPlugin plugin in plugins)
             {
@@ -84,7 +85,11 @@ namespace OML
                         case ResourceType.Item:
                             if (!Directory.Exists(respath + "\\gfx\\items\\collectibles\\"))
                                 Directory.CreateDirectory(respath + "\\gfx\\items\\collectibles\\");
-                            File.Copy("Plugins\\PluginResources\\" + i.resource.Path, respath + "\\gfx\\items\\collectibles\\" + i.resource.resourceName, true);
+                            if (!Directory.Exists(respath + "\\gfx\\characters\\costumes\\"))
+                                Directory.CreateDirectory(respath + "\\gfx\\characters\\costumes\\");
+                            File.Copy("Plugins\\PluginResources\\" + i.ResDir + "\\" + i.resource.resourceName, respath + "\\gfx\\items\\collectibles\\" + i.resource.resourceName, true);
+                            File.Copy("Plugins\\PluginResources\\" + i.ResDir + "\\" + i.AnimName, respath + "\\gfx\\characters\\" + i.AnimName, true);
+                            File.Copy("Plugins\\PluginResources\\" + i.ResDir + "\\" + i.CostumeName, respath + "\\gfx\\characters\\costumes\\" + i.CostumeName, true);
                             break;
                     }
                     XmlWriterSettings xws = new XmlWriterSettings();
@@ -125,6 +130,15 @@ namespace OML
                     xdoc = XDocument.Load(respath + "\\itempools.xml");
                     xdoc.Element("ItemPools").Element("Pool").Nodes().Last().AddAfterSelf(pnode);
                     //xdoc.Save(respath + "\\itempools.xml");
+
+                    XElement cnode;
+                    cnode = new XElement("costume",
+                        new XAttribute("anm2path", i.AnimName),
+                        new XAttribute("id", i.id),
+                        new XAttribute("type", i.Type));
+                    xdoc = XDocument.Load(respath + "\\costumes2.xml");
+                    xdoc.Element("costumes").Nodes().Last().AddAfterSelf(cnode);
+                    xdoc.Save(respath + "\\costumes2.xml");
                     id--;
                 }
             }

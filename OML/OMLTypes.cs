@@ -67,6 +67,9 @@ namespace OML
         public int luckbuff;
         public int shotspeedbuff;
         public string cache;
+        public string ResDir;
+        public string AnimName;
+        public string CostumeName;
         public OMLResource resource;
 
         public virtual void OnTearHit(Entity target)
@@ -132,6 +135,7 @@ namespace OML
         }
         public virtual void OnPickup(Player player)
         {
+            new API_AddCostumeCall(_OML.Connection, player.Handle, "resources/gfx/characters/" + AnimName).Call();
         }
     }
     public class Player : Entity
@@ -248,9 +252,9 @@ namespace OML
             result.y = (pf.y - 160) / 40;
             return result;
         }
-        public static void AddCustomItem(int id)
-        {
+        //public static void AddCustomItem(int id)
+        //{
             //new API_AddCustomItemCall(_OML.Connection, id).Call();
-        }
+        //}
     }
 }

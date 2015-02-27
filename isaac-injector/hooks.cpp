@@ -69,19 +69,12 @@ void* TakePillEvent_Original;
 
 bool __fastcall TakePillEvent_Payload(Player* player, int pillID)
 {
-
-	//API_SpawnEntity(5,100,-1,3,1,NULL);
-	//API_AddBlackHearts(player, 3);
-	//API_SpawnEntity(5,100,-2,4,1,NULL);
-
-	//API_Effect_BadPill(player);
-	//API_Effect_GoodPill(player);
-	API_GiveEternalHeart(player);
-	API_AddCostume(player, API_GetItem(7)); 
-	 
+	//API_AddCostume(player, API_GetItem(7)); 
 	TakePillEvent_Response response(false);
 	TakePillEvent_Notification notification(player, pillID);
-
+	ofstream s = ofstream("log.txt");
+	Item* i = API_GetItem(2);
+	s << i->_szName << "\r\n" << i->_pszResourcePath << "\r\n" << i->unknown0x90 << "\r\n" << i->unknown0xB0 << "\r\n" << i->unknown0xB4;
 	IPC_BeginEvent(&notification, sizeof(TakePillEvent_Notification));	
 	IPC_ProcessEvent();
 	IPC_EndEvent(&response, sizeof(TakePillEvent_Response), IPC_EVENT_DEFAULT_TIMEOUT);
@@ -174,7 +167,7 @@ int __cdecl SpawnEntityEvent_Payload(PointF* velocity, PointF* position, PlayerM
 			ofstream stream = ofstream("log.txt", ios_base::app);
 			for each (auto item in custom_items)
 			{
-				stream << item.second->_name << ", " << subtype << endl;
+				stream << item.second->_szName << ", " << subtype << endl;
 			}
 			itemStorageArray->items[235] = custom_items[subtype];
 			return 235;

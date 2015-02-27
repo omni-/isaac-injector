@@ -1,0 +1,344 @@
+<costumes anm2root="resources/gfx/characters/">
+	<costume id="1" anm2path="n001_Puberty.anm2" type="none" />
+	<costume id="2" anm2path="n002_I found pills.anm2" type="none" />
+	<costume id="3" anm2path="263_lordoftheflies.anm2" type="none" skinColor="1" isFlying="true" overwriteColor="true" />
+	<costume id="4" anm2path="210_gnawedleaf_statue.anm2" type="none" priority="50" />
+	<costume id="5" anm2path="n005_Guppy.anm2" type="none" skinColor="1" isFlying="true" overwriteColor="true" />
+	<costume id="6" anm2path="n006_RUAWizard.anm2" type="none" hasSkinAlt="true" />
+	<costume id="7" anm2path="Character_002_MagdaleneHead.anm2" type="none" priority="99" />
+	<costume id="8" anm2path="Character_003_cainsEyepatch.anm2" type="none" priority="99" />
+	<costume id="9" anm2path="Character_004_JudasFez.anm2" type="none" priority="99" />
+	<costume id="10" anm2path="Character_005_EveHead.anm2" type="none" priority="99" />
+	<costume id="11" anm2path="Character_008_AzazelHead.anm2" type="none" priority="23" skinColor="1" isFlying="true" overwriteColor="true" />
+	<costume id="12" anm2path="Character_009_EdenHair1.anm2" type="none" priority="99" />
+	<costume id="13" anm2path="Character_007_SamsonHead.anm2" type="none" priority="99" />
+	<costume id="14" anm2path="n014_Blindfold.anm2" type="none" priority="101" />
+	<costume id="15" anm2path="n015_blank.anm2" type="none" priority="100" hasSkinAlt="true" />
+	<costume id="16" anm2path="n016_Christmas.anm2" type="none" />
+
+	<costume anm2path="001_The Sad Onion.anm2" id="1"  type="passive">
+	</costume>
+	<costume anm2path="002_The Inner Eye.anm2" id="2"  type="passive">
+	</costume>
+	<costume anm2path="003_Spoon Bender.anm2" id="3"  type="passive">
+	</costume>
+	<costume anm2path="004_Maxs Head.anm2" id="4"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="005_My Reflection.anm2" id="5"  type="passive">
+	</costume>
+	<costume anm2path="006_Number one.anm2" id="6"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="007_Blood of the Martyr.anm2" id="7"  type="passive">
+	</costume>
+	<costume anm2path="009_Skatole.anm2" id="9"  type="passive">
+	</costume>
+	<costume anm2path="013_The Virus.anm2" id="13"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="014_Roid Rage.anm2" id="14"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="015_3.anm2" id="15"  type="passive">
+	</costume>
+	<costume anm2path="016_Raw Liver.anm2" id="16"  type="passive">
+	</costume>
+	<costume anm2path="017_Skeleton Key.anm2" id="17"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="019_Boom.anm2" id="19"  type="passive">
+	</costume>
+	<costume anm2path="020_Transcendence.anm2" id="20"  type="passive" priority="100"  isFlying="true">
+	</costume>
+	<costume anm2path="027_Wooden Spoon.anm2" id="27"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="028_The Belt.anm2" id="28"  type="passive">
+	</costume>
+	<costume anm2path="029_Moms Underwear.anm2" id="29"  type="passive">
+	</costume>
+	<costume anm2path="030_Moms Heels.anm2" id="30"  type="passive">
+	</costume>
+	<costume anm2path="031_Moms Lipstick.anm2" id="31"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="032_Wire Coat hanger.anm2" id="32"  type="passive">
+	</costume>
+	<costume anm2path="179_Fate.anm2" id="33"  type="active" isFlying="true">
+	</costume>
+	<costume anm2path="034_The Book of Belial.anm2" id="34"  type="active" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="039_Moms Bra.anm2" id="39"  type="active">
+	</costume>
+	<costume anm2path="040_Kamikaze.anm2" id="40"  type="passive">
+	</costume>
+	<costume anm2path="046_Lucky Foot.anm2" id="46"  type="passive">
+	</costume>
+	<costume anm2path="048_Cupids arrow.anm2" id="48"  type="passive">
+	</costume>
+	<costume anm2path="049_Shoop da Whoop.anm2" id="49"  type="active" priority="30"  hasSkinAlt="true">
+	</costume>
+	<costume anm2path="050_Steven.anm2" id="50"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="051_Pentagram.anm2" id="51"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="052_Dr Fetus.anm2" id="52"  type="passive">
+	</costume>
+	<costume anm2path="053_Magneto.anm2" id="53"  type="passive">
+	</costume>
+	<costume anm2path="055_Moms Eye.anm2" id="55"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="058_Book of Shadows.anm2" id="58" type="active" priority="101" isFlying="true">
+	</costume>
+	<costume anm2path="062_Charm of the Vampire.anm2" id="62"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="063_The Battery.anm2" id="63"  type="passive">
+	</costume>
+	<costume anm2path="064_Steam Sale.anm2" id="64"  type="passive">
+	</costume>
+	<costume anm2path="068_Technology.anm2" id="68"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="069_Chocolate Milk.anm2" id="69"  type="passive" priority="21"  hasSkinAlt="true">
+	</costume>
+	<costume anm2path="070_Growth Hormones.anm2" id="70"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="072_Rosary.anm2" id="72"  type="passive">
+	</costume>
+	<costume anm2path="075_PHD.anm2" id="75"  type="passive">
+	</costume>
+	<costume anm2path="076_Xray-Vision.anm2" id="76"  type="passive">
+	</costume>
+	<costume anm2path="077_My little Unicorn.anm2" id="77"  type="active">
+	</costume>
+	<costume anm2path="079_The Mark.anm2" id="79"  type="passive">
+	</costume>
+	<costume anm2path="080_The Pact.anm2" id="80"  type="passive" skinColor="1" overwriteColor="true">
+	</costume>
+	<costume anm2path="082_Lord of the Pit.anm2" id="82"  type="passive" skinColor="1" isFlying="true" overwriteColor="true">
+	</costume>
+	<costume anm2path="083_The Nail.anm2" id="83"  type="passive" skinColor="1" overwriteColor="true">
+	</costume>
+	<costume anm2path="086_MonstrosTooth.anm2" id="86"  type="active" skinColor="1" overwriteColor="true">
+	</costume>
+	<costume anm2path="087_Lokis Horns.anm2" id="87"  type="passive">
+	</costume>
+	<costume anm2path="089_Spider Bite.anm2" id="89"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="090_The Small Rock.anm2" id="90"  type="passive">
+	</costume>
+	<costume anm2path="091_Spelunker Hat.anm2" id="91"  type="passive">
+	</costume>
+	<costume anm2path="092_Super Bandage.anm2" id="92"  type="passive">
+	</costume>
+	<costume anm2path="093_The Gamekid.anm2" id="93"  type="active" priority="100" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="101_The Halo.anm2" id="101"  type="passive">
+	</costume>
+	<costume anm2path="103_The Common Cold.anm2" id="103"  type="passive" skinColor="4" overwriteColor="true">
+	</costume>
+	<costume anm2path="104_The Parasite.anm2" id="104"  type="passive">
+	</costume>
+	<costume anm2path="106_Mr Mega.anm2" id="106"  type="passive"  hasSkinAlt="true">
+	</costume>
+	<costume anm2path="108_The Wafer.anm2" id="108"  type="passive">
+	</costume>
+	<costume anm2path="109_Money  Power.anm2" id="109"  type="passive">
+	</costume>
+	<costume anm2path="110_Moms Contacts.anm2" id="110"  type="passive">
+	</costume>
+	<costume anm2path="115_Ouija Board.anm2" id="115"  type="passive"  overwriteColor="true">
+	</costume>
+	<costume anm2path="116_9 Volt.anm2" id="116"  type="passive">
+	</costume>
+	<costume anm2path="117_Dead Bird.anm2" id="117"  type="passive">
+	</costume>
+	<costume anm2path="118_Brimstone.anm2" id="118"  type="passive" priority="23" skinColor="1" overwriteColor="true">
+	</costume>
+	<costume anm2path="119_Blood Bag.anm2" id="119"  type="passive">
+	</costume>
+	<costume anm2path="122_Whore of Babylon.anm2" id="122"  type="passive" skinColor="1" overwriteColor="true">
+	</costume>
+	<costume anm2path="126_Razor Blade.anm2" id="126"  type="active" skinColor="3" overwriteColor="true">
+	</costume>
+	<costume anm2path="129_Bucket of Lard.anm2" id="129"  type="active" >
+	</costume>
+	<costume anm2path="130_Pony.anm2" id="130" type="passive" priority="23" isFlying="true" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="132_A Lump of Coal.anm2" id="132"  type="passive">
+	</costume>
+	<costume anm2path="134_Guppys Tail.anm2" id="134"  type="passive">
+	</costume>
+	<costume anm2path="138_Stigmata.anm2" id="138"  type="passive">
+	</costume>
+	<costume anm2path="139_Moms Purse.anm2" id="139"  type="passive">
+	</costume>
+	<costume anm2path="140_Bobs Curse.anm2" id="140"  type="passive" skinColor="4" overwriteColor="true">
+	</costume>
+	<costume anm2path="141_Pageant Boy.anm2" id="141"  type="passive">
+	</costume>
+	<costume anm2path="142_Scapular.anm2" id="142"  type="passive">
+	</costume>
+	<costume anm2path="143_Speed Ball.anm2" id="143"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="148_Infestation.anm2" id="148"  type="passive" skinColor="4" overwriteColor="true">
+	</costume>
+	<costume anm2path="149_Ipecac.anm2" id="149"  type="passive" skinColor="4" overwriteColor="true">
+	</costume>
+	<costume anm2path="150_Tough love.anm2" id="150"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="151_The Mulligan.anm2" id="151"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="152_Technology 2.anm2" id="152"  type="passive">
+	</costume>
+	<costume anm2path="153_Mutant Spider.anm2" id="153"  type="passive">
+	</costume>
+	<costume anm2path="154_Chemical peel.anm2" id="154"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="155_The Peeper.anm2" id="155"  type="familiar">
+	</costume>
+	<costume anm2path="156_Habit.anm2" id="156"  type="passive">
+	</costume>
+	<costume anm2path="157_Blood Lust.anm2" id="157"  type="passive">
+	</costume>
+	<costume anm2path="159_Spirit of the night.anm2" id="159"  type="passive" skinColor="1" isFlying="true" overwriteColor="true">
+	</costume>
+	<costume anm2path="161_Ankh.anm2" id="161"  type="passive">
+	</costume>
+	<costume anm2path="162_Celtic cross.anm2" id="162"  type="passive">
+	</costume>
+	<costume anm2path="165_Cat-o-nine-tails.anm2" id="165"  type="passive">
+	</costume>
+	<costume anm2path="168_Epic Fetus.anm2" id="168"  type="passive">
+	</costume>
+	<costume anm2path="169_Polyphemus.anm2" id="169"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="173_Mitre.anm2" id="173"  type="passive">
+	</costume>
+	<costume anm2path="176_Stem cells.anm2" id="176"  type="passive">
+	</costume>
+	<costume anm2path="179_Fate.anm2" id="179"  type="passive" isFlying="true">
+	</costume>
+	<costume anm2path="181_White Pony.anm2" id="181" priority="23" type="passive" isFlying="true" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="182_Sacred Heart.anm2" id="182"  type="passive">
+	</costume>
+	<costume anm2path="183_Tooth Picks.anm2" id="183"  type="passive">
+	</costume>
+	<costume anm2path="184_Holy Grail.anm2" id="184"  type="passive"  isFlying="true">
+	</costume>
+	<costume anm2path="185_Dead Dove.anm2" id="185" skinColor="0" type="passive"  isFlying="true" overwriteColor="true">
+	</costume>
+	<costume anm2path="189_SMB Super Fan.anm2" id="189"  type="passive" skinColor="3" overwriteColor="true">
+	</costume>
+	<costume anm2path="107_pyro.anm2" id="190" type="passive" hasOverlay="true">
+	</costume>
+	<costume anm2path="191_3 Dollar bill.anm2" id="191" type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="192_Telepathy for Dummies.anm2" id="192"  type="active">
+	</costume>
+	<costume anm2path="193_MEAT.anm2" id="193"  type="passive" hasSkinAlt="true">
+	</costume>
+	<costume anm2path="194_Magic 8 ball.anm2" id="194"  type="passive">
+	</costume>
+	<costume anm2path="195_Moms Coin Purse.anm2" id="195"  type="passive">
+	</costume>
+	<costume anm2path="196_Squeezy.anm2" id="196"  type="passive">
+	</costume>
+	<costume anm2path="197_Jesus Juice.anm2" id="197"  type="passive">
+	</costume>
+	<costume anm2path="198_box.anm2" id="198"  type="passive">
+	</costume>
+	
+	<costume id="199" anm2path="199_Moms Key.anm2" type="passive" />
+	<costume id="200" anm2path="200_momseyeshadow.anm2" type="passive" />
+	<costume id="201" anm2path="201_ironbar.anm2" type="passive" />
+	<costume id="202" anm2path="202_midastouch.anm2" type="passive"  overwriteColor="true" />
+	<costume id="203" anm2path="203_humblingbundle.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="204" anm2path="204_fannypack.anm2" type="passive" />
+	<costume id="205" anm2path="205_sharpplug.anm2" type="passive" />
+	<costume id="208" anm2path="208_championbelt.anm2" type="passive" />
+	<costume id="209" anm2path="209_buttbombs.anm2" type="passive" />
+	<costume id="210" anm2path="210_gnawedleaf.anm2" priority="1" type="passive"  />
+	<costume id="211" anm2path="211_spiderbaby.anm2" type="passive" />
+	<costume id="212" anm2path="212_guppyscollar.anm2" type="passive" />
+	<costume id="213" anm2path="213_lostcontact.anm2" type="passive" />
+	<costume id="214" anm2path="214_anemic.anm2" type="passive" />
+	<costume id="215" anm2path="215_goathead.anm2" type="passive" />
+	<costume id="216" anm2path="216_ceremonialrobes.anm2" type="passive" />
+	<costume id="217" anm2path="217_momswig.anm2" type="passive" />
+	<costume id="218" anm2path="218_placenta.anm2" type="passive" />
+	<costume id="219" anm2path="219_oldbandage.anm2" type="passive" />
+	<costume id="221" anm2path="221_rubbercement.anm2" type="passive" />
+	<costume id="222" anm2path="222_antigravity.anm2" type="passive" skinColor="2" overwriteColor="true" />
+	<costume id="223" anm2path="223_pyromaniac.anm2" type="passive"  />
+	<costume id="224" anm2path="224_crickets body.anm2" type="passive" />
+	<costume id="225" anm2path="225_gimpy.anm2" type="passive" />
+	<costume id="226" anm2path="226_blacklotus.anm2" type="passive" />
+	<costume id="227" anm2path="227_piggybank.anm2" type="passive"  />
+	<costume id="228" anm2path="228_moms perfume.anm2" type="passive" />
+	<costume id="229" anm2path="229_monstros lung.anm2" type="passive" priority="22"  hasSkinAlt="true" />
+	<costume id="230" anm2path="230_abaddon.anm2" type="passive" skinColor="1" overwriteColor="true" />
+	<costume id="231" anm2path="231_balloftar.anm2" type="passive" skinColor="1" overwriteColor="true" />
+	<costume id="232" anm2path="232_stopwatch.anm2" type="passive" />
+	<costume id="233" anm2path="233_tiny planet.anm2" type="passive" />
+	<costume id="234" anm2path="234_infestation2.anm2" type="passive"  />
+	<!-- 235 is an empty slot -->
+	<costume id="236" anm2path="236_ecoli.anm2" type="passive" />
+	<costume id="237" anm2path="237_deathstouch.anm2" type="passive" />
+	<costume id="240" anm2path="240_experimentaltreatment.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="241" anm2path="241_contractfrombelow.anm2" type="passive" />
+	<costume id="242" anm2path="242_infamy.anm2" type="passive" />
+	<costume id="244" anm2path="244_tech05.anm2" type="passive" />
+	<costume id="245" anm2path="245_2020.anm2" type="passive" />
+	<costume id="247" anm2path="247_bffs.anm2" type="passive" />
+	<costume id="248" anm2path="248_hive mind.anm2" type="passive" />
+	<costume id="249" anm2path="249_theresoptions.anm2" type="passive" />
+	<costume id="250" anm2path="250_bogobombs.anm2" type="passive"  />
+	<costume id="251" anm2path="251_starterdeck.anm2" type="passive" />
+	<costume id="252" anm2path="252_littlebaggy.anm2" type="passive" />
+	<costume id="253" anm2path="253_magicscab.anm2" type="passive" />
+	<costume id="254" anm2path="254_bloodclot.anm2" type="passive" />
+	<costume id="255" anm2path="255_screw.anm2" type="passive" />
+	<costume id="256" anm2path="256_hotbombs.anm2" type="passive" />
+	<costume id="257" anm2path="257_firemind.anm2" type="passive" />
+	<costume id="258" anm2path="258_missingno.anm2" type="passive" />
+	<costume id="259" anm2path="259_darkmatter.anm2" type="passive" />
+	<costume id="260" anm2path="260_blackcandle.anm2" type="passive" />
+	<costume id="261" anm2path="261_proptosis.anm2" type="passive" />
+	<costume id="262" anm2path="262_missingpage2.anm2" type="passive" />
+	<costume id="267" anm2path="267_robobaby20.anm2" type="familiar" />
+	<costume id="299" anm2path="299_taurus.anm2" type="passive"  hasSkinAlt="true" />
+	<costume id="300" anm2path="300_aries.anm2" type="passive" />
+	<costume id="301" anm2path="301_cancer.anm2" type="passive"  />
+	<costume id="302" anm2path="302_leo.anm2" type="passive" />
+	<costume id="303" anm2path="303_virgo.anm2" type="passive" />
+	<costume id="304" anm2path="304_libra.anm2" type="passive"  hasSkinAlt="true" />
+	<costume id="305" anm2path="305_scorpio.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="306" anm2path="306_sagittarius.anm2" type="passive"  />
+	<costume id="307" anm2path="307_capricorn.anm2" type="passive"  />
+	<costume id="308" anm2path="308_aquarius.anm2" type="passive" />
+	<costume id="309" anm2path="309_pisces.anm2" type="passive"  hasSkinAlt="true" />
+	<costume id="310" anm2path="310_evesmascara.anm2" type="passive" />
+	<!--<costume id="311" anm2path="311_judasshadow.anm2" type="passive" />-->
+	<costume id="312" anm2path="312_maggysbow.anm2" type="passive" />
+	<costume id="313" anm2path="313_holymantle.anm2" type="passive" />
+	<costume id="314" anm2path="314_thunderthighs.anm2" type="passive"  />
+	<costume id="315" anm2path="315_strangeattractor.anm2" type="passive" />
+	<costume id="316" anm2path="316_cursedeye.anm2" type="passive" />
+	<costume id="317" anm2path="317_mysteriousliquid.anm2" type="passive"  />
+	<!--<costume id="326" anm2path="326_breath of life.anm2" type="active"  hasSkinAlt="true" />-->
+	<costume id="327" anm2path="327_thepolaroid.anm2" type="passive" />
+	<costume id="328" anm2path="328_thenegative.anm2" type="passive" />
+	<costume id="329" anm2path="329_TheLudovicoTreatment.anm2" type="passive" />
+	<costume id="330" anm2path="330_soymilk.anm2" type="passive" />
+	<costume id="331" anm2path="331_godhead.anm2" type="passive" />
+	<costume id="332" anm2path="332_Lazarus Rags.anm2" type="passive" />
+	<costume id="333" anm2path="333_Mind.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="334" anm2path="334_Body.anm2" type="passive" />
+	<costume id="335" anm2path="335_Soul.anm2" type="passive" />
+	<costume id="336" anm2path="336_deadonion.anm2" type="passive"  />
+	<costume id="337" anm2path="337_Broken Stopwatch.anm2" type="passive" />
+	<costume id="339" anm2path="339_safety pin.anm2" type="passive" />
+	<costume id="340" anm2path="340_caffeine pill.anm2" type="passive" hasSkinAlt="true" />
+	<costume id="341" anm2path="341_torn photo.anm2" type="passive" hasOverlay="true" hasSkinAlt="true" />
+	<costume id="342" anm2path="342_blue cap.anm2" type="passive" hasOverlay="true" hasSkinAlt="true" />
+	<costume id="343" anm2path="343_LatchKey.anm2" type="passive" />
+	<costume id="344" anm2path="344_matchbook.anm2" type="passive" />
+	<costume id="345" anm2path="345_Synthoil.anm2" type="passive" />
+
+	<costume id="53" anm2path="t53_Tick.anm2" type="trinket" />
+</costumes>

@@ -17,24 +17,28 @@ namespace PluginTemplate
             PluginAuthor = "omni";
             Item item = new TheSun();
             item.Name = "The Sun";
-            item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\sun.png", "sun.png");
+            item.resource = new OMLResource(ResourceType.Item, "sun.png");
             item.Type = ItemType.passive;
             item.Pool = ItemPool.treasure;
             item.DecreaseBy = 1;
             item.PickupText = "Brighten your day!";
             item.Weight = 1;
             item.RemoveOn = .1f;
+            item.AnimName = "sun.anm2";
+            item.CostumeName = "costume_sun.png";
+            item.ResDir = "MyPlugin";
             CustomItemList.Add(item);
-            item = new TheMoon();
-            item.Name = "The Moon";
-            item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\moon.png", "moon.png");
-            item.Type = ItemType.passive;
-            item.Pool = ItemPool.treasure;
-            item.DecreaseBy = 1;
-            item.PickupText = "Brighten your night!";
-            item.Weight = 1;
-            item.RemoveOn = .1f;
-            CustomItemList.Add(item);
+
+            //item = new TheMoon();
+            //item.Name = "The Moon";
+            //item.resource = new OMLResource(ResourceType.Item, "MyPlugin\\moon.png", "moon.png");
+            //item.Type = ItemType.passive;
+            //item.Pool = ItemPool.treasure;
+            //item.DecreaseBy = 1;
+            //item.PickupText = "Brighten your night!";
+            //item.Weight = 1;
+            //item.RemoveOn = .1f;
+            //CustomItemList.Add(item);
         }
         public override void PluginInit()
         {

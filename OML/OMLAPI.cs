@@ -650,6 +650,7 @@ namespace OML
             AddCollectible_Response response = RawDeserialize<AddCollectible_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCollectible_Response))));
         }
     }
+
     //internal class API_GetCustomItemsCall : API_BaseCall
     //{
     //    [Serializable()]
@@ -729,4 +730,42 @@ namespace OML
     //        AddCustomItem_Response response = RawDeserialize<AddCustomItem_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCustomItem_Response))));
     //    }
     //}
+
+    internal class API_AddCostumeCall : API_BaseCall
+    {
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCostume_Request
+        {
+            public uint id;
+            public IntPtr playerHandle;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128)]
+            public byte[] anmpath;
+        };
+
+        [Serializable()]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        internal struct AddCostume_Response
+        {
+            public uint id;
+        };
+
+        private AddCostume_Request request;
+
+        public API_AddCostumeCall(API_ConnectionInfo _connection, IntPtr _player, string animpath)
+            : base(_connection)
+        {
+            request.id = _OML.APICALL_ADDCOSTUME;
+            request.playerHandle = _player;
+            byte[] buff = Encoding.UTF8.GetBytes(animpath);
+            Array.Resize<byte>(ref buff, 128);
+            request.anmpath = buff;
+        }
+
+        public void Call()
+        {
+            connection.outStream.Write(RawSerialize(request));
+            AddCostume_Response response = RawDeserialize<AddCostume_Response>(connection.inStream.ReadBytes(SizeOf(typeof(AddCostume_Response))));
+        }
+    }
 }

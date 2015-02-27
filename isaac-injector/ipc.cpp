@@ -5,6 +5,10 @@
 #include "isaac_api.h"
 #include "ipc_messages_api.h"
 
+using namespace std;
+
+static const WORD MAX_CONSOLE_LINES = 500;
+
 HANDLE hEventPipe;
 HANDLE hCallPipe;
 
@@ -12,6 +16,55 @@ bool eventPipeAvailable = true;
 bool apiPipeAvailable = true;
 
 typedef std::pair<int, Item*> IntItemPtr;
+
+void RedirectIOToConsole()
+{
+	int hConHandle;
+	long lStdHandle;
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	FILE *fp;
+
+	// allocate a console for this app
+	AllocConsole();
+
+	// set the screen buffer to be big enough to let us scroll text
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+	coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
+
+	// redirect unbuffered STDOUT to the console
+	lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	fp = _fdopen(hConHandle, "w");
+
+	*stdout = *fp;
+
+	setvbuf(stdout, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDIN to the console
+
+	lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	fp = _fdopen(hConHandle, "r");
+	*stdin = *fp;
+	setvbuf(stdin, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDERR to the console
+	lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	fp = _fdopen(hConHandle, "w");
+
+	*stderr = *fp;
+
+	setvbuf(stderr, NULL, _IONBF, 0);
+
+	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog
+	// point to console as well
+	ios::sync_with_stdio();
+}
 
 bool SafeReadFile(HANDLE pipe, void* buffer, DWORD bytesToRead, DWORD timeout)
 {
@@ -56,6 +109,8 @@ HANDLE InitEventPipe()
 		DWORD mode = PIPE_READMODE_MESSAGE;
 		SetNamedPipeHandleState(hPipe, &mode, NULL, NULL);
 	}
+
+	//RedirectIOToConsole();
 
 	return hPipe;
 }
@@ -433,6 +488,22 @@ unsigned int IPC_HandleAPICall(DWORD timeout)
 					//			WriteFile(hCallPipe, &response, sizeof(API_AddItemResult), &br, NULL);
 					//		}
 					//	}
+					case APICALL_ADDCOSTUME:
+						if (bl + sizeof(int) == sizeof(API_AddCostumeCall))
+						{
+							API_AddCostumeCall request;
+							apiPipeAvailable = SafeReadFile(hCallPipe, &request, sizeof(API_AddCostumeCall), IPC_EVENT_DEFAULT_TIMEOUT);
+							if (apiPipeAvailable)
+							{
+								//cout << request.animpath << endl << request.player << endl << request.id;
+								API_AddCostumeResult response;
+								Item* i = new Item();
+								i->_pszResourcePath = request.animpath;
+								API_AddCostume(request.player, i);
+								WriteFile(hCallPipe, &response, sizeof(API_AddCostumeResult), &br, NULL);
+							}
+						}
+						break;
 					default:
 						//MessageBoxA(NULL, std::to_string(resultID).c_str(), NULL, NULL);
 						break;

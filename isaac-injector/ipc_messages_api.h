@@ -24,6 +24,7 @@
 #define APICALL_GOTOFLOOR	   0x13
 #define APICALL_GETCUSTOMITEMS 0x14
 #define APICALL_ADDCUSTOMITEM  0x15
+#define APICALL_ADDCOSTUME	   0x16
 
 #define APICALL_END            0xFFFFFFFF
 
@@ -295,4 +296,18 @@ struct API_AddItemCall
 struct API_AddItemResult
 {
 	unsigned int id = APICALL_ADDCUSTOMITEM;
+};
+
+#pragma pack (1)
+struct API_AddCostumeCall
+{
+	unsigned int id = APICALL_ADDCOSTUME;
+	Player* player;
+	char animpath[128];
+};
+
+#pragma pack (1)
+struct API_AddCostumeResult
+{
+	unsigned int id = APICALL_ADDCOSTUME;
 };

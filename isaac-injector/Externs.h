@@ -96,64 +96,45 @@ struct Player : Entity
 };
 
 #pragma pack(1)
-struct Item
+class Item
 {
-	int _type; // 1 = passive(?), trinket = 2, active = 3, 4 = ??
-	int _id;
-	char* _name;
-
-	int unknown1;
-	int unknown2;
-	int unknown3;
-	int unknown4;
-	int unknown5;
-	int unknown6;
-	int _desc;
-	int unknown8;
-	int unknown9;
-	int unknown10;
-	int unknown11;
-	int unknown12;
-	int unknown13;
-
-	char* _imageResourcePath;
-
-	int unknown14;
-	int unknown15;
-	int unknown16;
-	int unknown17;
-	int unknown18;
-	int _gfx;
-	int _achievement;
-	int _cache;
-	int _maxhearts;
-	int _hearts;
-	int _soulhearts;
-	int _blackhearts;
-	int _bombs;
-	int _keys;
-	int _coins;
-	int _maxcharges;
-	int _cooldown;
-	int _special;
-	int _devilprice;
-	int unknown33;
-
-	char* _animationResourcePath;
-
-	int unknown34;
-	int unknown35;
-	int unknown36;
-	int unknown37;
-	int unknown38;
-	int unknown39;
-	int unknown40;
-	int unknown41;
-	int unknown42;
-	int unknown43;
-	int unknown44;
-	int unknown45;
-};
+public:
+	/*0x00*/        int _state;
+	/*0x04*/        int _id;
+	/*0x08*/        union {
+		char *_pszName;
+		char _szName[0x1C];
+	};
+	/*0x24*/        union {
+		char *_pszDescription;
+		char _szDescription[0x1C];
+	};
+	/*0x40*/        union {
+		char *_pszResourcePath;
+		char _szResourcePath[0x18];
+	};
+	/*0x58*/        int _gfx;
+	/*0x5C*/        int _achievement;
+	/*0x60*/        int _cache; // > 0 if locked?
+	/*0x64*/        int _maxhearts;
+	/*0x68*/        int _hearts;
+	/*0x6C*/        int _soulhearts;
+	/*0x70*/        int _blackhearts;
+	/*0x74*/        int _bombs;
+	/*0x78*/        int _keys;
+	/*0x7C*/        int _coins;
+	/*0x80*/        int _maxcharges;
+	/*0x84*/        int _cooldown;
+	/*0x88*/        int _special;
+	/*0x8C*/        int _devilprice;
+	/*0x90*/        int unknown0x90; // 5a locked ff
+	/*0x94*/        union {
+		char *_pszAnimationPath;
+		char _szAnimationPath[0x1C];
+	};
+	/*0xB0*/        int unknown0xB0;
+	/*0xB0*/        int unknown0xB4;
+}; /*0xC8*/
 
 struct ItemStorageArray
 {

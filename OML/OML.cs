@@ -164,13 +164,11 @@ namespace OML
     public class OMLResource
     {
         public ResourceType resourceType;
-        public string Path;
         public string resourceName;
 
-        public OMLResource(ResourceType type, string path, string name)
+        public OMLResource(ResourceType type, string name)
         {
             resourceType = type;
-            Path = path;
             resourceName = name;
         }
     }
@@ -218,6 +216,7 @@ namespace OML
         public const uint APICALL_GOTOFLOOR          = 0x13;
         public const uint APICALL_GETCUSTOMITEMS     = 0x14;
         public const uint APICALL_ADDCUSTOMITEM      = 0x15;
+        public const uint APICALL_ADDCOSTUME         = 0x16;
 
         public const uint APICALL_END                = 0xFFFFFFFF;
 
